@@ -1,0 +1,8 @@
+\BOOKMARK [1][-]{section.1}{Overview}{}
+\BOOKMARK [2][-]{subsection.1.1}{Simplicial Databases}{section.1}
+\BOOKMARK [2][-]{subsection.1.2}{Column-wise Data Storage}{section.1}
+\BOOKMARK [2][-]{subsection.1.3}{Database Aggregation}{section.1}
+\BOOKMARK [2][-]{subsection.1.4}{Simplicial Challenges}{section.1}
+\BOOKMARK [1][-]{section.2}{JoSQL Queries}{}
+\BOOKMARK [2][-]{subsection.2.1}{Create Database}{section.2}
+\BOOKMARK [2][-]{subsection.2.2}{Create Instance and Load Data}{section.2}
