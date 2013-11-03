@@ -7,6 +7,6 @@ cabal-dev
 .virthualenv
 .log
 .out
-.~
+*~
 .toc
 .aux
