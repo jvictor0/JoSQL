@@ -1,6 +1,13 @@
 module Utils where
 
 import Data.List
+import qualified Data.ByteString as BS
+import Numeric (showHex)
+
+hexPrint :: BS.ByteString -> String
+hexPrint = concatMap (flip showHex "") . BS.unpack
+
+x % f = fmap f x
 
 cim :: [b] -> (a -> [b]) -> [a] -> [b]
 cim a f l = concat $ intersperse a $ map f l
@@ -12,7 +19,10 @@ deleteAt i ls = (take i ls) ++ (drop (i+1) ls)
 zipMap f lst = map (\x -> (x,f x)) lst
 
 sortGroupBy f lst = groupBy ((==) `on` f) $ sortBy (compare `on` f) lst
+sortGroupFst lst = map (\l -> (fst $ head l, map snd l)) $ sortGroupBy fst lst
 
 partitionBy f lst = map (map fst) 
                     $ sortGroupBy snd
                     $ zipMap f lst
+                    
+subset l1 l2 = null $ l1\\l2

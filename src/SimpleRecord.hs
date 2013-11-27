@@ -1,8 +1,10 @@
+{-# LANGUAGE DeriveGeneric #-}
 module SimpleRecord where
 
-import qualified Data.Array.BitArray as BA
 import Data.List
 import Data.Maybe
+import Data.Serialize
+import GHC.Generics
 
 import Name
 import Schema
@@ -11,65 +13,91 @@ import HaskellCode
 import QueryCompState
 import Utils
 import TupleUtils
-
+import NutleyInstance
+import Metadata
 
 data SimpleRecordMetadata = SimpleRecordMetadata 
                             {
-                              simpleRecordSchema :: ConnectedSchema,
-                              simpleRecordCompressionSchemes   :: [(SimpID, HaskellCode)],
-                              simpleRecordDecompressionSchemes :: [(SimpID, HaskellCode)]
+                              simpleRecordSchema :: Schema,
+                              simpleRecordName :: String,
+                              simpleRecordCompressionSchemes   :: [(VertID, HaskellCode)],
+                              simpleRecordDecompressionSchemes :: [(VertID, HaskellCode)]
                             }
-data SimpleRecord = SimpleRecord InstanceID RowCount deriving (Eq, Ord)
+                            deriving (Generic)
 
-segmentFileName name v = Lit $ "\"segment_" ++ name ++ "_" ++ (show v) ++ "_\" ++ (show instID) ++ \".seg\""
+instance Named SimpleRecordMetadata where name = simpleRecordName
+                            
+instance Serialize SimpleRecordMetadata
+                                          
+segmentFileName md v = Lit $ "\"segment_" ++ ((name md) ++ "_" ++ (show v) ++ "_\" ++ (show instID) ++ \".seg\"")
 
-instantiateSimpleRecordFName n = "instantiateSimpleRecord_" ++ n
+simpleRecordSimplex = (map fst).simpleRecordCompressionSchemes
+
 
 codeSimpleRecordInstantiate :: SimpleRecordMetadata -> HaskellFunction
 codeSimpleRecordInstantiate srmd = 
-  Fun (instantiateSimpleRecordFName name)  funType 
+  Fun (instantiateFName srmd)  funType 
   (Lam (Mlp [Ltp "instID",  Ltp "inData"]) $ 
    Whr (Do
         [(USp, writeFiles),
-         (USp,c_return $ Lit $ "SimpleRecord instanceID (length inData)")])
+         (USp, c_return $ Lit $ "SimpleRecord instID (length inData)")])
    $ columnCodes ++ compressedColumnCodes ++ fileNameCodes)
-  where s@(Schema name verts _) = simpleRecordSchema srmd
-        inTupType = listTC $ TupType $ map (maybeTC . BaseType . snd) verts
+  where s = simpleRecordSchema srmd
+        simplex = simpleRecordSimplex srmd
+        verts = simplex
+        vertTypes = zip simplex $ univ s simplex
+        compSchemes = map (\v -> (v, fromJust $ lookup v $ simpleRecordCompressionSchemes srmd)) simplex
+        inTupType = tc_List $ TupType $ map (tc_Maybe . snd) vertTypes
         inTupName = Lit "inData"
         inInstanceName = Lit "instID"
-        funType = FunType [instanceID, inTupType] $ ioTC $ BaseType "SimpleRecord"
+        funType = FunType [BaseType "InstanceID", inTupType] $ tc_IO $ t_SimpleRecord
         
         numCols = length verts
-        columnCodes = map (\((v,_),i) -> 
+        columnCodes = map (\(v,i) -> 
                             (Ltp $"column_" ++ (show v) , c_map (tupNat numCols i) inTupName))
                       $ zip verts [1..]
         compressedColumnCodes = map (\(v,compsh) -> 
                                       (Ltp $ "compColumn_" ++ (show v) , compsh $$ [Lit $ "column_" ++ (show v)]))
-                                $ simpleRecordCompressionSchemes srmd
+                                $ compSchemes
         
-        fileNameCodes = map (\(v,_) -> 
+        fileNameCodes = map (\v -> 
                               (Ltp $ "segmentFile_" ++ (show v) , 
-                               segmentFileName name v))
+                               segmentFileName srmd v))
                         verts
-        writeFiles = c_mapM_ (Lit "(uncurry writeFile)")  $ 
-                     (Lit $ "[" ++ (cim "," (\v -> "(segmentFile_" ++ (show v) ++ ",compColumn_" ++ (show v) ++ ")") $ map fst verts) ++ "]")
+        writeFiles = c_mapM_ (Lit "(uncurry writeByteStringFile)")  $ 
+                     (Lit $ "[" ++ (cim "," (\v -> "(segmentFile_" ++ (show v) ++ ",compColumn_" ++ (show v) ++ ")") $ verts) ++ "]")
 
 
-codeSimpleRecordConndSection :: SimpleRecordMetadata -> SubSchema -> HaskellFunction
-codeSimpleRecordConndSection metadata ss@(SubSchema _ simps schema) = 
-  Fun (name ss) funType
-  $ Lam (Ltp "instID")
-  $ Do (columnInstantiations ++ [tupsCode])
-    where columnIDs = map head $ group $ concat $ transpose $ map (vertices schema) simps
-          columnInstantiations = map (\cid -> 
+codeSimpleRecordMaterialize :: SimpleRecordMetadata -> SubSchema -> ([NutleyQuery],HaskellFunction)
+codeSimpleRecordMaterialize metadata ss@(SubSchema simps sch)
+  | not $ null $ verts\\(simpleRecordSimplex metadata) =   
+    ([],
+     Fun (materializeFName metadata ss) funType
+     $ Lam (Fnp "SimpleRecord" [Ltp "instID",USp]) $ c_return $ Lst [])
+  where funType = materializeType metadata ss
+        verts = nub $ concat simps
+codeSimpleRecordMaterialize metadata ss@(SubSchema simps sch) =
+  ([],
+   Fun (materializeFName metadata ss) funType
+   $ Lam (Fnp "SimpleRecord" [Ltp "instID",USp])
+   $ Do (columnInstantiations ++ [tupsCode]))
+    where columnInstantiations = map (\cid -> 
                                        (Ltp $ "column_" ++ (show cid),
-                                        (c_2 "fmap" 
+                                        ((c_2 "fmap" 
                                          (fromJust $ lookup cid $ simpleRecordDecompressionSchemes metadata)
-                                         (c_1 "readFile" (segmentFileName (name schema) cid)))))
-                                 $ columnIDs 
-          n = length columnIDs
-          tupsCode = (USp,c_return $ c_mapMaybe (maybeTup n) $ zipN $ map (\cid -> Lit $ "column_" ++ (show cid)) columnIDs)
-          
-          inTupType = listTC $ TupType $ map (BaseType.(typeLookup schema)) columnIDs
-          funType = FunType [BaseType "SimpleRecord"] $ ioTC $ inTupType
+                                         (c_1 "readByteStringFile" (segmentFileName metadata cid))))
+                                       +>>=+ (Lit "fromEither")))
+                                 $ verts
+          tupsCode = (USp,c_return $ Tpl $ map 
+                          (\s -> c_mapMaybe (maybeTup (length s)) $ zipN $ map (\v -> Lit $ "column_" ++ (show v)) s)
+                          simps)
+          funType = materializeType metadata ss
+          verts = nub $ concat simps
 
+instance DBMetadata SimpleRecordMetadata where
+  dbSchema = simpleRecordSchema
+  instanceType _ = t_SimpleRecord
+  codeMaterialize = codeSimpleRecordMaterialize
+  
+instance InstantiateableDBMetadata SimpleRecordMetadata where
+  codeInstantiate md = ([],codeSimpleRecordInstantiate md)

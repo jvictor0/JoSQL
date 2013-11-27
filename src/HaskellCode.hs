@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric #-}
 module HaskellCode where
 
 import Utils
@@ -5,16 +6,17 @@ import Types
 
 import Data.List
 import Data.Char
+import GHC.Generics
+import Data.Serialize
 
 -- Warning: not gaurenteed to create syntatically correct Haskell.
 -- For instance, A case statement with a multi-pattern is not valid Haskell, nor is a where statement inside a function application.  
 
-data HaskellType = BaseType Type | FunType [HaskellType] HaskellType | TupType [HaskellType] | ConsType Type HaskellType
-                 deriving (Eq)
+data HaskellType = BaseType Type | FunType [HaskellType] HaskellType | TupType [HaskellType] | ConsType Type [HaskellType]
+                 deriving (Eq, Generic)
 data HaskellFunction = Fun Name HaskellType HaskellCode 
-                     deriving (Eq)
+                     deriving (Eq, Generic)
 data HaskellCode = Lit String 
-                 | Pat HaskellPattern
                  | Whr HaskellCode [(HaskellPattern,HaskellCode)]
                  | If HaskellCode HaskellCode HaskellCode
                  | Lam HaskellPattern HaskellCode
@@ -22,14 +24,20 @@ data HaskellCode = Lit String
                  | Lst [HaskellCode]
                  | Tpl [HaskellCode]
                  | Do [(HaskellPattern,HaskellCode)]
-                 deriving (Eq)
+                 | LComp HaskellCode [(HaskellPattern,HaskellCode)] [HaskellCode]
+                 deriving (Eq, Generic)
 data HaskellPattern = Mlp [HaskellPattern] -- toplevel only
                     | Ltp String
                     | Tup [HaskellPattern]
-                    | Fnp Name [HaskellPattern] -- used for where statements, not aloud inside lambdas
+                    | Fnp Name [HaskellPattern] 
                     | USp
-                    deriving (Eq)
+                    deriving (Eq, Generic)
                    
+instance Serialize HaskellType
+instance Serialize HaskellFunction
+instance Serialize HaskellCode
+instance Serialize HaskellPattern
+                             
 tab = "  "
                    
 showI :: (Show a) => Int -> a -> String
@@ -39,8 +47,8 @@ instance Show HaskellType where
   show (BaseType t) = t
   show (FunType args result) = "(" ++ (concatMap (\a -> (show a) ++ " -> ") args) ++ (show result) ++ ")" 
   show (TupType ts) = "(" ++ (cim "," show ts) ++ ")"
-  show (ConsType "[]" t) = "[" ++ (show t) ++ "]"
-  show (ConsType c t) = "(" ++ c ++ " " ++ (show t) ++ ")"
+  show (ConsType "[]" ts) = "[" ++ (cim "," show ts) ++ "]"
+  show (ConsType c ts) = "(" ++ c ++ " " ++ (cim " " show ts) ++ ")"
 
 instance Show HaskellFunction where
   show (Fun name t (Lam pat body)) = name ++ " :: " ++ (show t) ++ "\n" ++ 
@@ -64,7 +72,6 @@ paren x
                         
 instance Show HaskellCode where
   show (Lit s) = s
-  show (Pat p) = show p
   show (Whr c whrlst) = (show c) ++ "\n" ++ tab ++ "where\n" ++ 
                         (concatMap (\(pat,cde) -> tab ++ tab ++ (show pat) ++ " = \n      " ++ (showI 3 cde) ++ "\n") whrlst)
   show (If con thn els) = "if    " ++ (showI 3 con) ++ "\nthen  " ++ (showI 3 thn) ++ "\nelse  " ++ (showI 3 els)
@@ -89,28 +96,41 @@ instance Show HaskellCode where
   show (Do hasks) = "do\n" ++ 
                     (cim "\n" (\(p,d) -> if p == USp then "  " ++ (showI 1 d) else "  " ++ (show p) ++ " <- " ++ (showI 3 d)) hasks)
 
+  show (LComp tp pats conds) =  "[\n  " ++ (showI 1 tp) ++ "\n  |\n" ++ 
+                                (cim ",\n" (\(p,t) -> "  " ++ (show p) ++ " <- " ++ (showI 2 t)) pats) ++ 
+                                (if null conds then "" else ",\n") ++ 
+                                (cim ",\n" (\arg -> "  " ++ (showI 1 arg)) conds) ++
+                                "\n]"
 
 instance Show HaskellPattern where
   show (Mlp pats) = cim " " show pats
   show (Ltp l) = l
   show (Tup pats) = "(" ++ (cim "," show pats) ++ ")"
-  show (Fnp name pats) = name ++ " " ++ (cim " " show pats)
+  show (Fnp name pats) = "(" ++ name ++ " " ++ (cim " " show pats) ++ ")"
   show USp = "_"
   
 --- TYPE CONVINIENCE FUNCTIONS ---
-listTC = ConsType "[]"
-tupTC = TupType.(map BaseType)
-maybeTC = ConsType "Maybe"
-ioTC = ConsType "IO"
+tc_1 t x = ConsType t [x]
+tc_2 t x y = ConsType t [x,y]
+tc_List x = ConsType "[]" [x]
+tc_Maybe x = ConsType "Maybe" [x]
+tc_IO x = ConsType "IO" [x]
+
+t_ = BaseType
+t_Int = t_ "Int"
+t_Double = t_ "Double"
+t_String = t_ "String"
 
 --- Functional Convinience Type
 x +$+ y = App (Lit "($)") [x,y]
+x +==+ y = App (Lit "(==)") [x,y]
 x +.+ y = App (Lit "(.)") [x,y]
 x +++ y = App (Lit "(+)") [x,y]
 x +-+ y = App (Lit "(-)") [x,y]
 x +*+ y = App (Lit "(*)") [x,y]
 x +/+ y = App (Lit "(/)") [x,y]
 x ++++ y = App (Lit "(++)") [x,y]
+x +>>=+ y = App (Lit "(>>=)") [x,y]
 
 
 f $$ lst = App f lst
@@ -123,6 +143,11 @@ c_4 f x y z w = (Lit f) $$ [x,y,z,w]
 c_return = c_1 "return"
 
 c_map = c_2 "map"
+c_filter = c_2 "filter"
 c_zip = c_2 "zip"
 c_mapM_ = c_2 "mapM_"
 c_mapMaybe = c_2 "mapMaybe"
+
+do_1 f x = (USp,c_1 f x)
+
+do_return = do_1 "return"
