@@ -31,15 +31,15 @@ instance Named (SimpleSubInstanceMetadata md) where name = simpleSubInstanceName
 instance (Serialize md) => Serialize (SimpleSubInstanceMetadata md)
 
 codeSimpleSubInstanceMaterialize :: (DBMetadata md) => 
-                                    SimpleSubInstanceMetadata md -> SubSchema -> ([NutleyQuery],HaskellFunction)
+                                    SimpleSubInstanceMetadata md -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
 codeSimpleSubInstanceMaterialize metadata ss@(SubSchema simps schema) = 
-  ([MaterializeQuery (simpleSubInstanceInnerMetadata metadata) ss],
+  ([("I",MaterializeQuery (simpleSubInstanceInnerMetadata metadata) ss)],
    Fun (materializeFName metadata ss) (materializeType metadata ss)
    $ Lam (Fnp "SimpleSubInstance" [Tup $ map (\i -> Ltp $ "_param_" ++ (show i)) [1..(length $ simpleSubInstanceParamTypes metadata)],
                                    Ltp "instID"]) 
    $ Do [materializeFun, (USp, result)])
   where materializeFun = (Tup $ map (\(_,i) -> Ltp $ "column_" ++ (show i)) $ zip simps [1..], 
-                          (Lit $ materializeFName (simpleSubInstanceInnerMetadata metadata) ss) $$ [Lit "instID"])
+                          (Lit $ "I." ++ (materializeFName (simpleSubInstanceInnerMetadata metadata) ss)) $$ [Lit "instID"])
         result = c_return $ Tpl $ 
                  map (\(simp,i)
                       -> if (simpleSubInstanceSimplex metadata) `subset` simp

@@ -35,7 +35,7 @@ instance (DBMetadata md) => DBMetadata (InverseImageMetadata md) where
                     $ instanceType $ inverseImageInnerMetadata md
   
   codeMaterialize metadata ss = 
-    ([MaterializeQuery (inverseImageInnerMetadata metadata) ss'],
+    ([("I",MaterializeQuery (inverseImageInnerMetadata metadata) ss')],
      Fun (materializeFName metadata ss) (materializeType metadata ss)
      $ Lam (Fnp "InverseImageInstance" [Tup $ map (\i -> Ltp $ "_param_" ++ (show i)) [1..(length $ inverseImageParamTypes metadata)],
                                    Ltp "instID"]) 
@@ -44,7 +44,7 @@ instance (DBMetadata md) => DBMetadata (InverseImageMetadata md) where
            map (\(i,simp_fns) -> c_map (tupMaps simp_fns) $ tupNat n i $$ [Lit "preresult"])
            $ zip [1..] $ map (map (mapVertexFunc f)) $ subSchemaSimplices ss
           ])
-     where innerMatName = materializeFName (inverseImageInnerMetadata metadata) ss'
+     where innerMatName = "I." ++ (materializeFName (inverseImageInnerMetadata metadata) ss')
            ss' = schemaImage ss f
            simps = subSchemaSimplices ss'
            n = length simps

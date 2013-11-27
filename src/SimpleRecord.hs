@@ -68,7 +68,7 @@ codeSimpleRecordInstantiate srmd =
                      (Lit $ "[" ++ (cim "," (\v -> "(segmentFile_" ++ (show v) ++ ",compColumn_" ++ (show v) ++ ")") $ verts) ++ "]")
 
 
-codeSimpleRecordMaterialize :: SimpleRecordMetadata -> SubSchema -> ([NutleyQuery],HaskellFunction)
+codeSimpleRecordMaterialize :: SimpleRecordMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
 codeSimpleRecordMaterialize metadata ss@(SubSchema simps sch)
   | not $ null $ verts\\(simpleRecordSimplex metadata) =   
     ([],
@@ -80,7 +80,8 @@ codeSimpleRecordMaterialize metadata ss@(SubSchema simps sch) =
   ([],
    Fun (materializeFName metadata ss) funType
    $ Lam (Fnp "SimpleRecord" [Ltp "instID",USp])
-   $ Do (columnInstantiations ++ [tupsCode]))
+   $ Do (columnInstantiations ++ [tupsCode]
+        ))
     where columnInstantiations = map (\cid -> 
                                        (Ltp $ "column_" ++ (show cid),
                                         ((c_2 "fmap" 

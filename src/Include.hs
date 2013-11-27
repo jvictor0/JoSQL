@@ -4,6 +4,7 @@ module Include
         module Data.Serialize, 
         module RuntimeUtils,
         module Types,
+        module Prelude,
         readByteStringFile, writeByteStringFile)
        where
 

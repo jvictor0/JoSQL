@@ -120,7 +120,7 @@ t_ = BaseType
 t_Int = t_ "Int"
 t_Double = t_ "Double"
 t_String = t_ "String"
-
+t_ByteString = t_ "ByteString"
 --- Functional Convinience Type
 x +$+ y = App (Lit "($)") [x,y]
 x +==+ y = App (Lit "(==)") [x,y]

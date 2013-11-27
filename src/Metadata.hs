@@ -38,46 +38,46 @@ materializeType metadata ss@(SubSchema simps _) = funType
 sectionType :: (DBMetadata dbmd) => dbmd -> SubSchema -> HaskellType
 sectionType metadata (SubSchema simps _) = FunType [instanceType metadata] $ tc_IO $ outTupType         
   where outTupType = tc_List $ TupType $ map (typeLookup $ dbSchema metadata) allVerts
-        allVerts = sort $ foldr union [] $ simps :: [VertID]
+        allVerts = foldr union [] $ simps :: [VertID]
 
 class (Named dbmd, Serialize dbmd) => DBMetadata dbmd where
   dbSchema :: dbmd -> Schema
   
   instanceType :: dbmd -> HaskellType
   
-  codeMaterialize :: dbmd -> SubSchema -> ([NutleyQuery],HaskellFunction)
+  codeMaterialize :: dbmd -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
   codeMaterialize metadata ss@(SubSchema simps sch) = 
-    (map (\s -> SectionQuery metadata (SubSchema [s] sch)) simps,
+    (map (\(i,s) -> ("IMP" ++ (show i),SectionQuery metadata (SubSchema [s] sch))) $ zip [1..] simps,
      Fun (materializeFName metadata ss) (materializeType metadata ss)
      $ Lam (Ltp "instID") $ Do $ sects ++ [do_return result]
      )
     where sects = map (\(i,s) -> (Ltp $ "sec_" ++ (show i), 
-                                  c_1 (sectionFName metadata (SubSchema [s] sch)) (Lit "instID")))
+                                  c_1 ("IMP" ++ (show i) ++ "." ++ (sectionFName metadata (SubSchema [s] sch))) (Lit "instID")))
                   $ zip [1..] simps
           result = Tpl $ map (\(i,_) -> Lit $ "sec_" ++ (show i)) $ zip [1..] simps
   
-  codeSection :: dbmd -> SubSchema -> ([NutleyQuery],HaskellFunction)
+  codeSection :: dbmd -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
   codeSection metadata ss@(SubSchema [] _) = 
     ([],
      Fun (sectionFName metadata ss) (sectionType metadata ss)
      $ Lam (Ltp "instID") $ c_return $ Lst [])
   codeSection metadata ss@(SubSchema [x] _) =
-    ([MaterializeQuery metadata ss],
+    ([("I",MaterializeQuery metadata ss)],
      Fun (sectionFName metadata ss) (sectionType metadata ss)
      $ Lam (Ltp "instID") $ materializeFun)
-    where materializeFun = (Lit $ materializeFName metadata ss) $$ [Lit "instID"]
+    where materializeFun = (Lit $ "I." ++ (materializeFName metadata ss)) $$ [Lit "instID"]
   codeSection metadata ss@(SubSchema simps sch) = 
-    ([MaterializeQuery metadata ss],
+    ([("I",MaterializeQuery metadata ss)],
      Fun (sectionFName metadata ss) (sectionType metadata ss)
      $ Lam (Ltp "instID") $ Do [materializeFun, (USp, c_return joinCode)])
     where materializeFun = (Tup $ map (\(_,i) -> Ltp $ "column_" ++ (show i)) $ zip simps [1..], 
-                            (Lit $ materializeFName metadata ss) $$ [Lit "instID"])
+                            (Lit $ "I." ++ ( materializeFName metadata ss)) $$ [Lit "instID"])
           material = Lit "materializedCols"
           joinCode = codeEquiJoin $ map (\(s,i) -> (s,Lit $ "column_" ++ (show i))) $ zip simps [1..]
 
 
 class (DBMetadata dbmd) => InstantiateableDBMetadata dbmd where
-  codeInstantiate :: dbmd -> ([NutleyQuery],HaskellFunction)
+  codeInstantiate :: dbmd -> ([(Name,NutleyQuery)],HaskellFunction)
 
 t_SimpleRecord = t_ "SimpleRecord"
 tc_SimpleSubInstance = tc_2 "SimpleSubInstance"

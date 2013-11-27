@@ -30,30 +30,34 @@ queryModuleName q = "CQ_" ++ (name q) ++ (hexPrint $ hashQuery q)
 queryFileName q = (queryModuleName q) ++ ".hs"
 
 clearPlancache = system $ "rm CQ_*"
+clearData = system $ "rm *.seg"
+clearAll = clearData >> clearPlancache
 
-makeInclude = makeAll "Include.hs" []
+clearCompiled = system "rm *.o *.hi"
 
-compileQuery :: NutleyQuery -> IO ()
+compileQuery :: NutleyQuery -> IO String
 compileQuery q = do
   let (reqs, bod) = codeQuery q
       mname = queryModuleName q
-      rnams = map queryModuleName reqs
+      rnams = map queryModuleName $ map snd reqs
       fcnts = "module " ++ mname ++ " where\n\n" ++ 
-              (concatMap (\r -> "import " ++ r ++ "\n") rnams) ++ "\n" ++
+              (concatMap (\(qn,r) -> "import qualified " ++ r ++ " as " ++ qn ++ "\n") $ zip (map fst reqs) rnams) ++ "\n" ++
               "import Include\n\n\n" ++ 
               (show bod)
   b <- doesFileExist (mname ++ ".hs")
   if b
-    then return ()
+    then return mname
     else do
-    mapM_ compileQuery reqs
+    mapM_ compileQuery $ map snd reqs
     writeFile (mname ++ ".hs") fcnts
     putStrLn $ "compiling " ++ (name q)
     status <- make (mname ++ ".hs") []
     case status of 
       (MakeSuccess _ _) -> do
         putStrLn $ "sucess: " ++ (mname ++ ".hs")
+        return mname
       (MakeFailure es) -> do
         putStrLn $ "ghc compilation error"
-        mapM_ print es
+        mapM_ putStrLn es
+        error ""
       

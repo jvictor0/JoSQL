@@ -44,11 +44,11 @@ instance (DBMetadata md) => DBMetadata (DirectImageMetadata md) where
                     $ instanceType $ directImageInnerMetadata md
   
   codeSection metadata ss = 
-    ([SectionQuery (directImageInnerMetadata metadata) ss'],
+    ([("I",SectionQuery (directImageInnerMetadata metadata) ss')],
      Fun (sectionFName metadata ss) (sectionType metadata ss)
      $ Lam (Fnp "DirectImageInstance" [Ltp "instID"]) 
      $ Do [(Ltp "preresult",c_1 innerSecName $ Lit "instID"),
            do_return $ c_map (codeDirectImageRearange f ss ss') $ Lit "preresult"])
-     where innerSecName = sectionFName (directImageInnerMetadata metadata) ss'
+     where innerSecName = "I." ++ (sectionFName (directImageInnerMetadata metadata) ss')
            ss' = schemaPreimage ss f
            f = directImageMap metadata

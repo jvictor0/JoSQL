@@ -18,7 +18,7 @@ codeEquiJoinStub simps = LComp res tups intersectCode
         intersectCode = flip map intersects $ \(i,s,j,t,intr) -> 
           ((tupNatN s intr) $$ [Lit $ "tup_" ++ (show i)]) +==+ ((tupNatN t intr) $$ [Lit $ "tup_" ++ (show j)])
         tups = map (\(c,i) -> (Ltp $ "tup_" ++ (show i), c)) nNames
-        allVerts =  sort $ foldr union [] $ map fst simps :: [VertID]
+        allVerts = foldr union [] $ map fst simps :: [VertID]
         allTups = map (\i -> (fromJust $ find (\(s,_) -> i`elem`s) nSimps, i)) allVerts
         res = Tpl $ map (\((s,j),i) -> tupNatN s [i] $$ [Lit $ "tup_" ++ (show j)]) allTups
         

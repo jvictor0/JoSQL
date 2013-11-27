@@ -32,18 +32,18 @@ instance (DBMetadata md) => DBMetadata (ShriekMetadata md) where
   instanceType md = tc_Shriek $ instanceType $ shriekInnerMetadata md
   
   codeSection metadata ss = 
-    ([SectionQuery (shriekInnerMetadata metadata) ss'],
+    ([("I",SectionQuery (shriekInnerMetadata metadata) ss')],
      Fun (sectionFName metadata ss) (sectionType metadata ss)
      $ if (schemaFullImage $ shriekMap metadata) `containsSubSchema` ss
        then Lam (Fnp "Shriek" [Ltp "instID"]) 
             $ c_1 innerSecName $ Lit "InstID"
        else c_1 "const" $ c_return $ Lst [])
-    where innerSecName = sectionFName (shriekInnerMetadata metadata) ss'
+    where innerSecName = "I." ++ (sectionFName (shriekInnerMetadata metadata) ss')
           ss'          = SubSchema (map (fromJust.(simplexIncluded (shriekMap metadata))) $ subSchemaSimplices ss)
                          $ schemaMapDomain $ shriekMap metadata
           
   codeMaterialize metadata ss = 
-    ([MaterializeQuery  (shriekInnerMetadata metadata) ss'],
+    ([("I",MaterializeQuery  (shriekInnerMetadata metadata) ss')],
      Fun (materializeFName metadata ss) (materializeType metadata ss)
      $ Lam (Fnp "Shriek" [Ltp "instID"])
      $ Do 
@@ -58,7 +58,7 @@ instance (DBMetadata md) => DBMetadata (ShriekMetadata md) where
                                         else (i,(Nothing,s)))
                             1 $ subSchemaSimplices ss
           usableSimps = map snd $ filter (isJust.fst) observedSimps
-          innerMatName = sectionFName (shriekInnerMetadata metadata) ss'
+          innerMatName = "I." ++ (sectionFName (shriekInnerMetadata metadata) ss')
           ss' =  SubSchema (map (fromJust.(simplexIncluded (shriekMap metadata))) $ usableSimps)
                  $ schemaMapDomain $ shriekMap metadata
   
