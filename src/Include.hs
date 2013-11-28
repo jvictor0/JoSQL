@@ -5,7 +5,8 @@ module Include
         module RuntimeUtils,
         module Types,
         module Prelude,
-        readByteStringFile, writeByteStringFile)
+        readByteStringFile, writeByteStringFile,
+        ByteString, LazyByteString)
        where
 
 import NutleyInstance
@@ -14,8 +15,11 @@ import Data.Serialize
 import RuntimeUtils
 import Types
 
-import qualified Data.ByteString.Lazy as BS
+import qualified Data.ByteString.Lazy as LBS
+import qualified Data.ByteString as BS
 
+type ByteString = BS.ByteString
+type LazyByteString = LBS.ByteString
 
-readByteStringFile = BS.readFile
-writeByteStringFile = BS.writeFile
+readByteStringFile = LBS.readFile
+writeByteStringFile = LBS.writeFile

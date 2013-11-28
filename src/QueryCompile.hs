@@ -7,6 +7,7 @@ import Name
 import System.Plugins.Make
 import System.Plugins.Load
 import System.Directory
+import SerializeCode
 
 import System.Process
 import Data.Char
@@ -43,7 +44,8 @@ compileQuery q = do
       fcnts = "module " ++ mname ++ " where\n\n" ++ 
               (concatMap (\(qn,r) -> "import qualified " ++ r ++ " as " ++ qn ++ "\n") $ zip (map fst reqs) rnams) ++ "\n" ++
               "import Include\n\n\n" ++ 
-              (show bod)
+              (show bod) ++ "\n\n\n" ++ 
+              (show $ serializeCode q)
   b <- doesFileExist (mname ++ ".hs")
   if b
     then return mname
