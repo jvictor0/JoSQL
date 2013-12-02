@@ -26,3 +26,5 @@ partitionBy f lst = map (map fst)
                     $ zipMap f lst
                     
 subset l1 l2 = null $ l1\\l2
+
+unique lst = all ((1==).length) $ group $ sort lst

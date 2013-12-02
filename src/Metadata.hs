@@ -84,6 +84,6 @@ tc_SimpleSubInstance = tc_2 "SimpleSubInstance"
 tc_DirectImage = tc_2 "DirectImage"
 tc_InverseImage = tc_2 "InverseImage"
 tc_Shriek = tc_1 "Shriek"
-
+tc_CoLimit = tc_2 "CoLimit"
 
 

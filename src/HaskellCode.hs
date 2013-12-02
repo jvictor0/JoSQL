@@ -145,8 +145,11 @@ c_4 f x y z w = (Lit f) $$ [x,y,z,w]
 c_return = c_1 "return"
 
 c_map = c_2 "map"
+c_foldr = c_3 "foldr"
+c_fmap = c_2 "fmap"
 c_filter = c_2 "filter"
 c_zip = c_2 "zip"
+c_mapM = c_2 "mapM"
 c_mapM_ = c_2 "mapM_"
 c_mapMaybe = c_2 "mapMaybe"
 

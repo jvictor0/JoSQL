@@ -11,6 +11,7 @@ data SimpleSubInstance params inner = SimpleSubInstance params inner deriving (G
 data DirectImage params inner =  DirectImage params inner deriving (Generic)
 data InverseImage params inner = InverseImage params inner deriving (Generic)
 data Shriek inner = Shriek inner deriving (Generic)
+data CoLimit car cdr = CoLimit [car] cdr deriving (Generic)
 
 instance Serialize SimpleRecord
 instance (Serialize params, Serialize inner) => Serialize (SimpleSubInstance params inner)

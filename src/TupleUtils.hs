@@ -22,6 +22,9 @@ tupNatN ns is = Lam (Tup $ snd $ mapAccumL (\seen j -> if (not $ j`elem`seen) &&
 nTup n = map (\i -> "x_" ++ (show i)) [1..n]
 nTupPat n = Tup $ map Ltp $ nTup n
 
+tupZip f n = Lam (Mlp [Tup $ map (\i -> Ltp $ "x_" ++ (show i)) [1..n],Tup $ map (\i -> Ltp $ "y_" ++ (show i)) [1..n]])
+             $ Tpl $ map (\i -> f $$ [Lit $ "x_" ++ (show i),Lit $ "y_" ++ (show i)]) [1..n]
+tupConcat n lst = c_foldr (tupZip (Lit "(++)") n) (Tpl $ map (\_ -> Lst []) [1..n]) lst
 
 nestedTupPat 1 = Ltp $ "x_1"
 nestedTupPat n = Tup [Ltp $ "x_" ++ (show n), nestedTupPat (n-1)]
