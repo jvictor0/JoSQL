@@ -13,11 +13,11 @@ import Data.Serialize
 -- For instance, A case statement with a multi-pattern is not valid Haskell, nor is a where statement inside a function application.  
 
 data HaskellType = BaseType Type | FunType [HaskellType] HaskellType | TupType [HaskellType] | ConsType Type [HaskellType]
-                 deriving (Eq, Generic)
+                 deriving (Eq,Ord, Generic)
 data HaskellFunction = Fun Name HaskellType HaskellCode 
                      deriving (Eq, Generic)
 data HaskellCode = Lit String 
-                 | Whr HaskellCode [(HaskellPattern,HaskellCode)]
+                 | Whr HaskellCode [(HaskellPattern,Either HaskellType HaskellCode)]
                  | If HaskellCode HaskellCode HaskellCode
                  | Lam HaskellPattern HaskellCode
                  | App HaskellCode [HaskellCode]
@@ -29,6 +29,7 @@ data HaskellCode = Lit String
 data HaskellPattern = Mlp [HaskellPattern] -- toplevel only
                     | Ltp String
                     | Tup [HaskellPattern]
+                    | Lstp [HaskellPattern]
                     | Fnp Name [HaskellPattern] 
                     | USp
                     deriving (Eq, Generic)
@@ -73,7 +74,10 @@ paren x
 instance Show HaskellCode where
   show (Lit s) = s
   show (Whr c whrlst) = (show c) ++ "\n" ++ tab ++ "where\n" ++ 
-                        (concatMap (\(pat,cde) -> tab ++ tab ++ (show pat) ++ " = \n      " ++ (showI 3 cde) ++ "\n") whrlst)
+                        (concatMap (\(pat,tp) -> (case tp of
+                                                     (Left t) -> tab ++ tab ++ (show pat) ++ " :: " ++ (show t) ++ "\n"
+                                                     (Right cde) -> tab ++ tab ++ (show pat) ++ " = \n      " ++ (showI 3 cde) ++ "\n"))
+                         whrlst)
   show (If con thn els) = "if    " ++ (showI 3 con) ++ "\nthen  " ++ (showI 3 thn) ++ "\nelse  " ++ (showI 3 els)
   show (Lam pat cde) = if length showbod < maxFunAppLen 
                        then "(\\" ++ (show pat) ++ " -> " ++ (show cde) ++ ")"
@@ -106,6 +110,7 @@ instance Show HaskellPattern where
   show (Mlp pats) = cim " " show pats
   show (Ltp l) = l
   show (Tup pats) = "(" ++ (cim "," show pats) ++ ")"
+  show (Lstp pats) = "[" ++ (cim "," show pats) ++ "]"
   show (Fnp name pats) = "(" ++ name ++ " " ++ (cim " " show pats) ++ ")"
   show USp = "_"
   
@@ -122,6 +127,10 @@ t_Double = t_ "Double"
 t_String = t_ "String"
 t_ByteString = t_ "ByteString"
 t_LazyByteString = t_ "LazyByteString"
+
+t_NutleyInstance = t_ "NutleyInstance"
+
+
 --- Functional Convinience Type
 x +$+ y = App (Lit "($)") [x,y]
 x +==+ y = App (Lit "(==)") [x,y]
@@ -152,6 +161,7 @@ c_zip = c_2 "zip"
 c_mapM = c_2 "mapM"
 c_mapM_ = c_2 "mapM_"
 c_mapMaybe = c_2 "mapMaybe"
+c_concat = c_1 "concat"
 
 do_1 f x = (USp,c_1 f x)
 

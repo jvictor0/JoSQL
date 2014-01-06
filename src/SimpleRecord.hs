@@ -15,26 +15,14 @@ import Utils
 import TupleUtils
 import NutleyInstance
 import Metadata
+import NutleyQueryUtils
 
-data SimpleRecordMetadata = SimpleRecordMetadata 
-                            {
-                              simpleRecordSchema :: Schema,
-                              simpleRecordName :: String,
-                              simpleRecordCompressionSchemes   :: [(VertID, HaskellCode)],
-                              simpleRecordDecompressionSchemes :: [(VertID, HaskellCode)]
-                            }
-                            deriving (Generic)
-
-instance Named SimpleRecordMetadata where name = simpleRecordName
-                            
-instance Serialize SimpleRecordMetadata
                                           
 segmentFileName md v = Lit $ "\"segment_" ++ ((name md) ++ "_" ++ (show v) ++ "_\" ++ (show instID) ++ \".seg\"")
 
 simpleRecordSimplex = (map fst).simpleRecordCompressionSchemes
 
-
-codeSimpleRecordInstantiate :: SimpleRecordMetadata -> HaskellFunction
+codeSimpleRecordInstantiate :: DBMetadata -> HaskellFunction
 codeSimpleRecordInstantiate srmd = 
   Fun (instantiateFName srmd)  funType 
   (Lam (Mlp [Ltp "instID",  Ltp "inData"]) $ 
@@ -50,25 +38,24 @@ codeSimpleRecordInstantiate srmd =
         inTupType = tc_List $ TupType $ map (tc_Maybe . snd) vertTypes
         inTupName = Lit "inData"
         inInstanceName = Lit "instID"
-        funType = FunType [BaseType "InstanceID", inTupType] $ tc_IO $ t_SimpleRecord
+        funType = FunType [BaseType "InstanceID", inTupType] $ tc_IO $ t_NutleyInstance
         
         numCols = length verts
         columnCodes = map (\(v,i) -> 
-                            (Ltp $"column_" ++ (show v) , c_map (tupNat numCols i) inTupName))
+                            (Ltp $"column_" ++ (show v) , Right $ c_map (tupNat numCols i) inTupName))
                       $ zip verts [1..]
         compressedColumnCodes = map (\(v,compsh) -> 
-                                      (Ltp $ "compColumn_" ++ (show v) , compsh $$ [Lit $ "column_" ++ (show v)]))
+                                      (Ltp $ "compColumn_" ++ (show v) , Right $  compsh $$ [Lit $ "column_" ++ (show v)]))
                                 $ compSchemes
         
         fileNameCodes = map (\v -> 
-                              (Ltp $ "segmentFile_" ++ (show v) , 
-                               segmentFileName srmd v))
+                              (Ltp $ "segmentFile_" ++ (show v) , Right $ segmentFileName srmd v))
                         verts
         writeFiles = c_mapM_ (Lit "(uncurry writeByteStringFile)")  $ 
                      (Lit $ "[" ++ (cim "," (\v -> "(segmentFile_" ++ (show v) ++ ",compColumn_" ++ (show v) ++ ")") $ verts) ++ "]")
 
 
-codeSimpleRecordMaterialize :: SimpleRecordMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
+codeSimpleRecordMaterialize :: DBMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
 codeSimpleRecordMaterialize metadata ss@(SubSchema simps sch)
   | not $ null $ verts\\(simpleRecordSimplex metadata) =   
     ([],
@@ -95,10 +82,3 @@ codeSimpleRecordMaterialize metadata ss@(SubSchema simps sch) =
           funType = materializeType metadata ss
           verts = nub $ concat simps
 
-instance DBMetadata SimpleRecordMetadata where
-  dbSchema = simpleRecordSchema
-  instanceType _ = t_SimpleRecord
-  codeMaterialize = codeSimpleRecordMaterialize
-  
-instance InstantiateableDBMetadata SimpleRecordMetadata where
-  codeInstantiate md = ([],codeSimpleRecordInstantiate md)

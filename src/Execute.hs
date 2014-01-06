@@ -9,6 +9,7 @@ import Types
 import NutleyInstance
 import Include
 import SerializeCode
+import NutleyQuery
 
 import System.Plugins.Make
 import System.Plugins.Load
@@ -17,20 +18,20 @@ import System.Process
 import Data.Char
 import Data.Typeable
 
-instantiateWithType :: (InstanceID -> tups -> IO nutleyInstance) -> (nutleyInstance,tups) -> 
-                       (InstanceID -> tups -> IO nutleyInstance)
+instantiateWithType :: (InstanceID -> tups -> IO NutleyInstance) -> tups -> 
+                       (InstanceID -> tups -> IO NutleyInstance)
 instantiateWithType f _ = f
 
-sectionWithType :: (nutleyInstance -> IO tups) -> (nutleyInstance,tups) -> 
-                   (nutleyInstance -> IO tups)
+sectionWithType :: (NutleyInstance -> IO tups) -> tups -> 
+                   (NutleyInstance -> IO tups)
 sectionWithType f _ = f
 
-executeInstantiate :: nutleyInstance -> NutleyQuery -> InstanceID -> tups -> IO nutleyInstance
-executeInstantiate ni q instID inData = do
+executeInstantiate :: NutleyQuery -> InstanceID -> tups -> IO NutleyInstance
+executeInstantiate q instID inData = do
   modname <- compileQuery q
   ls <- load (modname ++ ".o") ["."] [] (name q)
   case ls of
-    (LoadSuccess _ f) -> (f`instantiateWithType`(ni,inData)) instID inData
+    (LoadSuccess _ f) -> (f`instantiateWithType`inData) instID inData
     (LoadFailure errs) -> (mapM_ putStrLn errs) >> error ""
     
 executeInstantiateSerialize :: NutleyQuery -> InstanceID -> LazyByteString -> IO ByteString
@@ -42,12 +43,12 @@ executeInstantiateSerialize q instID inData = do
     (LoadFailure errs) -> (mapM_ putStrLn errs) >> error ""
     
     
-executeSection :: tups -> NutleyQuery -> nutleyInstance -> IO tups
+executeSection :: tups -> NutleyQuery -> NutleyInstance -> IO tups
 executeSection tps q instID = do
   modname <- compileQuery q
   ls <- load (modname ++ ".o") ["."] []  (name q)
   case ls of
-    (LoadSuccess m f) -> (f`sectionWithType`(instID,tps)) instID
+    (LoadSuccess m f) -> (f`sectionWithType`tps) instID
     (LoadFailure errs) -> (mapM_ putStrLn errs) >> error ""
 
 executeSectionSerialize :: NutleyQuery -> ByteString -> IO LazyByteString

@@ -8,11 +8,13 @@ import System.Plugins.Make
 import System.Plugins.Load
 import System.Directory
 import SerializeCode
+import NutleyQuery
 
 import System.Process
 import Data.Char
 import qualified Crypto.Hash.SHA256 as SHA
 import Data.Serialize
+import qualified Data.ByteString as BS
 
 hashQuery (MaterializeQuery md ss) = SHA.finalize $
                                      SHA.update (SHA.update (SHA.update SHA.init (encode "mat"))
@@ -25,7 +27,7 @@ hashQuery (SectionQuery md ss) = SHA.finalize $
 hashQuery (InstantiateQuery md) = SHA.finalize $
                                   (SHA.update (SHA.update SHA.init (encode "inst"))
                                    (encode md))
-                                  
+                                 
 
 queryModuleName q = "CQ_" ++ (name q) ++ (hexPrint $ hashQuery q)
 queryFileName q = (queryModuleName q) ++ ".hs"

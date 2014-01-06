@@ -3,18 +3,18 @@ module NutleyInstance where
 
 import Types
 
+import Data.ByteString
 import GHC.Generics
 import Data.Serialize
 
-data SimpleRecord = SimpleRecord InstanceID RowCount deriving (Generic)
-data SimpleSubInstance params inner = SimpleSubInstance params inner deriving (Generic)
-data DirectImage params inner =  DirectImage params inner deriving (Generic)
-data InverseImage params inner = InverseImage params inner deriving (Generic)
-data Shriek inner = Shriek inner deriving (Generic)
-data CoLimit car cdr = CoLimit [car] cdr deriving (Generic)
+type NutleyParams = ByteString
 
-instance Serialize SimpleRecord
-instance (Serialize params, Serialize inner) => Serialize (SimpleSubInstance params inner)
-instance (Serialize params, Serialize inner) => Serialize (DirectImage params inner)
-instance (Serialize params, Serialize inner) => Serialize (InverseImage params inner)
-instance (Serialize inner) => Serialize (Shriek inner)
+data NutleyInstance = SimpleRecord InstanceID RowCount
+                    | SimpleSubInstance NutleyParams NutleyInstance
+                    | DirectImage NutleyInstance 
+                    | InverseImage NutleyParams NutleyInstance
+                    | Shriek NutleyInstance 
+                    | CoLimit [[NutleyInstance]]
+                    deriving (Generic)
+                             
+instance Serialize NutleyInstance

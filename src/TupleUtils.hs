@@ -4,11 +4,16 @@ import Data.List
 
 import Utils
 import HaskellCode
+import Control.Monad
 
 tupNat :: Int -> Int -> HaskellCode
 tupNat n i = Lam (Tup $ map (\j -> if j == i then Ltp "x" else USp) [1..n]) $ Lit "x"
 
 tupNatInverse :: HaskellCode -> Maybe (Int,Int)
+tupNatInverse (Lit "id") = Just (1,1)
+tupNatInverse (Lit "fst") = Just (2,1)
+tupNatInverse (Lit "snd") = Just (2,2)
+tupNatInverse (Lam (Ltp x) (Lit y)) = fmap (const (1,1)) $ guard $ x == y
 tupNatInverse (Lam (Tup ts) (Lit x)) = (findIndex (\t -> case t of { (Ltp y) -> y == x; _ -> False; }) ts)
                                        % (\i -> (length ts, i+1))
 tupNatInverse _ = Nothing

@@ -15,29 +15,27 @@ import Utils
 import TupleUtils
 import NutleyInstance
 import Metadata
+import NutleyQueryUtils
 
-data SimpleSubInstanceMetadata md = SimpleSubInstanceMetadata
-                                    {
-                                      simpleSubInstanceSimplex :: Simplex,
-                                      simpleSubInstanceName :: Name,
-                                      simpleSubInstanceParamTypes :: [HaskellType],
-                                      simpleSubInstanceFilterFunc :: HaskellCode,
-                                      simpleSubInstanceInnerMetadata :: md
-                                    }
-                                    deriving (Generic)
-                                             
-instance Named (SimpleSubInstanceMetadata md) where name = simpleSubInstanceName
+-- TODO: parameterization?
+subInstance simp f inner = SimpleSubInstanceMetadata
+  {
+    simpleSubInstanceSimplex = simp,
+    simpleSubInstanceName = "subinst_" ++ (name inner),
+    simpleSubInstanceParamTypes = [],
+    simpleSubInstanceFilterFunc = f,
+    simpleSubInstanceInnerMetadata = inner
+  }
 
-instance (Serialize md) => Serialize (SimpleSubInstanceMetadata md)
-
-codeSimpleSubInstanceMaterialize :: (DBMetadata md) => 
-                                    SimpleSubInstanceMetadata md -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
+codeSimpleSubInstanceMaterialize :: DBMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
 codeSimpleSubInstanceMaterialize metadata ss@(SubSchema simps schema) = 
   ([("I",MaterializeQuery (simpleSubInstanceInnerMetadata metadata) ss)],
    Fun (materializeFName metadata ss) (materializeType metadata ss)
-   $ Lam (Fnp "SimpleSubInstance" [Tup $ map (\i -> Ltp $ "_param_" ++ (show i)) [1..(length $ simpleSubInstanceParamTypes metadata)],
-                                   Ltp "instID"]) 
-   $ Do [materializeFun, (USp, result)])
+   $ Lam (Fnp "SimpleSubInstance" [Ltp "params", Ltp "instID"]) 
+   $ Whr (Do [materializeFun, (USp, result)])
+   $ (map (\(i,t) -> (Ltp $ "_param_" ++ (show i),Left t)) $ zip [1..] (simpleSubInstanceParamTypes metadata)) ++
+   [(Tup $ map (\i -> Ltp $ "_param_" ++ (show i)) [1..(length $ simpleSubInstanceParamTypes metadata)],
+       Right $ c_2 "fromEitherUnsafe" (Lit "\"Parameterization Decode Error\"") $ c_1 "decode" $ Lit "params")])
   where materializeFun = (Tup $ map (\(_,i) -> Ltp $ "column_" ++ (show i)) $ zip simps [1..], 
                           (Lit $ "I." ++ (materializeFName (simpleSubInstanceInnerMetadata metadata) ss)) $$ [Lit "instID"])
         result = c_return $ Tpl $ 
@@ -48,9 +46,4 @@ codeSimpleSubInstanceMaterialize metadata ss@(SubSchema simps schema) =
                          else Lit $ "column_" ++ (show i))
                  $ zip simps [1..]
 
-instance (DBMetadata md) => DBMetadata (SimpleSubInstanceMetadata md) where
-  dbSchema md = dbSchema $ simpleSubInstanceInnerMetadata md
-  instanceType md = tc_SimpleSubInstance (TupType $ simpleSubInstanceParamTypes md) 
-                    (instanceType $ simpleSubInstanceInnerMetadata md)
-  codeMaterialize = codeSimpleSubInstanceMaterialize
   

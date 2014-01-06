@@ -11,6 +11,7 @@ import NutleyInstance
 import Types
 import Join
 import Metadata
+import NutleyQuery
 
 serializedName q = (name q) ++ "_serialize"
 

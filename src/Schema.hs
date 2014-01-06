@@ -41,7 +41,7 @@ instance Show SimplicialComplex where
     
 instance Show Schema where
   show (Schema (SC _ simps) types) = 
-    "schema " ++ " where\n  vertices:\n" ++ 
+    "schema where\n  vertices:\n" ++ 
     (concatMap (\(v,t) -> "    " ++ (show v) ++ " :: " ++ (show t) ++ "\n") types) ++ "\n  simplices:\n" ++
     (concatMap (\vs -> "    (" ++ (init $ tail $ show vs) ++ ")\n") simps)
 
@@ -55,6 +55,9 @@ instance Show SubSchema where
 
 instance Named SubSchema where
   name (SubSchema simps _) = concatMap (\s -> "s" ++ (name s) ++ "_") simps
+
+emptySimplicialComplex = SC [] []
+emptySchema = Schema emptySimplicialComplex [] 
 
 typeLookup :: Schema -> VertID -> HaskellType
 typeLookup (Schema _ ts) x = case lookup x ts of
@@ -82,9 +85,23 @@ containsSubSchema ss (SubSchema simps _) = all (containsSimplex ss) simps
 vertexSpan :: Schema -> [VertID] -> SubSchema
 vertexSpan schema verts = SubSchema (map (intersect verts) $ schemaSimplices schema) schema
 
+-- possible TODO: make this only add new simplices
+insertSimplices :: [Simplex] -> Schema -> Schema
+insertSimplices newSimps (Schema (SC verts simps) vs) = Schema (SC verts (newSimps ++ simps)) vs
 
-
-
+schemaCoProduct :: [Schema] -> (Schema,[SchemaMap])
+schemaCoProduct schs = (resultSchema,inclusions)
+  where n = length schs
+        renamed = map (\(i,(Schema (SC verts simps) types))
+                       -> Schema 
+                          (SC (map (\v -> n*v+i) verts)
+                           (map (map (\v -> n*v+i)) simps))
+                          (map (\(v,t) -> (n*v+i,t)) types))
+                  $ zip [0..] schs
+        resultSchema = foldr (\(Schema (SC s1 v1) t1) (Schema (SC s2 v2) t2) -> Schema (SC (s1++s2) (v1++v2)) (t1++t2))
+                       (Schema (SC [] []) []) renamed
+        inclusions = map (\(i,s@(Schema _ ts)) -> SchemaMap s resultSchema $ map (\(v,t) -> (v,v*n+i,Lit "id")) ts) 
+                     $ zip [0..] schs
 
 
 data SchemaMap = SchemaMap Schema Schema [(VertID,VertID,HaskellCode)] deriving (Generic)

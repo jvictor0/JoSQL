@@ -11,6 +11,7 @@ import QueryCompile
 import Execute
 import NutleyInstance
 import Include
+import NutleyQuery
 
 jessSC = SC [1,2,3,4] [[1,2],[2,3,4]]
 jess = Schema jessSC [(1,t_Int),(2,t_Int),(3,t_Double),(4,t_String)]
@@ -53,11 +54,11 @@ doit = do
             (Just 2,Just 2.0,Just "two"),
             (Just 2,Just 2.5,Just "two point 5"),
             (Just 3,Just 2.5, Nothing)]
-  rec <- executeInstantiate (undefined :: SimpleRecord) (InstantiateQuery sarah) 1 dt
+  rec <- executeInstantiate (InstantiateQuery sarah) 1 dt
   (l1,l2) <- executeSection (undefined::([(Int,Double)],[(Int,String)])) (MaterializeQuery sarah con) rec
   sec <- executeSection ([]::[(Int,Double,String)]) (SectionQuery sarah con) rec
-  sec2 <- executeSection ([]::[(Int,Double,String)]) (SectionQuery evan con) $ SimpleSubInstance (2::Int) rec
-  sec3 <- executeSection (undefined::[(Double,Int)]) (SectionQuery evan disjoint) $ SimpleSubInstance (2::Int) rec
+  sec2 <- executeSection ([]::[(Int,Double,String)]) (SectionQuery evan con) $ SimpleSubInstance (encode (2::Int)) rec
+  sec3 <- executeSection (undefined::[(Double,Int)]) (SectionQuery evan disjoint) $ SimpleSubInstance (encode (2::Int)) rec
   putStrLn "Materialize (2,3):"
   mapM_ print l1
   putStrLn "Materialize (2,4):"
