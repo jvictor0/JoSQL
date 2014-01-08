@@ -47,7 +47,7 @@ compileQuery q = do
               (concatMap (\(qn,r) -> "import qualified " ++ r ++ " as " ++ qn ++ "\n") $ zip (map fst reqs) rnams) ++ "\n" ++
               "import Include\n\n\n" ++ 
               (show bod) ++ "\n\n\n" ++ 
-              (show $ serializeCode q)
+              (cim "\n\n\n" show $ serializeCode q)
   b <- doesFileExist (mname ++ ".hs")
   if b
     then return mname

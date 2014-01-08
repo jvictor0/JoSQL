@@ -39,10 +39,12 @@ zipN lsts = c_map (tupFlatten (length lsts)) $ foldr1 c_zip lsts
 
 tupMap n f = (Tpl $ map (\i -> f $$ [Lit $ "x_" ++ (show i)]) [1..n])
 tupMaps fns = Lam (nTupPat $ length fns) $ Tpl $ zipWith (\i f -> f $$ [Lit $ "x_" ++ (show i)]) [1..] fns
-maybeTup n = Lam (nTupPat n)
-             $ If (c_1 "and" $ Lst $ map ((c_1 "isJust").Lit) $ nTup n) 
-             (c_1 "Just" $ tupMap n (Lit "fromJust")) 
-             (Lit "Nothing")
+maybeTupErr n err = Lam (nTupPat n)
+                    $ If (c_1 "and" $ Lst $ map ((c_1 "isJust").Lit) $ nTup n) 
+                    (c_1 "return" $ tupMap n (Lit "fromJust")) 
+                    err
+maybeTup n = maybeTupErr n (Lit "Nothing")
+eitherTup n msg = maybeTupErr n (c_1 "Left" $ Lit $ "\"" ++ msg ++ "\"")
              
 tupleMapM :: String -> [HaskellCode] -> HaskellCode
 tupleMapM n ts = Do $ (map (\(t,i) -> (Ltp $ n ++ "_" ++ (show i), t)) $ zip ts [1..]) ++ 

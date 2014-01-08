@@ -34,6 +34,15 @@ executeInstantiate q instID inData = do
     (LoadSuccess _ f) -> (f`instantiateWithType`inData) instID inData
     (LoadFailure errs) -> (mapM_ putStrLn errs) >> error ""
     
+executeInstantiateFromStrings :: NutleyQuery -> InstanceID -> [[Maybe String]] -> IO (Either String NutleyInstance)
+executeInstantiateFromStrings q instID inData = do
+  modname <- compileQuery q
+  ls <- load (modname ++ ".o") ["."] [] (stringsInstantiateName q)
+  case ls of
+    (LoadSuccess _ f) -> f instID inData
+    (LoadFailure errs) -> (mapM_ putStrLn errs) >> error ""
+
+
 executeInstantiateSerialize :: NutleyQuery -> InstanceID -> LazyByteString -> IO ByteString
 executeInstantiateSerialize q instID inData = do
   modname <- compileQuery q

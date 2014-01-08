@@ -3,6 +3,7 @@ module Utils where
 import Data.List
 import qualified Data.ByteString as BS
 import Numeric (showHex)
+import Control.Monad.Trans.Either
 import Control.Monad
 
 hexPrint :: BS.ByteString -> String
@@ -35,3 +36,10 @@ unique lst = all ((1==).length) $ group $ sort lst
 fromMaybeM a' = a' >>= (\a -> case a of 
                            Nothing  -> mzero
                            (Just b) -> return b)
+
+guardEither err bool = if bool then Right () else Left err
+
+maybeToEither err Nothing = Left err
+maybeToEither _ (Just a) = Right a
+
+liftEitherT x = EitherT $ fmap Right $ x

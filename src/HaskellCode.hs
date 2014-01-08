@@ -31,6 +31,7 @@ data HaskellPattern = Mlp [HaskellPattern] -- toplevel only
                     | Tup [HaskellPattern]
                     | Lstp [HaskellPattern]
                     | Fnp Name [HaskellPattern] 
+                    | FnpNP Name [HaskellPattern] 
                     | USp
                     deriving (Eq, Generic)
                    
@@ -112,6 +113,7 @@ instance Show HaskellPattern where
   show (Tup pats) = "(" ++ (cim "," show pats) ++ ")"
   show (Lstp pats) = "[" ++ (cim "," show pats) ++ "]"
   show (Fnp name pats) = "(" ++ name ++ " " ++ (cim " " show pats) ++ ")"
+  show (FnpNP name pats) = name ++ " " ++ (cim " " show pats)
   show USp = "_"
   
 --- TYPE CONVINIENCE FUNCTIONS ---
@@ -119,6 +121,7 @@ tc_1 t x = ConsType t [x]
 tc_2 t x y = ConsType t [x,y]
 tc_List x = ConsType "[]" [x]
 tc_Maybe x = ConsType "Maybe" [x]
+tc_Either x y = ConsType "Either" [x,y]
 tc_IO x = ConsType "IO" [x]
 
 t_ = BaseType

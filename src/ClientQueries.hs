@@ -7,10 +7,13 @@ import Types
 import Schema
 import HaskellCode
 
-data ClientQuery = CreateSchema Name [TypeDec] [[Name]]
+data ClientQuery = LetQuery Name CreateQuery
                  | Show Name
-                 | InstantiateSchema SchemaQuery [Name] DataQuery
                  | Select [Simplex] InstanceQuery
+                   deriving (Eq,Show,Ord)
+
+data CreateQuery = CreateSchema [TypeDec] [[Name]]
+                 | InstantiateSchema SchemaQuery [Name] DataQuery
                    deriving (Eq,Show,Ord)
 
 data InstanceQuery = NamedInstance Name
@@ -19,7 +22,7 @@ data InstanceQuery = NamedInstance Name
 data SchemaQuery = NamedSchema Name
                    deriving (Eq,Show,Ord)
 
-data DataQuery = ExplicitTuples [[String]]
+data DataQuery = ExplicitTuples [[Maybe String]]
                deriving (Eq,Show,Ord)
                         
 data TypeDec = TypeDec Name HaskellType

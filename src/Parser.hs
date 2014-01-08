@@ -15,6 +15,7 @@ import Data.Char
 data NodeType = TopLevel | Quote | Paren | Bracket | Curly deriving (Eq)
 
 data LexTree = Ident String 
+             | LetToken
              | CreateToken
              | SchemaToken
              | InstantiateToken
@@ -23,6 +24,7 @@ data LexTree = Ident String
              | VerticesToken
              | SimplicesToken
              | ShowToken
+             | NullToken
              | EqToken
              | CommaToken
              | ColonToken
@@ -31,6 +33,7 @@ data LexTree = Ident String
 
 instance Show LexTree where
   show (Ident s) = s
+  show LetToken = "let"
   show CreateToken = "create"
   show InstantiateToken = "instantiate"
   show ShowToken = "show"                     
@@ -39,6 +42,7 @@ instance Show LexTree where
   show AtToken = "at"
   show VerticesToken = "vertices"
   show SimplicesToken = "simplices"
+  show NullToken = "null" 
   show EqToken = "="
   show CommaToken = ","
   show ColonToken = ":"
@@ -74,6 +78,7 @@ token ":" = ColonToken
 token "," = CommaToken
 token "=" = EqToken
 token "create" = CreateToken
+token "let" = LetToken
 token "instantiate" = InstantiateToken
 token "schema" = SchemaToken
 token "with" = WithToken
@@ -81,6 +86,7 @@ token "at" = AtToken
 token "show" = ShowToken
 token "vertices" = VerticesToken
 token "simplices" = SimplicesToken
+token "null" = NullToken
 token str = Ident str
 
 identName (Ident n) = Just n
@@ -117,41 +123,53 @@ parseSimplex :: [LexTree] -> Maybe [Name]
 parseSimplex [Node Curly verts] = mapM identName $ concat $ sepBy (==CommaToken) verts
 parseSimplex _ = Nothing
 
-parseCreateSchema :: LexTree -> Maybe ClientQuery
-parseCreateSchema (Node TopLevel [CreateToken,SchemaToken,Ident name,WithToken,
-                                  VerticesToken,EqToken,Node Curly verts,
-                                  SimplicesToken,EqToken,Node Curly simps]) = do
+parseLetName :: LexTree -> Maybe ClientQuery
+parseLetName (Node TopLevel (LetToken:(Ident name):EqToken:create)) = do
+  createQuery <- join $ find isJust $ map ($create) [parseCreateSchema,parseInstantiateSchema]
+  return $ LetQuery name createQuery
+parseLetName _ = Nothing
+
+parseCreateSchema :: [LexTree] -> Maybe CreateQuery
+parseCreateSchema [CreateToken,SchemaToken,WithToken,
+                   VerticesToken,EqToken,Node Curly verts,
+                   SimplicesToken,EqToken,Node Curly simps] = do
   vertdecs <- mapM parseTypeDec $ sepBy (==CommaToken) verts
   simpdecs <- mapM parseSimplex $ sepBy (==CommaToken) simps
-  return $ CreateSchema name vertdecs simpdecs
+  return $ CreateSchema vertdecs simpdecs
 parseCreateSchema _ = Nothing
 
 parseSchemaQuery :: LexTree -> Maybe SchemaQuery
 parseSchemaQuery (Ident a) =  Just $ NamedSchema a
 parseSchemaQuery _ = Nothing
 
-parseData :: LexTree -> Maybe DataQuery
-parseData (Node Bracket dats) = do
+parseData :: [LexTree] -> Maybe DataQuery
+parseData dats = do
   tups <- forM dats $ \x -> do
     case x of
-      (Node Paren items) -> forM (sepBy (==CommaToken) items) $ \i -> do
-        guard $ length i == 1
-        identName $ head i
+      (Node Paren items) -> do
+        forM (sepBy (==CommaToken) items) $ \i -> do
+          guard $ length i == 1
+          case head i of
+            (Ident a) -> Just $ Just a
+            NullToken -> Just Nothing
+            _         -> Nothing
       _                  -> Nothing
   return $ ExplicitTuples tups
-parseData _ = Nothing
 
-parseInstantiateSchema :: LexTree -> Maybe ClientQuery
-parseInstantiateSchema (Node TopLevel [InstantiateToken, schemaQuery, AtToken, simplex, WithToken, dataQuery]) = do
+parseInstantiateSchema :: [LexTree] -> Maybe CreateQuery
+parseInstantiateSchema (InstantiateToken:schemaQuery:AtToken:simplex:WithToken:dataQuery) = do
   sq <- parseSchemaQuery schemaQuery
   simp <- parseSimplex [simplex]
   dat <- parseData dataQuery
   return $ InstantiateSchema sq simp dat
+parseInstantiateSchema _ = Nothing
 
 parseShow (Node TopLevel [ShowToken,Ident name]) = Just $ Show name
 parseShow _ = Nothing
 
+
 parse :: String -> Maybe ClientQuery
 parse str = do
   (lx,_) <- lex str
-  join $ find isJust $ map ($lx) [parseCreateSchema,parseShow,parseInstantiateSchema]
+  join $ find isJust $ map ($lx) [parseLetName,parseShow]
+  

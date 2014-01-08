@@ -18,9 +18,35 @@ import Metadata
 import NutleyQueryUtils
 
                                           
+simpleRecord :: Name -> Schema -> Simplex -> DBMetadata
+simpleRecord name sch simp = SimpleRecordMetadata 
+  {
+    simpleRecordName = name,
+    simpleRecordSchema = sch,
+    simpleRecordCompressionSchemes = map (\v -> (v,Lit "encodeLazy")) simp,
+    simpleRecordDecompressionSchemes = map (\v -> (v,Lit "decodeLazy")) simp
+  }
+
 segmentFileName md v = Lit $ "\"segment_" ++ ((name md) ++ "_" ++ (show v) ++ "_\" ++ (show instID) ++ \".seg\"")
 
 simpleRecordSimplex = (map fst).simpleRecordCompressionSchemes
+strListToTupleName srmd = "strListToTuple_" ++ (name srmd)
+
+codeSimpleRecordStrListsToTuple :: DBMetadata -> HaskellFunction
+codeSimpleRecordStrListsToTuple srmd =
+  Fun (strListToTupleName srmd)
+  (FunType [tc_List $ tc_List $ tc_Maybe $ t_String] $ tc_Either t_String $ tc_List $ TupType $ map (tc_Maybe . snd) vertTypes) 
+  $ Lam (Ltp "ins")
+  $ Whr (c_mapM (Lit "pTup") (Lit "ins"))
+  [(FnpNP "pTup" [Lstp $ map (\(_,i) -> Ltp $ "x_" ++ (show i)) $ zip simplex [1..]],
+    Right $ eitherTup (length simplex) "Parse error in tuple" $$ 
+    [Tpl $ map (\(_,i) -> c_2 "fmap" (Lit "readMaybe") $ Lit $ "x_" ++ (show i)) $ zip simplex [1..]]),
+   (FnpNP "pTup" [USp], Right $ c_1 "Left" $ Lit $ "\"Tuple length mismatch\"")]
+  where s = simpleRecordSchema srmd
+        simplex = simpleRecordSimplex srmd
+        vertTypes = zip simplex $ univ s simplex
+
+
 
 codeSimpleRecordInstantiate :: DBMetadata -> HaskellFunction
 codeSimpleRecordInstantiate srmd = 
