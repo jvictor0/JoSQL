@@ -16,8 +16,9 @@ import System.Plugins.Load
 import System.Directory
 import System.Process
 import Data.Char
-import Data.Typeable
+import Control.Monad.Trans.Either
 
+{-
 instantiateWithType :: (InstanceID -> tups -> IO NutleyInstance) -> tups -> 
                        (InstanceID -> tups -> IO NutleyInstance)
 instantiateWithType f _ = f
@@ -25,24 +26,27 @@ instantiateWithType f _ = f
 sectionWithType :: (NutleyInstance -> IO tups) -> tups -> 
                    (NutleyInstance -> IO tups)
 sectionWithType f _ = f
-
-executeInstantiate :: NutleyQuery -> InstanceID -> tups -> IO NutleyInstance
+-}
+{-
+executeInstantiate :: NutleyQuery -> InstanceID -> tups -> ErrorT IO NutleyInstance
 executeInstantiate q instID inData = do
   modname <- compileQuery q
-  ls <- load (modname ++ ".o") ["."] [] (name q)
+  ls <- liftEitherT $ load (modname ++ ".o") ["."] [] (name q)
   case ls of
     (LoadSuccess _ f) -> (f`instantiateWithType`inData) instID inData
-    (LoadFailure errs) -> (mapM_ putStrLn errs) >> error ""
-    
-executeInstantiateFromStrings :: NutleyQuery -> InstanceID -> [[Maybe String]] -> IO (Either String NutleyInstance)
+    (LoadFailure errs) -> (mapM_ putStrLn errs) >> (right $ cim "\n" id errs)
+-}    
+
+
+executeInstantiateFromStrings :: NutleyQuery -> InstanceID -> [[Maybe String]] -> ErrorT IO NutleyInstance
 executeInstantiateFromStrings q instID inData = do
   modname <- compileQuery q
-  ls <- load (modname ++ ".o") ["."] [] (stringsInstantiateName q)
+  ls <- liftEitherT $ load (modname ++ ".o") ["."] [] (stringsInstantiateName q)
   case ls of
-    (LoadSuccess _ f) -> f instID inData
-    (LoadFailure errs) -> (mapM_ putStrLn errs) >> error ""
+    (LoadSuccess _ f) -> (EitherT $ f instID inData) 
+    (LoadFailure errs) -> (mapM_ (liftEitherT.putStrLn) errs) >> (left $ cim "\n" id errs)
 
-
+{-
 executeInstantiateSerialize :: NutleyQuery -> InstanceID -> LazyByteString -> IO ByteString
 executeInstantiateSerialize q instID inData = do
   modname <- compileQuery q
@@ -60,11 +64,19 @@ executeSection tps q instID = do
     (LoadSuccess m f) -> (f`sectionWithType`tps) instID
     (LoadFailure errs) -> (mapM_ putStrLn errs) >> error ""
 
-executeSectionSerialize :: NutleyQuery -> ByteString -> IO LazyByteString
+executeSectionSerialize :: NutleyQuery -> NutleyInstance -> IO LazyByteString
 executeSectionSerialize q instID = do
   modname <- compileQuery q
   ls <- load (modname ++ ".o") ["."] []  (serializedName q)
   case ls of
     (LoadSuccess m f) -> f instID
     (LoadFailure errs) -> (mapM_ putStrLn errs) >> error ""
+-}
+executeSectionString :: NutleyQuery -> NutleyInstance -> ErrorT IO String
+executeSectionString q instID = do
+  modname <- compileQuery q
+  ls <- liftEitherT $ load (modname ++ ".o") ["."] []  (stringResultName q)
+  case ls of
+    (LoadSuccess m f) -> f instID
+    (LoadFailure errs) -> (mapM_ (liftEitherT.putStrLn) errs) >> (left $ cim "\n" id errs)
 

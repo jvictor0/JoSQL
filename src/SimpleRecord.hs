@@ -18,13 +18,14 @@ import Metadata
 import NutleyQueryUtils
 
                                           
-simpleRecord :: Name -> Schema -> Simplex -> DBMetadata
+simpleRecord :: Name -> Schema -> [(VertID,Name)] -> DBMetadata
 simpleRecord name sch simp = SimpleRecordMetadata 
   {
     simpleRecordName = name,
     simpleRecordSchema = sch,
-    simpleRecordCompressionSchemes = map (\v -> (v,Lit "encodeLazy")) simp,
-    simpleRecordDecompressionSchemes = map (\v -> (v,Lit "decodeLazy")) simp
+    simpleRecordVertexNames = simp,
+    simpleRecordCompressionSchemes = map (\(v,_) -> (v,Lit "encodeLazy")) simp,
+    simpleRecordDecompressionSchemes = map (\(v,_) -> (v,Lit "decodeLazy")) simp
   }
 
 segmentFileName md v = Lit $ "\"segment_" ++ ((name md) ++ "_" ++ (show v) ++ "_\" ++ (show instID) ++ \".seg\"")

@@ -5,6 +5,7 @@ import Data.List
 import Data.Maybe
 import Data.Serialize
 import GHC.Generics
+import qualified Data.Map as Map
 
 import Name
 import Schema
@@ -16,26 +17,34 @@ import TupleUtils
 import NutleyInstance
 import Metadata
 import NutleyQueryUtils
+import Parameterize
 
--- TODO: parameterization?
-subInstance simp f inner = SimpleSubInstanceMetadata
-  {
-    simpleSubInstanceSimplex = simp,
-    simpleSubInstanceName = "subinst_" ++ (name inner),
-    simpleSubInstanceParamTypes = [],
-    simpleSubInstanceFilterFunc = f,
-    simpleSubInstanceInnerMetadata = inner
-  }
+subInstance :: HaskellCode -> DBMetadata -> Error (DBMetadata,NutleyParams)
+subInstance f inner = do 
+  let (simp,eta_f,params) = parameterize (Map.fromList $ map (\(x,y) -> (y,x)) $ dbVertexNames inner) f
+  ptypes <- mapM paramType params
+  return (
+    SimpleSubInstanceMetadata
+    {
+      simpleSubInstanceSimplex = simp,
+      simpleSubInstanceName = "subinst_" ++ (name inner),
+      simpleSubInstanceParamTypes = ptypes,
+      simpleSubInstanceFilterFunc = eta_f,
+      simpleSubInstanceInnerMetadata = inner
+    },
+    params)
+
 
 codeSimpleSubInstanceMaterialize :: DBMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
 codeSimpleSubInstanceMaterialize metadata ss@(SubSchema simps schema) = 
   ([("I",MaterializeQuery (simpleSubInstanceInnerMetadata metadata) ss)],
    Fun (materializeFName metadata ss) (materializeType metadata ss)
-   $ Lam (Fnp "SimpleSubInstance" [Ltp "params", Ltp "instID"]) 
+   $ Lam (Fnp "SimpleSubInstance" [Lstp $ map (\i -> Ltp $ "pre_param_" ++ (show i)) [1..(length $ simpleSubInstanceParamTypes metadata)], 
+                                   Ltp "instID"])
    $ Whr (Do [materializeFun, (USp, result)])
    $ (map (\(i,t) -> (Ltp $ "_param_" ++ (show i),Left t)) $ zip [1..] (simpleSubInstanceParamTypes metadata)) ++
-   [(Tup $ map (\i -> Ltp $ "_param_" ++ (show i)) [1..(length $ simpleSubInstanceParamTypes metadata)],
-       Right $ c_2 "fromEitherUnsafe" (Lit "\"Parameterization Decode Error\"") $ c_1 "decode" $ Lit "params")])
+     (map (\(i,t) -> (Ltp $ "_param_" ++ (show i),Right $ c_1 "extract" $ Lit $ "pre_param_" ++ (show i)))
+      $ zip [1..] (simpleSubInstanceParamTypes metadata)))
   where materializeFun = (Tup $ map (\(_,i) -> Ltp $ "column_" ++ (show i)) $ zip simps [1..], 
                           (Lit $ "I." ++ (materializeFName (simpleSubInstanceInnerMetadata metadata) ss)) $$ [Lit "instID"])
         result = c_return $ Tpl $ 

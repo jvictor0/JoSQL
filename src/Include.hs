@@ -5,7 +5,7 @@ module Include
         module RuntimeUtils,
         module Types,
         module Prelude,
-        readByteStringFile, writeByteStringFile,
+        readByteStringFile, writeByteStringFile, cim,
         ByteString, LazyByteString)
        where
 
@@ -14,6 +14,7 @@ import Data.Maybe
 import Data.Serialize
 import RuntimeUtils
 import Types
+import Utils (cim)
 
 
 import qualified Data.ByteString.Lazy as LBS

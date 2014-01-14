@@ -22,6 +22,7 @@ directImage f md = DirectImageMetadata
   {
     directImageName = "dirim" ++ (name md),
     directImageMap = f,
+    directImageVertexNames = [],
     directImageInnerMetadata = md
   }
 

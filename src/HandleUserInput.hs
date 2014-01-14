@@ -9,6 +9,7 @@ import Types
 import Execute
 import Metadata
 import NutleyQuery
+import QueryCompile
 
 import qualified Data.Map as Map
 import Control.Monad
@@ -27,11 +28,14 @@ createToObject state name (CreateSchema verts simps) = do
 createToObject state name (InstantiateSchema sch simplex dat) = do 
   (NutleySchema sch cols) <- mapEitherT atomically $ schemaQuerySchema state sch
   id <- mapEitherT atomically $ liftEitherT $ nextInstanceID state
-  case mapM (flip Map.lookup cols) simplex of
+  case mapM (\s -> fmap (flip (,) s) (Map.lookup s cols) ) simplex of
     (Just simp) -> do 
       let md = simpleRecord name sch simp
       inst <- case dat of 
-        (ExplicitTuples tps) -> EitherT $ executeInstantiateFromStrings (InstantiateQuery md) id tps
+        (ExplicitTuples tps) -> do
+          inst <- executeInstantiateFromStrings (InstantiateQuery md) id tps
+          liftEitherT $ putStrLn $ "got " ++ (show inst)
+          return inst
       return $ NutleyObjInstance inst md
     Nothing -> left "Cannot instantiate schema, simplex not in schema"
       
@@ -40,16 +44,32 @@ handleLetName state (LetQuery name create) = eitherT return return $ do
   mapEitherT atomically $ addNamedObjectIfNotExists state name nutleyObject 
   return $ "Added object " ++ name
   
-handleShow state (Show name) = eitherT return (return.showNutleyObject)
+handleShow state (ShowQuery name) = eitherT return (return.showNutleyObject)
                                $ mapEitherT atomically $ lookupByName state name
 
 schemaQuerySchema :: GlobalState -> SchemaQuery -> ErrorT STM NutleyObject
 schemaQuerySchema state (NamedSchema name) = lookupByName state name 
--- schemaQuerySchema state _ = retry
+
+instanceQueryInstance :: GlobalState -> InstanceQuery -> ErrorT STM NutleyObject
+instanceQueryInstance state (NamedInstance name) = lookupByName state name
+
+handleSelect :: GlobalState -> ClientQuery -> IO String
+handleSelect state (SelectQuery simpNamed instanceQuery) = eitherT return return $ do
+  (NutleyObjInstance inst md) <- mapEitherT atomically $ instanceQueryInstance state instanceQuery 
+  ss <- case simplicesFromNames md simpNamed of
+    Nothing -> left "Simplex not in instance's schema"
+    (Just simps) -> right (SubSchema simps $ dbSchema md)
+  executeSectionString (SectionQuery md ss) inst
+
 
 handleUserInput :: GlobalState -> String -> IO String
 handleUserInput state str = do
   case parse str of
     Nothing -> return "Parse Error"
     (Just letq@(LetQuery _ _)) -> handleLetName state letq
-    (Just show@(Show _)) -> handleShow state show
+    (Just show@(ShowQuery _)) -> handleShow state show
+    (Just sele@(SelectQuery _ _)) -> handleSelect state sele
+    (Just ClearCache) -> clearPlancache >> (return "")
+    (Just ClearData) -> clearData >> (clearGlobalState state) >> (return "")
+    (Just Quit) -> return "_q"
+    (Just KILLServer) -> return "_k"

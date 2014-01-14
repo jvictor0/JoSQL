@@ -1,13 +1,25 @@
-{-# LANGUAGE DeriveGeneric #-}
 module NutleyInstance where
 
 import Types
 
-import Data.ByteString
-import GHC.Generics
-import Data.Serialize
 
-type NutleyParams = ByteString
+data NutleyParam = IntParam Int | ListParam [NutleyParam] deriving (Eq)
+instance Show NutleyParam where
+  show (IntParam i) = show i
+  show (ListParam ls) = show ls
+  
+class Paramable t where
+  extract :: NutleyParam -> t
+  
+instance Paramable Int where
+  extract (IntParam i) = i
+  extract ls = error $ "cannot extract " ++ (show ls) ++ " with type Int"
+  
+instance (Paramable a) => Paramable [a] where
+  extract (ListParam ls) = map extract ls
+  extract x = error $ "cannot extract " ++ (show x) ++ " as list"
+  
+type NutleyParams = [NutleyParam]
 
 data NutleyInstance = SimpleRecord InstanceID RowCount
                     | SimpleSubInstance NutleyParams NutleyInstance
@@ -15,6 +27,5 @@ data NutleyInstance = SimpleRecord InstanceID RowCount
                     | InverseImage NutleyParams NutleyInstance
                     | Shriek NutleyInstance 
                     | CoLimit [[NutleyInstance]]
-                    deriving (Generic)
+                    deriving (Show)
                              
-instance Serialize NutleyInstance

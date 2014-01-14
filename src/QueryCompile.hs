@@ -9,12 +9,15 @@ import System.Plugins.Load
 import System.Directory
 import SerializeCode
 import NutleyQuery
+import Types
 
 import System.Process
 import Data.Char
 import qualified Crypto.Hash.SHA256 as SHA
 import Data.Serialize
 import qualified Data.ByteString as BS
+import Control.Monad.Trans.Either
+
 
 hashQuery (MaterializeQuery md ss) = SHA.finalize $
                                      SHA.update (SHA.update (SHA.update SHA.init (encode "mat"))
@@ -38,7 +41,7 @@ clearAll = clearData >> clearPlancache
 
 clearCompiled = system "rm *.o *.hi"
 
-compileQuery :: NutleyQuery -> IO String
+compileQuery :: NutleyQuery -> ErrorT IO String
 compileQuery q = do
   let (reqs, bod) = codeQuery q
       mname = queryModuleName q
@@ -48,20 +51,20 @@ compileQuery q = do
               "import Include\n\n\n" ++ 
               (show bod) ++ "\n\n\n" ++ 
               (cim "\n\n\n" show $ serializeCode q)
-  b <- doesFileExist (mname ++ ".hs")
+  b <- liftEitherT $ doesFileExist (mname ++ ".hs")
   if b
     then return mname
     else do
     mapM_ compileQuery $ map snd reqs
-    writeFile (mname ++ ".hs") fcnts
-    putStrLn $ "compiling " ++ (name q)
-    status <- make (mname ++ ".hs") []
+    liftEitherT $ writeFile (mname ++ ".hs") fcnts
+    liftEitherT $ putStrLn $ "compiling " ++ (name q)
+    status <- liftEitherT $ make (mname ++ ".hs") []
     case status of 
       (MakeSuccess _ _) -> do
-        putStrLn $ "sucess: " ++ (mname ++ ".hs")
+        liftEitherT $ putStrLn $ "sucess: " ++ (mname ++ ".hs")
         return mname
       (MakeFailure es) -> do
-        putStrLn $ "ghc compilation error"
-        mapM_ putStrLn es
-        error ""
+        liftEitherT $ putStrLn $ "ghc compilation error"
+        liftEitherT $ mapM_ putStrLn es
+        left $ "ghc compiler error, check functions from query"
       

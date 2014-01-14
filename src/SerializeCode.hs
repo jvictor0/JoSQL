@@ -15,6 +15,7 @@ import NutleyQuery
 import SimpleRecord
 
 serializedName q = (name q) ++ "_serialize"
+stringResultName q = (name q) ++ "_stringResult"
 stringsInstantiateName q = (name q) ++ "_stringsInstantiate"
 
 serializeCode :: NutleyQuery -> [HaskellFunction]
@@ -37,6 +38,10 @@ serializeCode q =
   [Fun (serializedName q)  
    (FunType [t_NutleyInstance] $ tc_IO $ t_LazyByteString)
    $ Lam (Mlp [Ltp "instID"]) 
-   $ c_2 "fmap" (Lit "encodeLazy") $ c_1 (name q) $ Lit "instID"]
+   $ c_2 "fmap" (Lit "encodeLazy") $ c_1 (name q) $ Lit "instID",
+   Fun (stringResultName q)  
+   (FunType [t_NutleyInstance] $ tc_IO $ t_String)
+   $ Lam (Mlp [Ltp "instID"]) 
+   $ c_2 "fmap" (c_2 "cim" (Lit "\"\\n\"") (Lit "show")) $ c_1 (name q) $ Lit "instID"]
   
                   

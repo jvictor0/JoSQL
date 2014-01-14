@@ -8,8 +8,12 @@ import Schema
 import HaskellCode
 
 data ClientQuery = LetQuery Name CreateQuery
-                 | Show Name
-                 | Select [Simplex] InstanceQuery
+                 | ShowQuery Name
+                 | SelectQuery [[Name]] InstanceQuery
+                 | KILLServer
+                 | ClearCache
+                 | ClearData
+                 | Quit
                    deriving (Eq,Show,Ord)
 
 data CreateQuery = CreateSchema [TypeDec] [[Name]]

@@ -46,6 +46,9 @@ newGlobalState = atomically $ do
   id <- newTVar 0
   return $ GlobalState { namedObjects = no, clientQueries = cq , instanceIDCounter = id}
                    
+clearGlobalState state = atomically $ do
+  writeTVar (namedObjects state) Map.empty
+    
 lookupByName :: GlobalState -> Name -> ErrorT STM NutleyObject
 lookupByName state name = do
   res <- liftEitherT $ fmap (Map.lookup name) $ readTVar $ namedObjects state

@@ -7,6 +7,7 @@ import Control.Monad
 import Control.Exception
 import System.CPUTime
 import Data.Char
+import QueryCompile
 
 import HandleUserInput
 import GlobalState
@@ -20,7 +21,7 @@ main = do
   setSocketOption sock ReuseAddr 1
   -- listen on TCP port 4242
   bindSocket sock (SockAddrInet 4242 iNADDR_ANY)
-  -- allow a maximum of 2 outstanding connections
+  -- allow a maximum of 5 outstanding connections
   listen sock 5
   state <- newGlobalState
   mainLoop state sock
@@ -40,9 +41,13 @@ runConn state (sock, _) = do
   hPutStr hdl "joSQL> "
   hFlush hdl
   forM (wordsWith ';' contents) $ \str -> do 
+    evaluate $ length str
     putStrLn $ "Query: " ++ str
     t <- getCPUTime
     response <- handleUserInput state str
+    case response of
+      "_q" -> hClose hdl
+      _   -> return ()
     evaluate $ length response
     t' <- getCPUTime
     hPutStrLn hdl $ "Query completed in " ++ (show $ (fromInteger $ t' - t) * 0.000000000001) ++ " secs"

@@ -19,6 +19,7 @@ import NutleyQueryUtils
 shriek f md = ShriekMetadata
   {
     shriekMap  = f,
+    shriekVertexNames = [],
     shriekName = "shriek_" ++ (name md),
     shriekInnerMetadata = md
   }
