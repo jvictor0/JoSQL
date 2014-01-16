@@ -18,6 +18,8 @@ tupNatInverse (Lam (Tup ts) (Lit x)) = (findIndex (\t -> case t of { (Ltp y) -> 
                                        % (\i -> (length ts, i+1))
 tupNatInverse _ = Nothing
 
+isIdentity f = tupNatInverse f == Just (1,1)
+
 tupNatN ns is = Lam (Tup $ snd $ mapAccumL (\seen j -> if (not $ j`elem`seen) && (j`elem`is) 
                                                        then (j:seen,Ltp $ "x_" ++ (show j)) 
                                                        else (seen,USp)) 

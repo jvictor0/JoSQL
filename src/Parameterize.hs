@@ -47,22 +47,29 @@ addSimplex x id = do
   return $ Lit x
 
 parameterize :: Map.Map Name VertID -> HaskellCode -> (Simplex,HaskellCode,[NutleyParam])
-parameterize mp expr = let (res,(simp',ts)) = runState (_par mp expr) newParamState
+parameterize mp expr = let (res,(simp',ts')) = runState (parHelper mp expr) newParamState
                            simp = nub simp'
+                           ts = reverse ts'
                        in (map snd simp,Lam (Tup $ map (Ltp . fst) simp) res,ts)
                                                     
+parameterizeMap :: SchemaMap -> (SchemaMap,NutleyParams)
+parameterizeMap (SchemaMap src trg d) = 
+  let (res,([],ts)) = flip runState newParamState $ do
+        mapM (\(i,j,Lam p f) -> fmap (((,,) i j).(Lam p)) $ parHelper Map.empty f) d
+  in (SchemaMap src trg res,reverse ts)
+                          
 parameterFrom (Lst ls) = fmap ListParam $ mapM parameterFrom ls
 parameterFrom (Lit x)
   | isNumber x = Just $ IntParam $ read x
 parameterFrom _ = Nothing
 
-_par mp (Lit x)
+parHelper mp (Lit x)
   | isNumber x = addIntParam x
   | otherwise = case Map.lookup x mp of  
     Nothing -> return $ Lit x
     (Just id) -> addSimplex x id
-_par mp (App f args) = (return App) `ap` (_par mp f) `ap` (mapM (_par mp) args)
-_par mp (Lst ts) = case parameterFrom (Lst ts) of
-  Nothing ->  return Lst `ap` (mapM (_par mp) ts)
+parHelper mp (App f args) = (return App) `ap` (parHelper mp f) `ap` (mapM (parHelper mp) args)
+parHelper mp (Lst ts) = case parameterFrom (Lst ts) of
+  Nothing ->  return Lst `ap` (mapM (parHelper mp) ts)
   (Just p) -> addParam p
-_par mp x = error $ "parameterizer does not deal with expression type of " ++ (show x)
+parHelper mp x = error $ "parameterizer does not deal with expression type of " ++ (show x)

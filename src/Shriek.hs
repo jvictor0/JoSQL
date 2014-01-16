@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 module Shriek where
 
+import Data.Tuple.HT
 import Data.Maybe
 import Data.List
 import Data.Serialize
@@ -15,26 +16,25 @@ import Types
 import TupleUtils
 import NutleyQueryUtils
 
-
 shriek f md = ShriekMetadata
-  {
-    shriekMap  = f,
-    shriekVertexNames = [],
+  { 
+    shriekMap = f,
     shriekName = "shriek_" ++ (name md),
     shriekInnerMetadata = md
-  }
+  } 
                                   
 codeShriekSection metadata ss = 
-  ([("I",SectionQuery (shriekInnerMetadata metadata) ss')],
+  (if fromInner then [("I",SectionQuery (shriekInnerMetadata metadata) ss')] else [],
    Fun (sectionFName metadata ss) (sectionType metadata ss)
-   $ if (schemaFullImage $ shriekMap metadata) `containsSubSchema` ss
+   $ if fromInner
      then Lam (Fnp "Shriek" [Ltp "instID"]) 
-          $ c_1 innerSecName $ Lit "InstID"
+          $ c_1 innerSecName $ Lit "instID"
      else c_1 "const" $ c_return $ Lst [])
   where innerSecName = "I." ++ (sectionFName (shriekInnerMetadata metadata) ss')
         ss'          = SubSchema (map (fromJust.(simplexIncluded (shriekMap metadata))) $ subSchemaSimplices ss)
                        $ schemaMapDomain $ shriekMap metadata
-          
+        fromInner = (schemaFullImage $ shriekMap metadata) `containsSubSchema` ss
+        
 codeShriekMaterialize metadata ss = 
   ([("I",MaterializeQuery  (shriekInnerMetadata metadata) ss')],
    Fun (materializeFName metadata ss) (materializeType metadata ss)

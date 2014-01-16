@@ -8,6 +8,7 @@ import Control.Exception
 import System.CPUTime
 import Data.Char
 import QueryCompile
+import Data.Time.Clock
 
 import HandleUserInput
 import GlobalState
@@ -42,15 +43,15 @@ runConn state (sock, _) = do
   hFlush hdl
   forM (wordsWith ';' contents) $ \str -> do 
     evaluate $ length str
-    putStrLn $ "Query: " ++ str
-    t <- getCPUTime
+    putStrLn $ "Query: " ++ (dropWhile isSpace str)
+    t <-  getCurrentTime
     response <- handleUserInput state str
     case response of
       "_q" -> hClose hdl
       _   -> return ()
     evaluate $ length response
-    t' <- getCPUTime
-    hPutStrLn hdl $ "Query completed in " ++ (show $ (fromInteger $ t' - t) * 0.000000000001) ++ " secs"
+    t' <- getCurrentTime
+    hPutStrLn hdl $ "Query completed in " ++ (show $ (diffUTCTime t' t))
     hPutStrLn hdl response
     hPutStr hdl "joSQL> "
     hFlush hdl

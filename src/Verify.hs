@@ -13,6 +13,11 @@ class Verify v where
   isVerified :: v -> Bool
   isVerified v = Nothing == (isVerifiedError v)
   
+  verifyEither :: v -> Either String v
+  verifyEither v = case isVerifiedError v of
+    Nothing -> return v
+    (Just err) -> Left err
+  
   verifyConditions :: v -> [(Bool,String)]
   verifyConditions v = [(isVerified v, "Verification Error")]
 

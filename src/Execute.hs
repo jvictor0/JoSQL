@@ -77,6 +77,6 @@ executeSectionString q instID = do
   modname <- compileQuery q
   ls <- liftEitherT $ load (modname ++ ".o") ["."] []  (stringResultName q)
   case ls of
-    (LoadSuccess m f) -> f instID
+    (LoadSuccess m f) -> liftEitherT $ f instID
     (LoadFailure errs) -> (mapM_ (liftEitherT.putStrLn) errs) >> (left $ cim "\n" id errs)
 

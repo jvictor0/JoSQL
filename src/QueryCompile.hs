@@ -55,9 +55,9 @@ compileQuery q = do
   if b
     then return mname
     else do
+    liftEitherT $ putStrLn $ "compiling " ++ (name q)
     mapM_ compileQuery $ map snd reqs
     liftEitherT $ writeFile (mname ++ ".hs") fcnts
-    liftEitherT $ putStrLn $ "compiling " ++ (name q)
     status <- liftEitherT $ make (mname ++ ".hs") []
     case status of 
       (MakeSuccess _ _) -> do

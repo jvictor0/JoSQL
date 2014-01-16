@@ -43,3 +43,11 @@ maybeToEither err Nothing = Left err
 maybeToEither _ (Just a) = Right a
 
 liftEitherT x = EitherT $ fmap Right $ x
+
+groupAdjBy _ [] = []
+groupAdjBy f (a:as) = (gab a as)
+  where gab a (b:bs) 
+          | f a b     = let (o:os) = gab b bs
+                        in ((a:o):os)
+          | otherwise = [a]:(gab b bs)
+        gab a [] = [[a]]

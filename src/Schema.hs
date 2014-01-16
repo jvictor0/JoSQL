@@ -16,12 +16,13 @@ import Data.Serialize
 import qualified Data.ByteString as BS
 import GHC.Generics
 
-data SimplicialComplex = SC [VertID] [[VertID]] deriving (Generic)
+data SimplicialComplex = SC [(VertID,Name)] [[VertID]] deriving (Generic)
 data Schema = Schema SimplicialComplex [(VertID, HaskellType)] deriving (Generic)
 type Simplex = [VertID]
 type ConnectedSchema = Schema
 
-schemaVertices (Schema (SC verts _) _) = verts
+schemaVertices (Schema (SC verts _) _) = map fst verts
+schemaVertexNames (Schema (SC verts _) _) = verts
 schemaSimplices (Schema (SC _ simps) _) = simps
 schemaTypes (Schema _ ts) = ts
 
@@ -59,6 +60,9 @@ instance Named SubSchema where
 emptySimplicialComplex = SC [] []
 emptySchema = Schema emptySimplicialComplex [] 
 
+schemaLookupVertex a sch = fmap fst $ find ((==a).snd) $ schemaVertexNames sch
+schemaLookupVertexName i sch = lookup i $ schemaVertexNames sch
+
 typeLookup :: Schema -> VertID -> HaskellType
 typeLookup (Schema _ ts) x = case lookup x ts of
   Nothing -> error "typeLookup: vertex not in Schema"
@@ -94,7 +98,7 @@ schemaCoProduct schs = (resultSchema,inclusions)
   where n = length schs
         renamed = map (\(i,(Schema (SC verts simps) types))
                        -> Schema 
-                          (SC (map (\v -> n*v+i) verts)
+                          (SC (map (\(v,nmt) -> (n*v+i,nmt)) verts)
                            (map (map (\v -> n*v+i)) simps))
                           (map (\(v,t) -> (n*v+i,t)) types))
                   $ zip [0..] schs

@@ -14,15 +14,16 @@ import ClientQueries
 import NutleyQuery
 import Metadata
 import Name
+import HaskellCode
 
-data NutleyObject = NutleySchema Schema (Map.Map Name VertID) | 
+data NutleyObject = NutleySchema Schema | 
+                    NutleyMap SchemaMap |
                     NutleyObjInstance NutleyInstance DBMetadata
                     
 data GlobalState = GlobalState 
                    {
                      namedObjects :: TVar (Map.Map Name NutleyObject),
-                     instanceIDCounter :: TVar Int,
-                     clientQueries :: TVar (Map.Map ClientQuery NutleyQuery)
+                     instanceIDCounter :: TVar Int                   
                    }
                    
 nextInstanceID state = do
@@ -30,8 +31,9 @@ nextInstanceID state = do
   writeTVar (instanceIDCounter state) $ id + 1
   return id
                    
-showNutleyObject (NutleySchema (Schema (SC verts simps) tps) mp) = result
-  where invmp = Map.fromList $ map (\(a,b) -> (b,a)) $ Map.toList mp
+showNutleyObject (NutleySchema (Schema (SC verts' simps) tps)) = result
+  where invmp = Map.fromList $ verts'
+        verts = map fst verts'
         vertNamed = map (\(i,t) -> (fromJust $ Map.lookup i invmp) ++ " : " ++ (show t)) tps
         simpNamed = map (cim ", "  (fromJust . (flip Map.lookup invmp))) simps
         result = "create schema with\n  vertices =\n  {\n" ++
@@ -39,12 +41,20 @@ showNutleyObject (NutleySchema (Schema (SC verts simps) tps) mp) = result
                  "  simplices =\n  {\n" ++ 
                  (cim ",\n" (\x -> "    { "++x++" }") simpNamed) ++ "\n  }"
 showNutleyObject (NutleyObjInstance isnt md) = "instance of database " ++ (name md)
-
+showNutleyObject (NutleyMap (SchemaMap srcS trgS f))
+  = "create map " ++ (showNutleyObject $ NutleySchema srcS) ++ "\n -> \n" ++ (showNutleyObject $ NutleySchema trgS) ++
+    "\n with\n  {\n" ++
+    (cim ",\n" (\(a,b,Lam _ g) -> "    " ++ (fromJust $ lookup a srcMap) ++ 
+                                  " -> " ++ (fromJust $ lookup b trgMap) ++ 
+                                  " by " ++ (show g)) f)
+    ++ "\n  }"
+  where srcMap = schemaVertexNames srcS
+        trgMap = schemaVertexNames trgS
+     
 newGlobalState = atomically $ do
   no <- newTVar Map.empty
-  cq <- newTVar Map.empty
   id <- newTVar 0
-  return $ GlobalState { namedObjects = no, clientQueries = cq , instanceIDCounter = id}
+  return $ GlobalState { namedObjects = no , instanceIDCounter = id}
                    
 clearGlobalState state = atomically $ do
   writeTVar (namedObjects state) Map.empty
@@ -64,15 +74,3 @@ addNamedObjectIfNotExists :: GlobalState -> Name -> NutleyObject -> ErrorT STM (
 addNamedObjectIfNotExists state name object = do
   (hoistEither.(guardEither $ "Object " ++ name ++ " already exists").not) =<< (liftEitherT $ nameExists state name)
   liftEitherT $ addNamedObject state name object
-
-lookupNutleyQuery :: GlobalState -> ClientQuery -> STM NutleyQuery
-lookupNutleyQuery state query = fromMaybeM $ fmap (Map.lookup query) $ readTVar $ clientQueries state
-
-clientQueryToNutleyQuery :: GlobalState -> ClientQuery -> STM NutleyQuery
-clientQueryToNutleyQuery state query = retry
-
-getNutleyQuery state query = (lookupNutleyQuery state query) `orElse` do
-  result <- clientQueryToNutleyQuery state query 
-  flip modifyTVar (Map.insert query result) $ clientQueries state
-  return result
-  

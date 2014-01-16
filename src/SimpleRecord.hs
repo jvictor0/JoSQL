@@ -18,14 +18,13 @@ import Metadata
 import NutleyQueryUtils
 
                                           
-simpleRecord :: Name -> Schema -> [(VertID,Name)] -> DBMetadata
+simpleRecord :: Name -> Schema -> [VertID] -> DBMetadata
 simpleRecord name sch simp = SimpleRecordMetadata 
   {
     simpleRecordName = name,
     simpleRecordSchema = sch,
-    simpleRecordVertexNames = simp,
-    simpleRecordCompressionSchemes = map (\(v,_) -> (v,Lit "encodeLazy")) simp,
-    simpleRecordDecompressionSchemes = map (\(v,_) -> (v,Lit "decodeLazy")) simp
+    simpleRecordCompressionSchemes = map (\v -> (v,Lit "encodeLazy")) simp,
+    simpleRecordDecompressionSchemes = map (\v -> (v,Lit "decodeLazy")) simp
   }
 
 segmentFileName md v = Lit $ "\"segment_" ++ ((name md) ++ "_" ++ (show v) ++ "_\" ++ (show instID) ++ \".seg\"")
@@ -39,9 +38,9 @@ codeSimpleRecordStrListsToTuple srmd =
   (FunType [tc_List $ tc_List $ tc_Maybe $ t_String] $ tc_Either t_String $ tc_List $ TupType $ map (tc_Maybe . snd) vertTypes) 
   $ Lam (Ltp "ins")
   $ Whr (c_mapM (Lit "pTup") (Lit "ins"))
-  [(FnpNP "pTup" [Lstp $ map (\(_,i) -> Ltp $ "x_" ++ (show i)) $ zip simplex [1..]],
+  [(FnpNP "pTup" [Lstp $ map (\(_,i) -> Ltp $ "z_" ++ (show i)) $ zip simplex [1..]],
     Right $ eitherTup (length simplex) "Parse error in tuple" $$ 
-    [Tpl $ map (\(_,i) -> c_2 "fmap" (Lit "readMaybe") $ Lit $ "x_" ++ (show i)) $ zip simplex [1..]]),
+    [Tpl $ map (\(_,i) -> c_1 "readJustMaybe" $ Lit $ "z_" ++ (show i)) $ zip simplex [1..]]),
    (FnpNP "pTup" [USp], Right $ c_1 "Left" $ Lit $ "\"Tuple length mismatch\"")]
   where s = simpleRecordSchema srmd
         simplex = simpleRecordSimplex srmd

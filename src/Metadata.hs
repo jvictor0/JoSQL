@@ -11,12 +11,15 @@ import HaskellCode
 import NutleyInstance
 import Types
 import Join
+import Verify
+import Utils
+import Data.Tuple.HT
+import TupleUtils
 
 data DBMetadata = SimpleRecordMetadata 
                   {
                     simpleRecordName :: Name,
                     simpleRecordSchema :: Schema,
-                    simpleRecordVertexNames :: [(VertID,Name)],
                     simpleRecordCompressionSchemes   :: [(VertID, HaskellCode)],
                     simpleRecordDecompressionSchemes :: [(VertID, HaskellCode)]
                   } | 
@@ -32,14 +35,12 @@ data DBMetadata = SimpleRecordMetadata
                   {
                     inverseImageName :: Name,
                     inverseImageMap  :: SchemaMap,
-                    inverseImageVertexNames :: [(VertID,Name)],                     
                     inverseImageParamTypes :: [HaskellType],                                      
                     inverseImageInnerMetadata :: DBMetadata
                   } |
                   DirectImageMetadata 
                   {
                     directImageName :: Name,                    
-                    directImageVertexNames :: [(VertID,Name)],                     
                     directImageMap  :: SchemaMap,
                     directImageInnerMetadata :: DBMetadata
                   } |
@@ -47,7 +48,6 @@ data DBMetadata = SimpleRecordMetadata
                   {
                     shriekName :: Name,                    
                     shriekMap  :: SchemaMap,
-                    shriekVertexNames :: [(VertID,Name)],                     
                     shriekInnerMetadata :: DBMetadata
                   } |
                   CoLimitMetadata 
@@ -65,11 +65,11 @@ data MetadataToken = SimpleRecordToken | SimpleSubInstanceToken
                    | CoLimitToken
                    deriving (Eq,Show,Ord)
 
-dbToken (SimpleRecordMetadata _ _ _ _ _) = SimpleRecordToken
+dbToken (SimpleRecordMetadata _ _ _ _) = SimpleRecordToken
 dbToken (SimpleSubInstanceMetadata _ _ _ _ _) = SimpleSubInstanceToken
-dbToken (InverseImageMetadata _ _ _ _ _) = InverseImageToken
-dbToken (DirectImageMetadata _ _ _ _) = DirectImageToken
-dbToken (ShriekMetadata _ _ _ _) = ShriekToken
+dbToken (InverseImageMetadata _ _ _ _) = InverseImageToken
+dbToken (DirectImageMetadata _ _ _) = DirectImageToken
+dbToken (ShriekMetadata _ _ _) = ShriekToken
 dbToken (CoLimitMetadata _ _) = CoLimitToken
                                                          
 instance Named DBMetadata where
@@ -86,27 +86,35 @@ dbSchema md = case dbToken md of
   SimpleRecordToken -> simpleRecordSchema md
   SimpleSubInstanceToken -> dbSchema $ simpleSubInstanceInnerMetadata md
   InverseImageToken -> schemaMapDomain $ inverseImageMap md
-  DirectImageToken -> schemaMapDomain $ directImageMap md
+  DirectImageToken -> schemaMapCoDomain $ directImageMap md
   ShriekToken -> schemaMapCoDomain $ shriekMap md
   CoLimitToken -> case coLimitInnerMetadatas md of 
     [] -> emptySchema
     (a:_) -> dbSchema a
                  
 dbVertexNames :: DBMetadata -> [(VertID,Name)]
-dbVertexNames md = case dbToken md of
-  SimpleRecordToken -> simpleRecordVertexNames md
-  SimpleSubInstanceToken -> dbVertexNames $ simpleSubInstanceInnerMetadata md
-  InverseImageToken -> inverseImageVertexNames md
-  DirectImageToken -> directImageVertexNames md
-  ShriekToken -> shriekVertexNames md
-  CoLimitToken -> case coLimitInnerMetadatas md of 
-    [] -> []
-    (a:_) -> dbVertexNames a
+dbVertexNames md = schemaVertexNames $ dbSchema md
     
 simplexFromNames :: DBMetadata -> [Name] -> Maybe [VertID]
 simplexFromNames db simps = let names = map (\(x,y) -> (y,x)) $ dbVertexNames db in 
-  mapM (flip lookup names) simps
- 
+  mapM (flip lookup names) simps 
+
 simplicesFromNames :: DBMetadata -> [[Name]] -> Maybe [Simplex]
 simplicesFromNames db simps = let names = map (\(x,y) -> (y,x)) $ dbVertexNames db in 
   mapM (mapM (flip lookup names)) simps
+  
+instance Verify DBMetadata where
+  verifyConditions md = case dbToken md of
+    ShriekToken -> let (SchemaMap _ _ f) = shriekMap md in
+      [
+        (all (isIdentity.thd3) f, "Cannot form shriek map with non-identity pullback maps"),
+        (unique $ map snd3 f, "Cannot form shriek with non-injective schema map")
+      ]
+    DirectImageToken -> let (SchemaMap _ trg f) = directImageMap md in
+      [ -- TODO: check the types of the tupnatinverse
+        ((length (schemaVertices trg)) == (length $ nub $ (map snd3 f)), "Cannot form direct image with map not surjective on vertices"),
+        (all ((/=Nothing).tupNatInverse) $ map thd3 f, "Cannot form direct image with pullback maps not projections")
+      ]
+    _ -> []
+    
+    

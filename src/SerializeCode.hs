@@ -34,7 +34,7 @@ serializeCode q@(InstantiateQuery db) =
          (c_1 "return" $ (Lam (Fnp "Left" [Ltp "a"]) (c_1 "Left" $ Lit "a")) $$ [Lit "tps"]) $ 
          c_2 "fmap" (Lit "Right") $ c_2 (name q) (Lit "instID") $ c_1 "fromRight" $ Lit "tps")]
    ]
-serializeCode q = 
+serializeCode q@(SectionQuery _ _) = 
   [Fun (serializedName q)  
    (FunType [t_NutleyInstance] $ tc_IO $ t_LazyByteString)
    $ Lam (Mlp [Ltp "instID"]) 
@@ -43,5 +43,5 @@ serializeCode q =
    (FunType [t_NutleyInstance] $ tc_IO $ t_String)
    $ Lam (Mlp [Ltp "instID"]) 
    $ c_2 "fmap" (c_2 "cim" (Lit "\"\\n\"") (Lit "show")) $ c_1 (name q) $ Lit "instID"]
-  
+serializeCode _ = []
                   

@@ -11,7 +11,9 @@ isLeft _ = False
 
 fromRight (Right a) = a
 
-readMaybe        :: (Read a) => String -> Maybe a
-readMaybe s      =  case [x | (x,t) <- reads s, ("","") <- lex t] of
-  [x] -> Just x
+readJustMaybe        :: (Read a) => Maybe String -> Maybe (Maybe a)
+readJustMaybe Nothing = Just Nothing
+readJustMaybe (Just s)=  case [x | (x,t) <- reads s, ("","") <- lex t] of
+  [x] -> Just (Just x)
   _   -> Nothing
+  

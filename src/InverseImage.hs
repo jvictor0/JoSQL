@@ -15,12 +15,29 @@ import Schema
 import Types
 import TupleUtils
 import NutleyQueryUtils
+import Parameterize
+
+
+inverseImage :: SchemaMap -> DBMetadata -> Error (DBMetadata,NutleyParams)
+inverseImage f md = do
+  let (f',params) = parameterizeMap f
+  ptypes <- mapM paramType params
+  return (
+    InverseImageMetadata 
+    {
+      inverseImageName = "invim_" ++ (name md),
+      inverseImageMap  = f',
+      inverseImageParamTypes = ptypes,                                      
+      inverseImageInnerMetadata = md
+    },
+    params)
+
 
 
 codeInverseImageMaterialize metadata ss = 
   ([("I",MaterializeQuery (inverseImageInnerMetadata metadata) ss')],
    Fun (materializeFName metadata ss) (materializeType metadata ss)
-   $ Lam (Fnp "InverseImageInstance" [Lstp $ map (\i -> Ltp $ "pre_param_" ++ (show i)) [1..(length $ simpleSubInstanceParamTypes metadata)],
+   $ Lam (Fnp "InverseImage" [Lstp $ map (\i -> Ltp $ "pre_param_" ++ (show i)) [1..(length $ inverseImageParamTypes metadata)],
                                       Ltp "instID"]) 
    $ Whr
    (Do [(Ltp "preresult",c_1 innerMatName $ Lit "instID"),
