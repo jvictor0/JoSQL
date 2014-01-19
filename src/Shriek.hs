@@ -15,12 +15,15 @@ import Schema
 import Types
 import TupleUtils
 import NutleyQueryUtils
+import qualified Crypto.Hash.SHA256 as SHA
+
 
 shriek f md = ShriekMetadata
   { 
     shriekMap = f,
     shriekName = "shriek_" ++ (name md),
-    shriekInnerMetadata = md
+    shriekInnerMetadata = md,
+    shriekHashCode = SHA.finalize $ foldr (flip SHA.update) SHA.init [dbHashCode md,encode f]
   } 
                                   
 codeShriekSection metadata ss = 

@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
 module InverseImage where
 
 import Data.Maybe
@@ -16,6 +15,7 @@ import Types
 import TupleUtils
 import NutleyQueryUtils
 import Parameterize
+import qualified Crypto.Hash.SHA256 as SHA
 
 
 inverseImage :: SchemaMap -> DBMetadata -> Error (DBMetadata,NutleyParams)
@@ -28,7 +28,8 @@ inverseImage f md = do
       inverseImageName = "invim_" ++ (name md),
       inverseImageMap  = f',
       inverseImageParamTypes = ptypes,                                      
-      inverseImageInnerMetadata = md
+      inverseImageInnerMetadata = md,
+      inverseImageHashCode = SHA.finalize $ foldr (flip SHA.update) SHA.init [dbHashCode md,encode f',encode ptypes]
     },
     params)
 

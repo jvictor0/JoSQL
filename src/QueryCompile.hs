@@ -21,15 +21,15 @@ import Control.Monad.Trans.Either
 
 hashQuery (MaterializeQuery md ss) = SHA.finalize $
                                      SHA.update (SHA.update (SHA.update SHA.init (encode "mat"))
-                                                 (encode md))
+                                                 (dbHashCode md))
                                      (encode ss)
 hashQuery (SectionQuery md ss) = SHA.finalize $
                                  SHA.update (SHA.update (SHA.update SHA.init (encode "sec"))
-                                             (encode md))
+                                             (dbHashCode md))
                                  (encode ss)
 hashQuery (InstantiateQuery md) = SHA.finalize $
                                   (SHA.update (SHA.update SHA.init (encode "inst"))
-                                   (encode md))
+                                   (dbHashCode md))
                                  
 
 queryModuleName q = "CQ_" ++ (name q) ++ (hexPrint $ hashQuery q)

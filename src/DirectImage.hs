@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
 module DirectImage where
 
 import Data.Maybe
@@ -16,13 +15,15 @@ import Schema
 import Types
 import TupleUtils
 import NutleyQueryUtils
+import qualified Crypto.Hash.SHA256 as SHA
 
 
 directImage f md = DirectImageMetadata
   {
     directImageName = "dirim" ++ (name md),
     directImageMap = f,
-    directImageInnerMetadata = md
+    directImageInnerMetadata = md,
+    directImageHashCode = SHA.finalize $ foldr (flip SHA.update) SHA.init [dbHashCode md,encode f]
   }
 
 codeDirectImageRearange :: SchemaMap -> SubSchema -> SubSchema -> HaskellCode

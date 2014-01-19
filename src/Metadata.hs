@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
 module Metadata where
 
 import Data.List
@@ -15,13 +14,15 @@ import Verify
 import Utils
 import Data.Tuple.HT
 import TupleUtils
+import qualified Data.ByteString as BS
 
 data DBMetadata = SimpleRecordMetadata 
                   {
                     simpleRecordName :: Name,
                     simpleRecordSchema :: Schema,
                     simpleRecordCompressionSchemes   :: [(VertID, HaskellCode)],
-                    simpleRecordDecompressionSchemes :: [(VertID, HaskellCode)]
+                    simpleRecordDecompressionSchemes :: [(VertID, HaskellCode)],
+                    simpleRecordHashCode :: BS.ByteString
                   } | 
                   SimpleSubInstanceMetadata
                   {
@@ -29,48 +30,50 @@ data DBMetadata = SimpleRecordMetadata
                     simpleSubInstanceSimplex :: Simplex,
                     simpleSubInstanceParamTypes :: [HaskellType],
                     simpleSubInstanceFilterFunc :: HaskellCode,
-                    simpleSubInstanceInnerMetadata :: DBMetadata
+                    simpleSubInstanceInnerMetadata :: DBMetadata,
+                    simpleSubInstanceHashCode :: BS.ByteString
                   } |
                   InverseImageMetadata 
                   {
                     inverseImageName :: Name,
                     inverseImageMap  :: SchemaMap,
                     inverseImageParamTypes :: [HaskellType],                                      
-                    inverseImageInnerMetadata :: DBMetadata
+                    inverseImageInnerMetadata :: DBMetadata,
+                    inverseImageHashCode :: BS.ByteString
                   } |
                   DirectImageMetadata 
                   {
                     directImageName :: Name,                    
                     directImageMap  :: SchemaMap,
-                    directImageInnerMetadata :: DBMetadata
+                    directImageInnerMetadata :: DBMetadata,
+                    directImageHashCode :: BS.ByteString
                   } |
                   ShriekMetadata 
                   {
                     shriekName :: Name,                    
                     shriekMap  :: SchemaMap,
-                    shriekInnerMetadata :: DBMetadata
+                    shriekInnerMetadata :: DBMetadata,
+                    shriekHashCode :: BS.ByteString
                   } |
                   CoLimitMetadata 
                   {
                     coLimitName :: Name,
-                    coLimitInnerMetadatas :: [DBMetadata]
-                  } 
-                  deriving (Generic)
-                 
-instance Serialize DBMetadata 
-                           
+                    coLimitInnerMetadatas :: [DBMetadata],
+                    coLimitHashCode :: BS.ByteString
+                  }                  
+                                            
 data MetadataToken = SimpleRecordToken | SimpleSubInstanceToken 
                    | InverseImageToken | DirectImageToken
                    | ShriekToken
                    | CoLimitToken
                    deriving (Eq,Show,Ord)
 
-dbToken (SimpleRecordMetadata _ _ _ _) = SimpleRecordToken
-dbToken (SimpleSubInstanceMetadata _ _ _ _ _) = SimpleSubInstanceToken
-dbToken (InverseImageMetadata _ _ _ _) = InverseImageToken
-dbToken (DirectImageMetadata _ _ _) = DirectImageToken
-dbToken (ShriekMetadata _ _ _) = ShriekToken
-dbToken (CoLimitMetadata _ _) = CoLimitToken
+dbToken (SimpleRecordMetadata _ _ _ _ _) = SimpleRecordToken
+dbToken (SimpleSubInstanceMetadata _ _ _ _ _ _) = SimpleSubInstanceToken
+dbToken (InverseImageMetadata _ _ _ _ _) = InverseImageToken
+dbToken (DirectImageMetadata _ _ _ _) = DirectImageToken
+dbToken (ShriekMetadata _ _ _ _) = ShriekToken
+dbToken (CoLimitMetadata _ _ _) = CoLimitToken
                                                          
 instance Named DBMetadata where
   name md = case dbToken md of
@@ -92,6 +95,20 @@ dbSchema md = case dbToken md of
     [] -> emptySchema
     (a:_) -> dbSchema a
                  
+dbHashCode :: DBMetadata -> BS.ByteString
+dbHashCode md = case dbToken md of
+  SimpleRecordToken -> simpleRecordHashCode md
+  SimpleSubInstanceToken -> simpleSubInstanceHashCode md
+  InverseImageToken -> inverseImageHashCode md
+  DirectImageToken -> directImageHashCode md
+  ShriekToken -> shriekHashCode md
+  CoLimitToken -> coLimitHashCode md
+
+instance Eq DBMetadata where
+  a == b = (dbHashCode a) == (dbHashCode b)
+instance Ord DBMetadata where
+  compare a b = compare (dbHashCode a) (dbHashCode b)
+  
 dbVertexNames :: DBMetadata -> [(VertID,Name)]
 dbVertexNames md = schemaVertexNames $ dbSchema md
     

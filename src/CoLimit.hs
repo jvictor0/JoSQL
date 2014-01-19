@@ -5,6 +5,8 @@ import Data.List
 import Data.Serialize
 import GHC.Generics
 import Data.Tuple.HT
+import Control.Monad.Trans.Either
+
 
 
 import Utils
@@ -16,13 +18,31 @@ import Schema
 import Types
 import TupleUtils
 import Shriek
-import NutleyQueryUtils
-                         
+import NutleyQueryUtils                
+import qualified Crypto.Hash.SHA256 as SHA
+
+
+coLimitOne :: [(DBMetadata,NutleyInstance)] -> (DBMetadata,NutleyInstance)
+coLimitOne inners' = 
+  let inners = map (\((md,c):cs) -> (md,c:(map snd cs)))
+               $ groupBy ((==) `on` fst) $ sortBy (compare `on` fst) inners'          
+  in 
+   (
+    CoLimitMetadata 
+    {
+      coLimitName = cim "_coprd_" (name.fst) inners,
+      coLimitInnerMetadatas = map fst inners,
+      coLimitHashCode = SHA.finalize $ foldr (flip SHA.update) SHA.init $ map (dbHashCode.fst) inners
+    },
+    CoLimit $ map snd inners
+   )
+                    
 coProduct :: [DBMetadata] -> DBMetadata
 coProduct inners = CoLimitMetadata
   {
     coLimitName = cim "_coprd_" name inners,
-    coLimitInnerMetadatas = zipWith shriek incs inners
+    coLimitInnerMetadatas = zipWith shriek incs inners,
+    coLimitHashCode = SHA.finalize $ foldr (flip SHA.update) SHA.init $ map dbHashCode inners
   }
   where (coProdSchema,incs) = schemaCoProduct $ map dbSchema inners
         

@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
 module SimpleSubInstance where
 
 import Data.List
@@ -18,6 +17,8 @@ import NutleyInstance
 import Metadata
 import NutleyQueryUtils
 import Parameterize
+import qualified Crypto.Hash.SHA256 as SHA
+
 
 subInstance :: HaskellCode -> DBMetadata -> Error (DBMetadata,NutleyParams)
 subInstance f inner = do 
@@ -30,7 +31,8 @@ subInstance f inner = do
       simpleSubInstanceName = "subinst_" ++ (name inner),
       simpleSubInstanceParamTypes = ptypes,
       simpleSubInstanceFilterFunc = eta_f,
-      simpleSubInstanceInnerMetadata = inner
+      simpleSubInstanceInnerMetadata = inner,
+      simpleSubInstanceHashCode = SHA.finalize $ foldr (flip SHA.update) SHA.init [dbHashCode inner,encode eta_f,encode ptypes,encode simp]
     },
     params)
 

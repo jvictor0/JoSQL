@@ -15,15 +15,19 @@ import TupleUtils
 import NutleyInstance
 import Metadata
 import NutleyQueryUtils
+import qualified Crypto.Hash.SHA256 as SHA
+
 
                                           
+-- NOTE: if you add more encodings, remember to update hash!
 simpleRecord :: Name -> Schema -> [VertID] -> DBMetadata
 simpleRecord name sch simp = SimpleRecordMetadata 
   {
     simpleRecordName = name,
     simpleRecordSchema = sch,
     simpleRecordCompressionSchemes = map (\v -> (v,Lit "encodeLazy")) simp,
-    simpleRecordDecompressionSchemes = map (\v -> (v,Lit "decodeLazy")) simp
+    simpleRecordDecompressionSchemes = map (\v -> (v,Lit "decodeLazy")) simp,
+    simpleRecordHashCode = SHA.finalize $ foldr (flip SHA.update) SHA.init [encode name,encode sch, encode simp]
   }
 
 segmentFileName md v = Lit $ "\"segment_" ++ ((name md) ++ "_" ++ (show v) ++ "_\" ++ (show instID) ++ \".seg\"")
