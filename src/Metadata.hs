@@ -102,7 +102,7 @@ simplexFromNames db simps = let names = map (\(x,y) -> (y,x)) $ dbVertexNames db
 simplicesFromNames :: DBMetadata -> [[Name]] -> Maybe [Simplex]
 simplicesFromNames db simps = let names = map (\(x,y) -> (y,x)) $ dbVertexNames db in 
   mapM (mapM (flip lookup names)) simps
-  
+-- should go in a different file
 instance Verify DBMetadata where
   verifyConditions md = case dbToken md of
     ShriekToken -> let (SchemaMap _ _ f) = shriekMap md in

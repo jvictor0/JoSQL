@@ -24,6 +24,7 @@ data CreateQuery = CreateSchema [TypeDec] [[Name]]
                  | InstantiateSchema SchemaQuery [Name] DataQuery
                  | FilterQuery InstanceQuery HaskellCode
                  | FunctorQuery FunctorType MapQuery InstanceQuery
+                 | UnionQuery [InstanceQuery]
                    deriving (Eq,Show)
 
 data InstanceQuery = NamedInstance Name

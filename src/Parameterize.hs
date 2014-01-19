@@ -16,6 +16,7 @@ import TupleUtils
 import NutleyInstance
 import Metadata
 import NutleyQueryUtils
+import Paramable
 
 isNumber ('-':rst) = all isDigit rst
 isNumber x = all isDigit x
@@ -23,6 +24,7 @@ isNumber x = all isDigit x
 paramType :: NutleyParam -> Error HaskellType
 paramType (IntParam _) = return t_Int
 paramType (ListParam []) = return $ tc_List $ BaseType "a"
+paramType (StringParam _) = return t_String
 paramType (ListParam (a:rst)) = do
   pa <- paramType a
   prst <- mapM paramType rst
@@ -55,12 +57,14 @@ parameterize mp expr = let (res,(simp',ts')) = runState (parHelper mp expr) newP
 parameterizeMap :: SchemaMap -> (SchemaMap,NutleyParams)
 parameterizeMap (SchemaMap src trg d) = 
   let (res,([],ts)) = flip runState newParamState $ do
-        mapM (\(i,j,Lam p f) -> fmap (((,,) i j).(Lam p)) $ parHelper Map.empty f) d
+        mapM (\(i,j,f) -> fmap ((,,) i j) $ parHelper Map.empty f) d
   in (SchemaMap src trg res,reverse ts)
                           
 parameterFrom (Lst ls) = fmap ListParam $ mapM parameterFrom ls
 parameterFrom (Lit x)
   | isNumber x = Just $ IntParam $ read x
+parameterFrom (SLit str) = Just $ StringParam str
+parameterFrom (CLit c) = Just $ CharParam c
 parameterFrom _ = Nothing
 
 parHelper mp (Lit x)
@@ -72,4 +76,6 @@ parHelper mp (App f args) = (return App) `ap` (parHelper mp f) `ap` (mapM (parHe
 parHelper mp (Lst ts) = case parameterFrom (Lst ts) of
   Nothing ->  return Lst `ap` (mapM (parHelper mp) ts)
   (Just p) -> addParam p
+parHelper mp (Tpl tup) = fmap Tpl $ mapM (parHelper mp) tup
+parHelper mp (Lam p e) = fmap (Lam p) $ parHelper mp e
 parHelper mp x = error $ "parameterizer does not deal with expression type of " ++ (show x)

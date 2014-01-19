@@ -40,7 +40,7 @@ showNutleyObject (NutleySchema (Schema (SC verts' simps) tps)) = result
                  (cim ",\n" ("    "++) vertNamed) ++ "\n  }\n" ++ 
                  "  simplices =\n  {\n" ++ 
                  (cim ",\n" (\x -> "    { "++x++" }") simpNamed) ++ "\n  }"
-showNutleyObject (NutleyObjInstance isnt md) = "instance of database " ++ (name md)
+showNutleyObject (NutleyObjInstance isnt md) = "instance of database " ++ (name md) ++ "\n  " ++ (show isnt)
 showNutleyObject (NutleyMap (SchemaMap srcS trgS f))
   = "create map " ++ (showNutleyObject $ NutleySchema srcS) ++ "\n -> \n" ++ (showNutleyObject $ NutleySchema trgS) ++
     "\n with\n  {\n" ++

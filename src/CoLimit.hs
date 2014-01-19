@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric, RankNTypes #-}
 module CoLimit where
 
 import Data.Maybe

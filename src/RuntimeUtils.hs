@@ -16,4 +16,3 @@ readJustMaybe Nothing = Just Nothing
 readJustMaybe (Just s)=  case [x | (x,t) <- reads s, ("","") <- lex t] of
   [x] -> Just (Just x)
   _   -> Nothing
-  

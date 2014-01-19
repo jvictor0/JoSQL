@@ -16,6 +16,9 @@ tupNatInverse (Lit "snd") = Just (2,2)
 tupNatInverse (Lam (Ltp x) (Lit y)) = fmap (const (1,1)) $ guard $ x == y
 tupNatInverse (Lam (Tup ts) (Lit x)) = (findIndex (\t -> case t of { (Ltp y) -> y == x; _ -> False; }) ts)
                                        % (\i -> (length ts, i+1))
+tupNatInverse (Lam (Ltp x) (App tn [Lit x'])) -- eta reduction since because stupid
+  | x == x' = tupNatInverse tn
+tupNatInverse (Tpl [tn]) = tupNatInverse tn -- extra parens don't make it not a tupleNat
 tupNatInverse _ = Nothing
 
 isIdentity f = tupNatInverse f == Just (1,1)

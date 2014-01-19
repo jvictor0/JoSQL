@@ -44,6 +44,9 @@ maybeToEither _ (Just a) = Right a
 
 liftEitherT x = EitherT $ fmap Right $ x
 
+liftToSingletonList f [x] = f x
+liftToSingletonList _  _ = Nothing
+
 groupAdjBy _ [] = []
 groupAdjBy f (a:as) = (gab a as)
   where gab a (b:bs) 

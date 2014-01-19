@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
 module SimpleRecord where
 
 import Data.List
@@ -40,7 +39,10 @@ codeSimpleRecordStrListsToTuple srmd =
   $ Whr (c_mapM (Lit "pTup") (Lit "ins"))
   [(FnpNP "pTup" [Lstp $ map (\(_,i) -> Ltp $ "z_" ++ (show i)) $ zip simplex [1..]],
     Right $ eitherTup (length simplex) "Parse error in tuple" $$ 
-    [Tpl $ map (\(_,i) -> c_1 "readJustMaybe" $ Lit $ "z_" ++ (show i)) $ zip simplex [1..]]),
+    [Tpl $ map (\((_,t),i) -> if t == t_String 
+                              then c_1 "Just" $ Lit $ "z_" ++ (show i)
+                              else c_1 "readJustMaybe" $ Lit $ "z_" ++ (show i)) 
+     $ zip vertTypes [1..]]),
    (FnpNP "pTup" [USp], Right $ c_1 "Left" $ Lit $ "\"Tuple length mismatch\"")]
   where s = simpleRecordSchema srmd
         simplex = simpleRecordSimplex srmd

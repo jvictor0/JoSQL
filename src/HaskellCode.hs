@@ -24,6 +24,8 @@ data HaskellCode = Lit String
                  | Lst [HaskellCode]
                  | Tpl [HaskellCode]
                  | Do [(HaskellPattern,HaskellCode)]
+                 | SLit String
+                 | CLit Char
                  | LComp HaskellCode [(HaskellPattern,HaskellCode)] [HaskellCode]
                  deriving (Eq, Generic)
 data HaskellPattern = Mlp [HaskellPattern] -- toplevel only
@@ -74,6 +76,8 @@ paren x
                         
 instance Show HaskellCode where
   show (Lit s) = s
+  show (SLit s) = show s
+  show (CLit c) = show c
   show (Whr c whrlst) = (show c) ++ "\n" ++ tab ++ "where\n" ++ 
                         (concatMap (\(pat,tp) -> (case tp of
                                                      (Left t) -> tab ++ tab ++ (show pat) ++ " :: " ++ (show t) ++ "\n"

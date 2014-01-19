@@ -12,9 +12,12 @@ import Data.List
 import Control.Monad
 import Data.Char
 
-data NodeType = TopLevel | Quote | Paren | Bracket | Curly deriving (Eq)
+data NodeType = TopLevel | Paren | Bracket | Curly deriving (Eq)
 
 data LexTree = Ident String 
+             | Node NodeType [LexTree] 
+             | Quote String
+             | CharLit Char
              | LetToken
              | ClearToken
              | DataToken
@@ -23,6 +26,8 @@ data LexTree = Ident String
              | CreateToken
              | SelectToken
              | FilterToken
+             | UnknownToken
+             | UnionToken
              | SchemaToken
              | MapToken
              | ShriekToken
@@ -40,15 +45,17 @@ data LexTree = Ident String
              | NullToken
              | EqToken
              | CommaToken
+             | UnderScoreToken
+             | LambdaToken
              | ColonToken
              | ArrowToken               
-             | Node NodeType [LexTree] 
              | KILLToken
              | QuitToken
              deriving (Eq)
 
 instance Show LexTree where
   show (Ident s) = s
+  show (Quote str)  = show str
   show LetToken = "let"
   show CreateToken = "create"
   show SelectToken = "select"
@@ -70,41 +77,43 @@ instance Show LexTree where
   show NullToken = "null" 
   show EqToken = "="
   show CommaToken = ","
+  show UnderScoreToken = "_"
+  show LambdaToken = "\\"
   show ArrowToken = "->"
   show ColonToken = "::"
+  show UnionToken = "union"
   show KILLToken = "KILL"
   show ClearToken = "clear"
   show CacheToken = "cache"
   show QuitToken = "quit"
   show ServerToken = "server"
+  show UnknownToken = "UNKOWN"
   show (Node t lvs) = (leftBraceStr t) ++ (cim " " show lvs) ++ (rightBraceStr t)
 
-isLeftBrace x = x`elem`"\"([{"
-isRightBrace x = x`elem`"\")]}"
+isLeftBrace x = x`elem`"([{"
+isRightBrace x = x`elem`")]}"
 isBrace x = isLeftBrace x || isRightBrace x 
 
-leftBraceLevel '\"' = Quote
 leftBraceLevel '(' = Paren
 leftBraceLevel '[' = Bracket
 leftBraceLevel '{' = Curly
-rightBraceLevel '\"' = Quote
 rightBraceLevel ')' = Paren
 rightBraceLevel ']' = Bracket
 rightBraceLevel '}' = Curly
 
 leftBraceStr TopLevel = ""
-leftBraceStr Quote = "\""
 leftBraceStr Paren = "("
 leftBraceStr Bracket = "["
 leftBraceStr Curly = "{"
 rightBraceStr TopLevel = ""
-rightBraceStr Quote = "\""
 rightBraceStr Paren = ")"
 rightBraceStr Bracket = "]"
 rightBraceStr Curly = "}"
 
 token "::" = ColonToken
 token "," = CommaToken
+token "_" = UnderScoreToken
+token "\\" = LambdaToken
 token "=" = EqToken
 token "->" = ArrowToken
 token "map" = MapToken
@@ -121,6 +130,7 @@ token "image" = ImageToken
 token "direct" = DirectToken
 token "inverse" = InverseToken
 token "show" = ShowToken
+token "union" = UnionToken
 token "vertices" = VerticesToken
 token "simplices" = SimplicesToken
 token "null" = NullToken
@@ -132,24 +142,36 @@ token "data" = DataToken
 token "quit" = QuitToken
 token "filter" = FilterToken
 token "by" = ByToken
+token "~" = UnknownToken
 token str = Ident str
 
 identName (Ident n) = Just n
 identName _ = Nothing
 
-isInfix = flip elem "+-*=/<>!,:"
+isInfix = flip elem "+-*=/<>:"
+isSingletonTok a = (isBrace a) || (a`elem`"_\\,")
+isTokenable '_' = True
+isTokenable a = isAlphaNum a
 
-preLex str = concatMap (groupAdjBy (\x y -> sameGroup x y)) $ words str
-  where sameGroup x y
-          | isBrace x || isBrace y = False
-          | x == '-'  && isDigit y = True
-          | isInfix x              = isInfix y
-          | isDigit x              = isDigit y
-          | isAlpha x              = isAlpha y
+preLex [] = []
+preLex ('\'':a:'\'':rst) = ['\'']:[a]:['\'']:(preLex rst)
+preLex (a:as)
+  | isSpace a = preLex as
+  | isAlpha a = let (tk,rst) = break (not.isTokenable) as in (a:tk):(preLex rst)
+  | a == '\"' = let (tk,rst) = break (=='\"') as in 
+  case rst of
+    ('\"':rst1) -> [a]:tk:['\"']:(preLex rst1)
+    []          -> [[a],tk]
+  | isSingletonTok a = [a]:(preLex as)
+  | isDigit a = let (tk,rst) = break (not.isDigit) as in (a:tk):(preLex rst)
+  | isInfix a = let (tk,rst) = break (not.isInfix) as in (a:tk):(preLex rst)
+  | otherwise = ["~"]
 
 lex str = fmap fst $ lex_ TopLevel [] $ preLex str
 
-lex_ Quote res ("\"":as) = Just (Node Quote $ reverse res,as)
+lex_ level res ("\"":q:"\"":rst) = lex_ level ((Quote q):res) rst
+lex_ level res ("\'":[q]:"\'":rst) = lex_ level ((CharLit q):res) rst
+lex_ _ _ ("\"":_) = Nothing
 lex_ level res ([a]:as)
   | isLeftBrace a  = (lex_ (leftBraceLevel a) [] as) >>= (\(nd,rst) -> lex_ level (nd:res) rst)
   | isRightBrace a = (guard $ (rightBraceLevel a) == level) >> (Just (Node level (reverse res),as))
@@ -215,6 +237,7 @@ parseData dats = do
           case head i of
             (Ident a) -> Just $ Just a
             NullToken -> Just Nothing
+            (Quote q) -> Just $ Just q
             _         -> Nothing
       _                  -> Nothing
   return $ ExplicitTuples tups
@@ -230,12 +253,42 @@ parseInstantiateSchema _ = Nothing
 -- TODO: generalize this to all infix expressions, should require modifying something
 parseExpression :: [LexTree] -> Maybe HaskellCode
 parseExpression [Ident a] = Just $ Lit a
-parseExpression [Node Paren expr] = parseExpression expr
+parseExpression [Node Paren expr] = do 
+  exp <- mapM parseExpression $ sepBy (==CommaToken) expr
+  case exp of
+    [x] -> return x
+    exps -> return $ Tpl exps
 parseExpression [Node Bracket expr] = fmap Lst $ mapM parseExpression $ sepBy (==CommaToken) expr
 parseExpression [Ident "-",x] = (Just $ App (Lit "-")) `ap` (fmap return $ parseExpression [x])
+parseExpression (LambdaToken:rst) = do
+  let (pat,exp) = break (==ArrowToken) rst
+  guard $ not $ null exp
+  pattern0 <- mapM (parsePattern.return) pat
+  let pattern = case pattern0 of
+        [p] -> p
+        ps -> Mlp ps
+  fmap (Lam pattern) $ parseExpression $ tail exp
+parseExpression [Quote q] = Just $ SLit q
+parseExpression [CharLit q] = Just $ CLit q
+parseExpression [x] = Nothing
 parseExpression [l_expr,Ident infixOp,r_expr] 
   | all isInfix infixOp = parseExpression [Ident $ "(" ++ infixOp ++ ")",l_expr,r_expr]
 parseExpression (f:rst) = (Just App) `ap` (parseExpression [f]) `ap` (mapM (parseExpression.return) rst)
+parseExpression [] = Nothing
+
+parsePattern :: [LexTree] -> Maybe HaskellPattern
+parsePattern [Ident a] = Just $ Ltp a
+parsePattern [Quote q] = Just $ Ltp $ show q
+parsePattern [Node Paren expr] = do
+  pat <- mapM parsePattern $ sepBy (==CommaToken) expr
+  case pat of
+    [x] -> return x
+    xs  -> return $ Tup xs
+parsePattern [Node Bracket expr] = fmap Lstp $ mapM parsePattern $ sepBy (==CommaToken) expr
+parsePattern [UnderScoreToken] = Just USp
+parsePattern ((Ident f):rst) = fmap (Fnp f) $ mapM (\x -> parsePattern [x]) rst
+parsePattern _ = Nothing
+
 
 parseFilter :: [LexTree] -> Maybe CreateQuery
 parseFilter (FilterToken:instanceQuery:ByToken:expr) = do
@@ -243,6 +296,11 @@ parseFilter (FilterToken:instanceQuery:ByToken:expr) = do
   filtfun <- parseExpression expr
   return $ FilterQuery inst filtfun
 parseFilter _ = Nothing
+
+parseUnion :: [LexTree] -> Maybe CreateQuery
+parseUnion (UnionToken:instanceQueries) = do
+  instances <- mapM (liftToSingletonList parseInstanceQuery) $ sepBy (==CommaToken) instanceQueries
+  return $UnionQuery instances
 
 parseFunctor :: [LexTree] -> Maybe CreateQuery                
 parseFunctor [ShriekToken,mapQuery,WithToken,instanceQuery] = createFunctorQuery ShriekFunctor mapQuery instanceQuery

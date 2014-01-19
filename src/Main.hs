@@ -1,4 +1,4 @@
-module Server where
+module Main where
 
 import Network.Socket
 import Control.Concurrent
