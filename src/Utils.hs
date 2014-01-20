@@ -6,6 +6,12 @@ import Numeric (showHex)
 import Control.Monad.Trans.Either
 import Control.Monad
 
+fromJustE str Nothing = error str
+fromJustE _ (Just a) = a
+
+fromJustOr alt Nothing = alt
+fromJustOr _ (Just a) = a
+
 hexPrint :: BS.ByteString -> String
 hexPrint = concatMap (flip showHex "") . BS.unpack
 

@@ -66,7 +66,7 @@ codeSimpleRecordInstantiate srmd =
         simplex = simpleRecordSimplex srmd
         verts = simplex
         vertTypes = zip simplex $ univ s simplex
-        compSchemes = map (\v -> (v, fromJust $ lookup v $ simpleRecordCompressionSchemes srmd)) simplex
+        compSchemes = map (\v -> (v, fromJustE "compression lookup fail" $ lookup v $ simpleRecordCompressionSchemes srmd)) simplex
         inTupType = tc_List $ TupType $ map (tc_Maybe . snd) vertTypes
         inTupName = Lit "inData"
         inInstanceName = Lit "instID"
@@ -88,13 +88,6 @@ codeSimpleRecordInstantiate srmd =
 
 
 codeSimpleRecordMaterialize :: DBMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
-codeSimpleRecordMaterialize metadata ss@(SubSchema simps sch)
-  | not $ null $ verts\\(simpleRecordSimplex metadata) =   
-    ([],
-     Fun (materializeFName metadata ss) funType
-     $ Lam (Fnp "SimpleRecord" [Ltp "instID",USp]) $ c_return $ Lst [])
-  where funType = materializeType metadata ss
-        verts = nub $ concat simps
 codeSimpleRecordMaterialize metadata ss@(SubSchema simps sch) =
   ([],
    Fun (materializeFName metadata ss) funType
@@ -102,15 +95,19 @@ codeSimpleRecordMaterialize metadata ss@(SubSchema simps sch) =
    $ Do (columnInstantiations ++ [tupsCode]
         ))
     where columnInstantiations = map (\cid -> 
-                                       (Ltp $ "column_" ++ (show cid),
-                                        ((c_2 "fmap" 
-                                         (fromJust $ lookup cid $ simpleRecordDecompressionSchemes metadata)
-                                         (c_1 "readByteStringFile" (segmentFileName metadata cid))))
-                                       +>>=+ (Lit "fromEither")))
+                                       case lookup cid $ simpleRecordDecompressionSchemes metadata of
+                                         Nothing -> do_return $ Lit "()"
+                                         (Just decomp) -> 
+                                           (Ltp $ "column_" ++ (show cid),
+                                            ((c_2 "fmap" decomp
+                                              (c_1 "readByteStringFile" (segmentFileName metadata cid))))
+                                            +>>=+ (Lit "fromEither")))
                                  $ verts
           tupsCode = (USp,c_return $ Tpl $ map 
-                          (\s -> c_mapMaybe (maybeTup (length s)) $ zipN $ map (\v -> Lit $ "column_" ++ (show v)) s)
+                          (\s -> if s`subset`(simpleRecordSimplex metadata)
+                                 then c_mapMaybe (maybeTup (length s)) $ zipN $ map (\v -> Lit $ "column_" ++ (show v)) s
+                                 else Lit "[]")
                           simps)
           funType = materializeType metadata ss
-          verts = nub $ concat simps
+          verts = nub $ concat $ filter (`subset`(simpleRecordSimplex metadata)) simps
 

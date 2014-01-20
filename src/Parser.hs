@@ -202,7 +202,7 @@ parseSimplices (Node Curly simps) = mapM parseSimplex $ sepBy (==CommaToken) sim
 
 parseLetName :: LexTree -> Maybe ClientQuery
 parseLetName (Node TopLevel (LetToken:(Ident name):EqToken:create)) = do
-  createQuery <- join $ find isJust $ map ($create) [parseCreateSchema,parseInstantiateSchema,parseFilter,parseCreateMap,parseFunctor]
+  createQuery <- join $ find isJust $ map ($create) [parseCreateSchema,parseInstantiateSchema,parseFilter,parseCreateMap,parseFunctor,parseUnion]
   return $ LetQuery name createQuery
 parseLetName _ = Nothing
 
@@ -300,7 +300,8 @@ parseFilter _ = Nothing
 parseUnion :: [LexTree] -> Maybe CreateQuery
 parseUnion (UnionToken:instanceQueries) = do
   instances <- mapM (liftToSingletonList parseInstanceQuery) $ sepBy (==CommaToken) instanceQueries
-  return $UnionQuery instances
+  return $ UnionQuery instances
+parseUnion _ = Nothing
 
 parseFunctor :: [LexTree] -> Maybe CreateQuery                
 parseFunctor [ShriekToken,mapQuery,WithToken,instanceQuery] = createFunctorQuery ShriekFunctor mapQuery instanceQuery

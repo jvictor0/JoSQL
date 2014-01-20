@@ -6,6 +6,7 @@ import Schema
 import Utils
 import SimpleRecord
 import SimpleSubInstance
+import CoLimit
 import Types
 import Execute
 import Metadata
@@ -47,6 +48,12 @@ createToObject state (FilterQuery inner fn) = do
   (NutleyObjInstance inst md) <- mapEitherT atomically $ instanceQueryInstance state inner
   (md,params) <- EitherT $ return $ subInstance fn md
   return $ NutleyObjInstance (SimpleSubInstance params inst) md
+createToObject state (UnionQuery us) = do
+  inners <- fmap (map (\(NutleyObjInstance inst md) -> (md,inst))) $ 
+            mapEitherT atomically $ mapM (instanceQueryInstance state) us
+  let (db,ni) = coLimitOne inners 
+  hoistEither $ verifyEither db
+  return $ NutleyObjInstance ni db
 createToObject state (CreateMap srcQ trgQ defs) = do
   schSrc <- mapEitherT atomically $ schemaQuerySchema state srcQ
   schTrg <- mapEitherT atomically $ schemaQuerySchema state trgQ

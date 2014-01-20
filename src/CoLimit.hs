@@ -24,8 +24,13 @@ import qualified Crypto.Hash.SHA256 as SHA
 
 coLimitOne :: [(DBMetadata,NutleyInstance)] -> (DBMetadata,NutleyInstance)
 coLimitOne inners' = 
-  let inners = map (\((md,c):cs) -> (md,c:(map snd cs)))
-               $ groupBy ((==) `on` fst) $ sortBy (compare `on` fst) inners'          
+  let inners'' :: [(DBMetadata,[NutleyInstance])]
+      inners'' = concatMap (\(db,inst) -> case inst of
+                               (CoLimit ins) -> zipWith (,) (coLimitInnerMetadatas db) ins
+                               _             -> [(db,[inst])])
+                 inners'
+      inners = map (\((md,c):cs) -> (md,c ++ (concatMap snd cs)))
+               $ groupBy ((==) `on` fst) $ sortBy (compare `on` fst) inners''
   in 
    (
     CoLimitMetadata 
