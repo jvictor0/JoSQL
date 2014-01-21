@@ -17,6 +17,7 @@ import Name
 import Verify
 import Shriek
 import DirectImage
+import System.Directory
 import InverseImage
 
 import qualified Data.Map as Map
@@ -42,6 +43,14 @@ createToObject state (InstantiateSchema schq simplex dat) = do
       inst <- case dat of 
         (ExplicitTuples tps) -> do
           executeInstantiateFromStrings (InstantiateQuery md) id tps
+        (LoadCSV filepath) -> do
+          dfe <- liftEitherT $ doesFileExist filepath
+          if not dfe
+            then left $ "Cannot find file " ++ filepath
+            else do
+            dats <- liftEitherT $ fmap ((map (sepBy (==','))).lines) $ readFile filepath
+            let tups = map (map (\x -> if x == "null" then Nothing else Just x)) dats
+            executeInstantiateFromStrings (InstantiateQuery md) id tups
       return $ NutleyObjInstance inst md
     Nothing -> left "Cannot instantiate schema, simplex not in schema"
 createToObject state (FilterQuery inner fn) = do

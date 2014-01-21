@@ -76,7 +76,7 @@ paren x
                         
 instance Show HaskellCode where
   show (Lit s) = s
-  show (SLit s) = show s
+  show (SLit s) = s
   show (CLit c) = show c
   show (Whr c whrlst) = (show c) ++ "\n" ++ tab ++ "where\n" ++ 
                         (concatMap (\(pat,tp) -> (case tp of

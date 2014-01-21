@@ -63,7 +63,7 @@ parameterizeMap (SchemaMap src trg d) =
 parameterFrom (Lst ls) = fmap ListParam $ mapM parameterFrom ls
 parameterFrom (Lit x)
   | isNumber x = Just $ IntParam $ read x
-parameterFrom (SLit str) = Just $ StringParam str
+parameterFrom (SLit str) = Just $ StringParam $ read str
 parameterFrom (CLit c) = Just $ CharParam c
 parameterFrom _ = Nothing
 

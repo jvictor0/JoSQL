@@ -19,6 +19,7 @@ data LexTree = Ident String
              | Quote String
              | CharLit Char
              | LetToken
+             | LoadToken
              | ClearToken
              | DataToken
              | CacheToken
@@ -55,7 +56,7 @@ data LexTree = Ident String
 
 instance Show LexTree where
   show (Ident s) = s
-  show (Quote str)  = show str
+  show (Quote str)  = str
   show LetToken = "let"
   show CreateToken = "create"
   show SelectToken = "select"
@@ -70,6 +71,7 @@ instance Show LexTree where
   show DirectToken = "direct"
   show WithToken = "with"
   show AtToken = "at"
+  show LoadToken = "load"
   show ByToken = "by"
   show FromToken = "from"               
   show VerticesToken = "vertices"
@@ -133,6 +135,7 @@ token "show" = ShowToken
 token "union" = UnionToken
 token "vertices" = VerticesToken
 token "simplices" = SimplicesToken
+token "load" = LoadToken
 token "null" = NullToken
 token "KILL" = KILLToken
 token "server" = ServerToken
@@ -154,14 +157,14 @@ isTokenable '_' = True
 isTokenable a = isAlphaNum a
 
 preLex [] = []
-preLex ('\'':a:'\'':rst) = ['\'']:[a]:['\'']:(preLex rst)
+preLex ('\'':a:'\'':rst) = ['\'',a,'\'']:(preLex rst)
 preLex (a:as)
   | isSpace a = preLex as
   | isAlpha a = let (tk,rst) = break (not.isTokenable) as in (a:tk):(preLex rst)
   | a == '\"' = let (tk,rst) = break (=='\"') as in 
   case rst of
-    ('\"':rst1) -> [a]:tk:['\"']:(preLex rst1)
-    []          -> [[a],tk]
+    ('\"':rst1) -> ([a] ++ tk ++ ['\"']):(preLex rst1)
+    []          -> ["~"]
   | isSingletonTok a = [a]:(preLex as)
   | isDigit a = let (tk,rst) = break (not.isDigit) as in (a:tk):(preLex rst)
   | isInfix a = let (tk,rst) = break (not.isInfix) as in (a:tk):(preLex rst)
@@ -169,9 +172,9 @@ preLex (a:as)
 
 lex str = fmap fst $ lex_ TopLevel [] $ preLex str
 
-lex_ level res ("\"":q:"\"":rst) = lex_ level ((Quote q):res) rst
-lex_ level res ("\'":[q]:"\'":rst) = lex_ level ((CharLit q):res) rst
-lex_ _ _ ("\"":_) = Nothing
+lex_ level res (('\"':q):rst) = lex_ level ((Quote ('\"':q)):res) rst
+lex_ level res (['\'',q,'\'']:rst) = lex_ level ((CharLit q):res) rst
+lex_ _ _ ("~":_) = Nothing
 lex_ level res ([a]:as)
   | isLeftBrace a  = (lex_ (leftBraceLevel a) [] as) >>= (\(nd,rst) -> lex_ level (nd:res) rst)
   | isRightBrace a = (guard $ (rightBraceLevel a) == level) >> (Just (Node level (reverse res),as))
@@ -228,6 +231,7 @@ parseMapQuery (Ident a) = Just $ NamedMap a
 parseMapQuery _ = Nothing
 
 parseData :: [LexTree] -> Maybe DataQuery
+parseData [LoadToken,Quote filename] = Just $ LoadCSV $ read filename
 parseData dats = do
   tups <- forM dats $ \x -> do
     case x of
@@ -278,7 +282,7 @@ parseExpression [] = Nothing
 
 parsePattern :: [LexTree] -> Maybe HaskellPattern
 parsePattern [Ident a] = Just $ Ltp a
-parsePattern [Quote q] = Just $ Ltp $ show q
+parsePattern [Quote q] = Just $ Ltp $ q
 parsePattern [Node Paren expr] = do
   pat <- mapM parsePattern $ sepBy (==CommaToken) expr
   case pat of
