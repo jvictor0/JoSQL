@@ -1,0 +1,37 @@
+clear data;
+clear cache;
+
+
+let s = create schema with vertices = {a :: Int} simplices = {{a}};
+let i1 = instantiate s at {a} with (1) (2) (3) (4);
+let i2 = instantiate s at {a} with (-1) (-2) (-3) (-4);
+let i3 = instantiate s at {a} with (1);
+select {{a}} from i1;
+select {{a}} from i2;
+select {{a}} from i3;
+select {{a},{a}} from i1;
+
+show i1;
+show i2;
+show i3;
+
+let t = create schema with vertices = {id :: Int, a :: Int, b :: String} simplices = {{id,a},{id,b}};
+let j1 = instantiate t at {id,a} with (1,10) (2,-20) (3,30) (4,-40);
+
+show j1;
+
+select {{id,a}} from j1;
+select {{id},{a}} from j1;
+select {{id}} from j1;
+select {{a}} from j1;
+select {{b}} from j1;
+select {{id,b}} from j1;
+select {{id,a},{id,b}} from j1;
+select {{id},{b}} from j1;
+
+let j2 = instantiate t at {b} with ("imaString") ("your a string");
+let j3 = instantiate t at {b} with ("with a \n") ("with\"a subquote\"") (";");
+select {{b}} from j2;
+select {{b}} from j3;
+select {{id,b}} from j2;
+

@@ -53,7 +53,7 @@ runConn state (sock, _) = do
     evaluate $ length response
     t' <- getCurrentTime
     hPutStrLn hdl $ "Query completed in " ++ (show $ (diffUTCTime t' t))
-    hPutStrLn hdl response
+    hPutStrLn hdl $ response ++ "\EOT"
     hPutStr hdl "joSQL> "
     hFlush hdl
   putStrLn "user disconnected"

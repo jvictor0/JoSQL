@@ -13,3 +13,8 @@ cabal-dev
 CQ*
 \#*
 *.seg
+*.expected
+*.result
+*.csv
+Main
+Geodude

@@ -1,7 +1,6 @@
 module Parser where
 
-import Prelude hiding (lex)
-
+import Prelude 
 import ClientQueries
 import Utils
 import HaskellCode
@@ -177,7 +176,7 @@ readQuote (a:rst)
   | otherwise = ([],a:rst)
 readQuote [] = ([],[])
             
-splitContents ch f = sc f
+splitContents ch f = init $ sc f
   where sc [] = [[]]
         sc ('"':rst) = let (q,m:rst0) = readQuote rst
                            (c:cs) = sc rst0
@@ -186,6 +185,7 @@ splitContents ch f = sc f
           | ch == c   = []:(sc cs)
           | otherwise = let (a:as) = sc cs in (c:a):as
                
+        
 preLex [] = []
 preLex ('\'':a:'\'':rst) = ['\'',a,'\'']:(preLex rst)
 preLex ('\'':'\\':a:'\'':rst) = ['\'',lexEscChar a,'\'']:(preLex rst)
@@ -200,8 +200,9 @@ preLex (a:as)
   | isDigit a = let (tk,rst) = break (not.isDigit) as in (a:tk):(preLex rst)
   | isInfix a = let (tk,rst) = break (not.isInfix) as in (a:tk):(preLex rst)
   | otherwise = ["~"]
+                
 
-lex str = fmap fst $ lex_ TopLevel [] $ preLex str
+lexTree str = fmap fst $ lex_ TopLevel [] $ preLex str
 
 lex_ level res (('\"':q):rst) = lex_ level ((Quote ('\"':q)):res) rst
 lex_ level res (['\'',q,'\'']:rst) = lex_ level ((CharLit q):res) rst
@@ -268,11 +269,11 @@ parseData dats = do
     case x of
       (Node Paren items) -> do
         forM (sepBy (==CommaToken) items) $ \i -> do
-          guard $ length i == 1
-          case head i of
-            (Ident a) -> Just $ Just a
-            NullToken -> Just Nothing
-            (Quote q) -> Just $ Just q
+          case i of
+            [Ident a] -> Just $ Just a
+            [NullToken] -> Just Nothing
+            [Quote q] -> Just $ Just q
+            [Ident "-",Ident a] -> Just $ Just $ '-':a
             _         -> Nothing
       _                  -> Nothing
   return $ ExplicitTuples tups
@@ -380,6 +381,6 @@ parseSpecial _ = Nothing
 
 parse :: String -> Maybe ClientQuery
 parse str = do
-  lx <- lex str
+  lx <- lexTree str
   join $ find isJust $ map ($lx) [parseLetName,parseShow,parseSelect,parseSpecial]
   

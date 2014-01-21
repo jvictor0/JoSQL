@@ -58,6 +58,7 @@ newGlobalState = atomically $ do
                    
 clearGlobalState state = atomically $ do
   writeTVar (namedObjects state) Map.empty
+  writeTVar (instanceIDCounter state) 0
     
 lookupByName :: GlobalState -> Name -> ErrorT STM NutleyObject
 lookupByName state name = do
