@@ -7,19 +7,23 @@ import Control.Monad
 import Data.List
 import Data.Char
 import System.Environment
+import System.Random
 
 
 data QueryResult = QR String String String [String]
 
 data Mode = Mode MType String
 
-data MType = Test | Update | Diff deriving (Eq)
+data MType = Test | Update | Diff | Error deriving (Eq)
+numASCIIs = 3
 
 main = do
+  n <- randomIO :: IO Int
+  (readFile $ "ASCIIDude" ++ (show $ (n`mod`numASCIIs) + 1)) >>= putStrLn
   args <- getArgs
   let (Mode md dotFile) = getMode args
   joSQLInputs <- generateInputs 0 "." dotFile
-  forM joSQLInputs $ \x -> do
+  forM_ joSQLInputs $ \x -> do
     putStrLn x
     when (md`elem`[Test,Update]) $ executeTest x
     when (md`elem`[Test,Diff]) $ checkTest x 
@@ -31,8 +35,8 @@ getMode ["-u",dotFile] = Mode Update dotFile
 getMode ["-update",dotFile] = Mode Update dotFile
 getMode ["-d",dotFile] = Mode Diff dotFile
 getMode ["-diff",dotFile] = Mode Diff dotFile
-                        
-  
+getMode _ = Mode Error ""                        
+ 
 isDotFile "." = False
 isDotFile ".." = False
 isDotFile ('.':file) = True
@@ -43,6 +47,7 @@ dropJoSQL f = reverse $ drop (length ".joSQL") $ reverse f
 
 maxDepth = 10
 
+generateInputs _ _ "" = return []
 generateInputs depth path dotFile = do
   bf <- doesFileExist $ path ++ "/" ++ dotFile
   bd <- doesDirectoryExist $ path ++ "/" ++ dotFile
