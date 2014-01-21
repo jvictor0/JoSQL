@@ -10,6 +10,7 @@ import Data.Char
 import QueryCompile
 import Data.Time.Clock
 
+import Parser
 import HandleUserInput
 import GlobalState
 import Utils
@@ -41,9 +42,9 @@ runConn state (sock, _) = do
   contents <- hGetContents hdl
   hPutStr hdl "joSQL> "
   hFlush hdl
-  forM (wordsWith ';' contents) $ \str -> do 
+  forM (splitContents ';' contents) $ \str -> do 
     evaluate $ length str
-    putStrLn $ "Query: " ++ (dropWhile isSpace str)
+    putStrLn $ "Query: " ++ (show $ dropWhile isSpace str)
     t <-  getCurrentTime
     response <- handleUserInput state str
     case response of

@@ -156,15 +156,46 @@ isSingletonTok a = (isBrace a) || (a`elem`"_\\,")
 isTokenable '_' = True
 isTokenable a = isAlphaNum a
 
+lexEscChar c = 
+  case c of
+    'a'  -> '\a'
+    'b'  -> '\b'
+    'f'  -> '\f'
+    'n'  -> '\n'
+    'r'  -> '\r'
+    't'  -> '\t'
+    'v'  -> '\v'
+    '\\' -> '\\'
+    '\"' -> '\"'
+    '\'' -> '\''
+    a    -> a
+
+readQuote ('\"':rst) = ("",'\"':rst)
+readQuote ('\\':a:rst) = let (f,r) = readQuote rst in ('\\':a:f,r)
+readQuote (a:rst) 
+  | isPrint a = let (f,r) = readQuote rst in (a:f,r)
+  | otherwise = ([],a:rst)
+readQuote [] = ([],[])
+            
+splitContents ch f = sc f
+  where sc [] = [[]]
+        sc ('"':rst) = let (q,m:rst0) = readQuote rst
+                           (c:cs) = sc rst0
+                       in ((('"':q) ++ [m] ++ c)):cs
+        sc (c:cs) 
+          | ch == c   = []:(sc cs)
+          | otherwise = let (a:as) = sc cs in (c:a):as
+               
 preLex [] = []
 preLex ('\'':a:'\'':rst) = ['\'',a,'\'']:(preLex rst)
+preLex ('\'':'\\':a:'\'':rst) = ['\'',lexEscChar a,'\'']:(preLex rst)
 preLex (a:as)
   | isSpace a = preLex as
   | isAlpha a = let (tk,rst) = break (not.isTokenable) as in (a:tk):(preLex rst)
-  | a == '\"' = let (tk,rst) = break (=='\"') as in 
+  | a == '\"' = let (tk,rst) = readQuote as in 
   case rst of
     ('\"':rst1) -> ([a] ++ tk ++ ['\"']):(preLex rst1)
-    []          -> ["~"]
+    _          -> ["~"]
   | isSingletonTok a = [a]:(preLex as)
   | isDigit a = let (tk,rst) = break (not.isDigit) as in (a:tk):(preLex rst)
   | isInfix a = let (tk,rst) = break (not.isInfix) as in (a:tk):(preLex rst)
