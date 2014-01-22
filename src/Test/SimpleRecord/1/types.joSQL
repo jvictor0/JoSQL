@@ -1,0 +1,10 @@
+clear data;
+clear cache;
+
+let s = create schema with vertices = { a :: [Int], b :: [[Int]], c :: [String], d :: (Double,Char)} simplices = {{a,b,c,d}};
+let i = instantiate s at {a,b,c,d} with
+     ([1,-2,3],[[1,2],[3,4]],["how","are","you"],(1.0,'h'))
+     ([1,-2,3],[[-1,2],[-3,4]],["how","am","i"],(-3.5,';'));
+select {{a,b,c,d}} from i;
+select {{a,b},{a,c,d}} from i;
+

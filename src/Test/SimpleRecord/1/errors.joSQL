@@ -1,0 +1,16 @@
+clear data;
+clear cache;
+
+
+let s = create schema with vertices = {a :: Int, b :: Int} simplices = {{a},{b}};
+let i = instantiate s at {a} with (1) (2) (3) (4) (5);
+select {{a,b}} from i;
+select {{a,x}} from i;
+
+let j = instantiate s at {x} with (1);
+let j = instantiate s at {a} with ("hi");
+let j = instantiate s at {a} with (adgadfg);
+let j = instantiate s at {a} with (2) (1,1) (2,2);
+let j = instantiate s at {a,b} with (1,2);
+
+

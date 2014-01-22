@@ -39,6 +39,7 @@ createToObject state (InstantiateSchema schq simplex dat) = do
   id <- mapEitherT atomically $ liftEitherT $ nextInstanceID state
   case mapM (\s -> schemaLookupVertex s sch) simplex of
     (Just simp) -> do 
+      hoistEither $ guardEither "Cannot instantiate schema at simplex not in schema" $ containsSimplex (fullSubSchema sch) simp
       let md = simpleRecord (name schq) sch simp
       inst <- case dat of 
         (ExplicitTuples tps) -> do
@@ -48,11 +49,11 @@ createToObject state (InstantiateSchema schq simplex dat) = do
           if not dfe
             then left $ "Cannot find file " ++ filepath
             else do
-            dats <- liftEitherT $ fmap ((map (sepBy (==','))).lines) $ readFile filepath
+            dats <- liftEitherT $ fmap ((map (sepBySkipQuotes (==','))).lines) $ readFile filepath
             let tups = map (map (\x -> if x == "null" then Nothing else Just x)) dats
             executeInstantiateFromStrings (InstantiateQuery md) id tups
       return $ NutleyObjInstance inst md
-    Nothing -> left "Cannot instantiate schema, simplex not in schema"
+    Nothing -> left "Cannot instantiate schema at vertices not in schema"
 createToObject state (FilterQuery inner fn) = do
   (NutleyObjInstance inst md) <- mapEitherT atomically $ instanceQueryInstance state inner
   (md,params) <- EitherT $ return $ subInstance fn md
@@ -105,7 +106,8 @@ handleSelect state (SelectQuery simpNamed instanceQuery) = eitherT return return
   (NutleyObjInstance inst md) <- mapEitherT atomically $ instanceQueryInstance state instanceQuery 
   ss <- case simplicesFromNames md simpNamed of
     Nothing -> left "Simplex not in instance's schema"
-    (Just simps) -> right (SubSchema simps $ dbSchema md)
+    (Just simps) -> do
+      right (SubSchema simps $ dbSchema md)
   executeSectionString (SectionQuery md ss) inst
 
 handleUserInput :: GlobalState -> String -> IO String

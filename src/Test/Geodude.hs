@@ -153,7 +153,7 @@ splitContents ch f = init $ sc f
         sc ('"':rst) = let (q,m:rst0) = readQuote rst
                            (c:cs) = sc rst0
                        in ((('"':q) ++ [m] ++ c)):cs
+        sc ('\'':c:'\'':rst) = let (a:as) = sc rst in ('\'':c:'\'':a):as
         sc (c:cs) 
           | ch == c   = []:(sc cs)
           | otherwise = let (a:as) = sc cs in (c:a):as
-               

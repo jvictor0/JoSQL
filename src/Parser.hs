@@ -56,6 +56,7 @@ data LexTree = Ident String
 instance Show LexTree where
   show (Ident s) = s
   show (Quote str)  = str
+  show (CharLit ch) = show ch
   show LetToken = "let"
   show CreateToken = "create"
   show SelectToken = "select"
@@ -181,6 +182,7 @@ splitContents ch f = init $ sc f
         sc ('"':rst) = let (q,m:rst0) = readQuote rst
                            (c:cs) = sc rst0
                        in ((('"':q) ++ [m] ++ c)):cs
+        sc ('\'':c:'\'':rst) = let (a:as) = sc rst in ('\'':c:'\'':a):as
         sc (c:cs) 
           | ch == c   = []:(sc cs)
           | otherwise = let (a:as) = sc cs in (c:a):as
@@ -197,7 +199,11 @@ preLex (a:as)
     ('\"':rst1) -> ([a] ++ tk ++ ['\"']):(preLex rst1)
     _          -> ["~"]
   | isSingletonTok a = [a]:(preLex as)
-  | isDigit a = let (tk,rst) = break (not.isDigit) as in (a:tk):(preLex rst)
+  | isDigit a = let (tk,rst) = break (not.isDigit) as 
+                in case rst of
+                  ('.':b:rst0) 
+                    | isDigit b -> let (tk0,rst1) = break (not.isDigit) rst0 in ((a:tk) ++ "." ++ (b:tk0)):(preLex rst1)
+                  _             -> (a:tk):(preLex rst)
   | isInfix a = let (tk,rst) = break (not.isInfix) as in (a:tk):(preLex rst)
   | otherwise = ["~"]
                 
@@ -218,6 +224,14 @@ sepBy _ [] = [[]]
 sepBy fn (a:as)
   | fn a      = []:(sepBy fn as)
   | otherwise = let (res1:res) = sepBy fn as in ((a:res1):res)
+
+sepBySkipQuotes _ [] = [[]]
+sepBySkipQuotes fn (a:as)
+  | fn a      = []:(sepBySkipQuotes fn as)
+  | a == '"'  = case readQuote as of
+    (q,b:rst) -> let (res1:res) = sepBySkipQuotes fn rst in ((a:q) ++ [b] ++ res1):res
+    ([],[])     -> [a:as]
+  | otherwise = let (res1:res) = sepBySkipQuotes fn as in ((a:res1):res)
 
 parseTypeDec :: [LexTree] -> Maybe TypeDec
 parseTypeDec ((Ident a):ColonToken:tp) = fmap (TypeDec a) $ parseType tp
@@ -262,19 +276,27 @@ parseMapQuery :: LexTree -> Maybe MapQuery
 parseMapQuery (Ident a) = Just $ NamedMap a
 parseMapQuery _ = Nothing
 
+parseDatum :: [LexTree] -> Maybe (Maybe String)
+parseDatum [Ident a] = Just $ Just a
+parseDatum [NullToken] = Just Nothing
+parseDatum [Quote q] = Just $ Just q
+parseDatum [CharLit c] = Just $ Just $ show c
+parseDatum [Ident "-",Ident a] = Just $ Just $ '-':a
+parseDatum [Node nType dts] 
+  | nType`elem`[Paren,Bracket] = do
+    ls <- mapM parseDatum $ sepBy (==CommaToken) dts
+    guard $ all isJust ls
+    return $ Just $ (leftBraceStr nType) ++ (cim "," fromJust ls) ++ (rightBraceStr nType)
+parseDatum  _         = Nothing
+
+
 parseData :: [LexTree] -> Maybe DataQuery
 parseData [LoadToken,Quote filename] = Just $ LoadCSV $ read filename
 parseData dats = do
   tups <- forM dats $ \x -> do
     case x of
       (Node Paren items) -> do
-        forM (sepBy (==CommaToken) items) $ \i -> do
-          case i of
-            [Ident a] -> Just $ Just a
-            [NullToken] -> Just Nothing
-            [Quote q] -> Just $ Just q
-            [Ident "-",Ident a] -> Just $ Just $ '-':a
-            _         -> Nothing
+        forM (sepBy (==CommaToken) items) parseDatum 
       _                  -> Nothing
   return $ ExplicitTuples tups
 

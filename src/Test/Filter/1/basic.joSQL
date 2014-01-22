@@ -1,0 +1,20 @@
+clear data;
+clear cache;
+
+let s = create schema with vertices = {a :: Int, b :: Int, c :: Int} simplices = {{a,b,c}};
+let i = instantiate s at {a,b,c} with (1,2,3) (4,5,6) (3,2,1) (6,5,4);
+
+let f1 = filter i by b == 2;
+let f2 = filter i by elem b [1,2,3];
+let f3 = filter i by a < b;
+let f4 = filter i by (a + b) >= c;
+
+select {{a,b,c}} from f1;
+select {{a,b,c}} from f2;
+select {{a,b,c}} from f3;
+select {{a,b,c}} from f4;
+select {{a,c}} from f1;
+select {{a,c}} from f2;
+select {{a,c},{a,b}} from i;
+select {{a,c},{a,b}} from f4;
+

@@ -3,6 +3,7 @@ module Metadata where
 import Data.List
 import Data.Serialize
 import GHC.Generics
+import Control.Monad
 
 import Name
 import Schema
@@ -117,8 +118,11 @@ simplexFromNames db simps = let names = map (\(x,y) -> (y,x)) $ dbVertexNames db
   mapM (flip lookup names) simps 
 
 simplicesFromNames :: DBMetadata -> [[Name]] -> Maybe [Simplex]
-simplicesFromNames db simps = let names = map (\(x,y) -> (y,x)) $ dbVertexNames db in 
-  mapM (mapM (flip lookup names)) simps
+simplicesFromNames db simps = do
+  let names = map (\(x,y) -> (y,x)) $ dbVertexNames db 
+  simps <- mapM (mapM (flip lookup names)) simps
+  guard $ all (containsSimplex (fullSubSchema $ dbSchema db)) simps
+  return simps
 -- should go in a different file
 instance Verify DBMetadata where
   verifyConditions md = case dbToken md of
