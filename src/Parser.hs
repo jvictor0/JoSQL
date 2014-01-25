@@ -276,7 +276,8 @@ parseSchemaQuery _ = Nothing
 
 parseInstanceQuery :: LexTree -> Maybe InstanceQuery
 parseInstanceQuery (Ident a) =  Just $ NamedInstance a
---parseInstanceQuery (Node Paren createQuery) = fmap CreateInstance $ findSuccessIn createQuery createInstanceFunctions
+parseInstanceQuery (Node Paren [createQuery]) = parseInstanceQuery createQuery 
+parseInstanceQuery (Node Paren createQuery) = fmap CreateInstance $ findSuccessIn createQuery createInstanceFunctions
 parseInstanceQuery _ = Nothing
 
 parseMapQuery :: LexTree -> Maybe MapQuery

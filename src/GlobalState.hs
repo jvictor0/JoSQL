@@ -31,6 +31,10 @@ data GlobalState = GlobalState
 isActionObject (NutleyActionObject _) = True
 isActionObject _ = False
 
+execNutleyInstance :: NutleyObject -> ErrorT IO (NutleyInstance,DBMetadata)
+execNutleyInstance (NutleyActionObject act) = act >>= execNutleyInstance
+execNutleyInstance (NutleyObjInstance inst md) = return (inst,md)
+
 nextInstanceID state = do
   id <- readTVar $ instanceIDCounter state
   writeTVar (instanceIDCounter state) $ id + 1

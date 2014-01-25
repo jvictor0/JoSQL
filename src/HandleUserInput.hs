@@ -129,12 +129,13 @@ mapQueryMap state (NamedMap name) = do
 
 instanceQueryInstance :: GlobalState -> InstanceQuery -> ErrorT STM NutleyObject
 instanceQueryInstance state (NamedInstance name) = lookupByName state name
---instanceQueryInstance state (CreateInstance createQuery) = do
+instanceQueryInstance state (CreateInstance createQuery) = createToObject state createQuery
   
 
 handleSelect :: GlobalState -> ClientQuery -> IO String
 handleSelect state (SelectQuery simpNamed instanceQuery) = eitherT return return $ do
-  (NutleyObjInstance inst md) <- mapEitherT atomically $ instanceQueryInstance state instanceQuery 
+  instanceObj <- mapEitherT atomically $ instanceQueryInstance state instanceQuery 
+  (inst,md) <- execNutleyInstance instanceObj -- THIS CAN LEAK MEMORY IF instanceObj IS AN INSTANTIATE QUERY
   ss <- case simplicesFromNames md simpNamed of
     Nothing -> left "Simplex not in instance's schema"
     (Just simps) -> do
