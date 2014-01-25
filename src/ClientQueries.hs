@@ -28,13 +28,14 @@ data CreateQuery = CreateSchema [TypeDec] [[Name]]
                    deriving (Eq,Show)
 
 data InstanceQuery = NamedInstance Name
-                   deriving (Eq,Show,Ord)
+                   | CreateInstance CreateQuery
+                   deriving (Eq,Show)
 
 data SchemaQuery = NamedSchema Name
-                   deriving (Eq,Show,Ord)
+                   deriving (Eq,Show)
 
 data MapQuery = NamedMap Name
-              deriving (Eq,Show,Ord)
+              deriving (Eq,Show)
 
 data DataQuery = ExplicitTuples [[Maybe String]]
                | LoadCSV FilePath

@@ -249,9 +249,15 @@ parseSimplex _ = Nothing
 
 parseSimplices (Node Curly simps) = mapM parseSimplex $ sepBy (==CommaToken) simps 
 
+createInstanceFunctions :: [[LexTree] -> Maybe CreateQuery]
+createInstanceFunctions = [parseInstantiateSchema,parseFilter,parseFunctor,parseUnion]
+
+findSuccessIn :: a -> [a -> Maybe b] -> Maybe b
+findSuccessIn a fns = join $ find isJust $ map ($a) fns
+
 parseLetName :: LexTree -> Maybe ClientQuery
 parseLetName (Node TopLevel (LetToken:(Ident name):EqToken:create)) = do
-  createQuery <- join $ find isJust $ map ($create) [parseCreateSchema,parseInstantiateSchema,parseFilter,parseCreateMap,parseFunctor,parseUnion]
+  createQuery <- findSuccessIn create $ createInstanceFunctions ++ [parseCreateSchema,parseCreateMap]
   return $ LetQuery name createQuery
 parseLetName _ = Nothing
 
@@ -270,6 +276,7 @@ parseSchemaQuery _ = Nothing
 
 parseInstanceQuery :: LexTree -> Maybe InstanceQuery
 parseInstanceQuery (Ident a) =  Just $ NamedInstance a
+--parseInstanceQuery (Node Paren createQuery) = fmap CreateInstance $ findSuccessIn createQuery createInstanceFunctions
 parseInstanceQuery _ = Nothing
 
 parseMapQuery :: LexTree -> Maybe MapQuery
@@ -404,5 +411,5 @@ parseSpecial _ = Nothing
 parse :: String -> Maybe ClientQuery
 parse str = do
   lx <- lexTree str
-  join $ find isJust $ map ($lx) [parseLetName,parseShow,parseSelect,parseSpecial]
+  findSuccessIn lx [parseLetName,parseShow,parseSelect,parseSpecial]
   

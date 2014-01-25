@@ -16,9 +16,11 @@ import Metadata
 import Name
 import HaskellCode
 
-data NutleyObject = NutleySchema Schema | 
-                    NutleyMap SchemaMap |
-                    NutleyObjInstance NutleyInstance DBMetadata
+data NutleyObject = NutleySchema Schema 
+                  | NutleyMap SchemaMap 
+                  | NutleyObjInstance NutleyInstance DBMetadata
+                  | NutleyActionObject (ErrorT IO NutleyObject)
+                  | EmptyNutleyObject
                     
 data GlobalState = GlobalState 
                    {
@@ -26,6 +28,9 @@ data GlobalState = GlobalState
                      instanceIDCounter :: TVar Int                   
                    }
                    
+isActionObject (NutleyActionObject _) = True
+isActionObject _ = False
+
 nextInstanceID state = do
   id <- readTVar $ instanceIDCounter state
   writeTVar (instanceIDCounter state) $ id + 1
@@ -70,8 +75,11 @@ lookupByName state name = do
 nameExists state name = eitherT (const $ return False) (const $ return True) $ lookupByName state name
   
 addNamedObject state name object = flip modifyTVar (Map.insert name object) $ namedObjects state
+removeNamedObject state name = flip modifyTVar (Map.delete name) $ namedObjects state
 
 addNamedObjectIfNotExists :: GlobalState -> Name -> NutleyObject -> ErrorT STM ()
 addNamedObjectIfNotExists state name object = do
   (hoistEither.(guardEither $ "Object " ++ name ++ " already exists").not) =<< (liftEitherT $ nameExists state name)
   liftEitherT $ addNamedObject state name object
+
+reserveName state name = addNamedObjectIfNotExists state name EmptyNutleyObject
