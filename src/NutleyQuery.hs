@@ -24,6 +24,7 @@ import CoLimit
 codeQuery (MaterializeQuery db ss) = codeMaterialize db ss
 codeQuery (SectionQuery db ss) = codeSection db ss
 codeQuery (InstantiateQuery db) = codeInstantiate db
+codeQuery (InstantiateSelectQuery to from ss) = codeInstantiateSelect to from ss
 
         
 codeSection :: DBMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
@@ -47,3 +48,4 @@ codeInstantiate db = case dbToken db of
     _  -> error "Cannot Instantiate from Non Simple Record Database Metadata"
 
 
+codeInstantiateSelect = codeInstantiateSelectDefault

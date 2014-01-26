@@ -1,0 +1,9 @@
+clear cache;
+clear data;
+
+
+let s = create schema with vertices = {a :: Int} simplices = {{a}};
+let i = instantiate s at {a} with (1) (2) (3) (4);
+let j = instantiate s at {a} with select {{a}} from i;
+select {{a}} from j;
+

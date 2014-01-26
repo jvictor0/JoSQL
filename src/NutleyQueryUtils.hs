@@ -6,6 +6,7 @@ import Name
 import Schema
 import Types
 import HaskellCode
+import TupleUtils
 import Utils
 import Metadata
 import Join
@@ -13,15 +14,18 @@ import Join
 data NutleyQuery = MaterializeQuery DBMetadata SubSchema 
                  | SectionQuery DBMetadata SubSchema 
                  | InstantiateQuery DBMetadata
+                 | InstantiateSelectQuery DBMetadata DBMetadata SubSchema
 
 instance Named NutleyQuery where
   name (MaterializeQuery metadata ss) = materializeFName metadata ss
   name (SectionQuery metadata ss) = sectionFName metadata ss
   name (InstantiateQuery metadata) = instantiateFName metadata
+  name (InstantiateSelectQuery to from ss) = instantiateSelectFName to from ss
 
 materializeFName metadata subschema = "materialize_" ++ (name metadata) ++ "_" ++ (name subschema)
 sectionFName metadata subschema = "section_" ++ (name metadata) ++ "_" ++ (name subschema)
 instantiateFName metadata = "instantiate_" ++ (name metadata)
+instantiateSelectFName to from ss = "instantiate_select_" ++ (name to) ++ "_from_" ++ (name from) ++ "_" ++ (name ss)
 
 materializeType metadata ss@(SubSchema simps _) = funType
   where inTupType = TupType $ map (tc_List.TupType.(univ (dbSchema metadata))) simps
@@ -65,3 +69,15 @@ codeSectionDefault metadata ss@(SubSchema simps sch) =
         joinCode = codeEquiJoin $ map (\(s,i) -> (s,Lit $ "column_" ++ (show i))) $ zip simps [1..]
 
 
+
+codeInstantiateSelectDefault :: DBMetadata -> DBMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
+codeInstantiateSelectDefault to from ss = 
+  ([("I",InstantiateQuery to),("J",SectionQuery from ss)],
+   Fun (instantiateSelectFName to from ss)
+   (FunType [BaseType "InstanceID", t_NutleyInstance] $ tc_IO $ t_NutleyInstance)
+   $ Lam (Mlp [Ltp "instID", Ltp "fromInstance"])
+   $ Do [(Ltp "tups", c_1 ("J." ++ sectionFName from ss) $ Lit "fromInstance"),
+         (USp,c_2 ("I." ++ instantiateFName to) (Lit "instID") $ c_map (Lam (nTupPat n) (tupMap n (Lit "Just"))) (Lit "tups"))]
+   )
+  where n = length $ simpleRecordCompressionSchemes to
+  

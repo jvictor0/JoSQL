@@ -46,6 +46,15 @@ executeInstantiateFromStrings q instID inData = do
     (LoadSuccess _ f) -> (EitherT $ f instID inData) 
     (LoadFailure errs) -> (mapM_ (liftEitherT.putStrLn) errs) >> (left $ cim "\n" id errs)
 
+executeInstantiateSelect :: NutleyQuery -> InstanceID -> NutleyInstance -> ErrorT IO NutleyInstance
+executeInstantiateSelect q instID fromInstance = do
+  modname <- compileQuery q
+  ls <- liftEitherT $ load (modname ++ ".o") ["."] [] (name q)
+  case ls of
+    (LoadSuccess _ f) -> (liftEitherT $ f instID fromInstance) 
+    (LoadFailure errs) -> (mapM_ (liftEitherT.putStrLn) errs) >> (left $ cim "\n" id errs)
+
+
 {-
 executeInstantiateSerialize :: NutleyQuery -> InstanceID -> LazyByteString -> IO ByteString
 executeInstantiateSerialize q instID inData = do
@@ -72,6 +81,7 @@ executeSectionSerialize q instID = do
     (LoadSuccess m f) -> f instID
     (LoadFailure errs) -> (mapM_ putStrLn errs) >> error ""
 -}
+
 executeSectionString :: NutleyQuery -> NutleyInstance -> ErrorT IO String
 executeSectionString q instID = do
   modname <- compileQuery q

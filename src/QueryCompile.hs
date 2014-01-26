@@ -30,7 +30,13 @@ hashQuery (SectionQuery md ss) = SHA.finalize $
 hashQuery (InstantiateQuery md) = SHA.finalize $
                                   (SHA.update (SHA.update SHA.init (encode "inst"))
                                    (dbHashCode md))
-                                 
+hashQuery (InstantiateSelectQuery to md ss) = 
+  SHA.finalize $
+  SHA.update 
+  (SHA.update (SHA.update (SHA.update SHA.init (encode "instsel"))
+               (dbHashCode md))
+   (encode ss))
+  (dbHashCode to)
 
 queryModuleName q = "CQ_" ++ (name q) ++ (hexPrint $ hashQuery q)
 queryFileName q = (queryModuleName q) ++ ".hs"

@@ -39,7 +39,8 @@ data MapQuery = NamedMap Name
 
 data DataQuery = ExplicitTuples [[Maybe String]]
                | LoadCSV FilePath
-               deriving (Eq,Show,Ord)
+               | SelectData ClientQuery
+               deriving (Eq,Show)
                         
 data TypeDec = TypeDec Name HaskellType
              deriving (Eq,Ord)

@@ -41,19 +41,26 @@ createToObject state (InstantiateSchema schq simplex dat) = do
     (Just simp) -> do 
       hoistEither $ guardEither "Cannot instantiate schema at simplex not in schema" $ containsSimplex (fullSubSchema sch) simp
       let md = simpleRecord (name schq) sch simp
-      return $ NutleyActionObject $ do 
-        inst <- case dat of 
-          (ExplicitTuples tps) -> do
-            executeInstantiateFromStrings (InstantiateQuery md) id tps
-          (LoadCSV filepath) -> do
-            dfe <- liftEitherT $ doesFileExist filepath
-            if not dfe
-              then left $ "Cannot find file " ++ filepath
-              else do
-              dats <- liftEitherT $ fmap ((map (sepBySkipQuotes (==','))).lines) $ readFile filepath
-              let tups = map (map (\x -> if x == "null" then Nothing else Just x)) dats
-              executeInstantiateFromStrings (InstantiateQuery md) id tups
-        return $ NutleyObjInstance inst md
+      case dat of 
+        (ExplicitTuples tps) -> return $ NutleyActionObject $ do 
+          fmap (flip NutleyObjInstance md) $ executeInstantiateFromStrings (InstantiateQuery md) id tps
+        (LoadCSV filepath) -> return $ NutleyActionObject $ do 
+          dfe <- liftEitherT $ doesFileExist filepath
+          if not dfe
+            then left $ "Cannot find file " ++ filepath
+            else do
+            dats <- liftEitherT $ fmap ((map (sepBySkipQuotes (==','))).lines) $ readFile filepath
+            let tups = map (map (\x -> if x == "null" then Nothing else Just x)) dats
+            fmap (flip NutleyObjInstance md) $ executeInstantiateFromStrings (InstantiateQuery md) id tups
+        (SelectData (SelectQuery simpNamed from)) -> do
+          instanceObj <- instanceQueryInstance state from
+          ss <- case simplicesFromNames md simpNamed of
+            Nothing -> left "Simplex not in instance's schema"
+            (Just simps) -> do
+              right (SubSchema simps $ dbSchema md)
+          return $ NutleyActionObject $ do 
+            (inst,mdfrom) <- execNutleyInstance instanceObj
+            fmap (flip NutleyObjInstance md) $ executeInstantiateSelect (InstantiateSelectQuery md mdfrom ss) id inst
     Nothing -> left "Cannot instantiate schema at vertices not in schema"
 createToObject state (FilterQuery inner fn) = do
   instObj <- instanceQueryInstance state inner

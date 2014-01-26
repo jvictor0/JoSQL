@@ -148,6 +148,8 @@ token "by" = ByToken
 token "~" = UnknownToken
 token str = Ident str
 
+fromTopLevel (Node TopLevel lexTree) = lexTree
+
 identName (Ident n) = Just n
 identName _ = Nothing
 
@@ -300,6 +302,7 @@ parseDatum  _         = Nothing
 
 parseData :: [LexTree] -> Maybe DataQuery
 parseData [LoadToken,Quote filename] = Just $ LoadCSV $ read filename
+parseData selectQuery@(SelectToken:_) = fmap SelectData $ parseSelect selectQuery
 parseData dats = do
   tups <- forM dats $ \x -> do
     case x of
@@ -393,8 +396,8 @@ parseCreateMap [CreateToken,MapToken,srcQuery,ArrowToken,trgQuery,WithToken,Node
   return $ CreateMap src trg mp
 parseCreateMap _ = Nothing
 
-parseSelect :: LexTree -> Maybe ClientQuery
-parseSelect (Node TopLevel [SelectToken,simplices,FromToken,instanceQuery]) = do
+parseSelect :: [LexTree] -> Maybe ClientQuery
+parseSelect [SelectToken,simplices,FromToken,instanceQuery] = do
   simps <- parseSimplices simplices
   inst  <- parseInstanceQuery instanceQuery
   return $ SelectQuery simps inst
@@ -412,5 +415,5 @@ parseSpecial _ = Nothing
 parse :: String -> Maybe ClientQuery
 parse str = do
   lx <- lexTree str
-  findSuccessIn lx [parseLetName,parseShow,parseSelect,parseSpecial]
+  findSuccessIn lx [parseLetName,parseShow,parseSelect . fromTopLevel,parseSpecial]
   
