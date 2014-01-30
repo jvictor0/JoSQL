@@ -59,7 +59,8 @@ showNutleyObject (NutleyMap (SchemaMap srcS trgS f))
     ++ "\n  }"
   where srcMap = schemaVertexNames srcS
         trgMap = schemaVertexNames trgS
-     
+showNutleyObject EmptyNutleyObject = "There's no object here"
+        
 newGlobalState = atomically $ do
   no <- newTVar Map.empty
   id <- newTVar 0

@@ -51,7 +51,7 @@ executeInstantiateSelect q instID fromInstance = do
   modname <- compileQuery q
   ls <- liftEitherT $ load (modname ++ ".o") ["."] [] (name q)
   case ls of
-    (LoadSuccess _ f) -> (liftEitherT $ f instID fromInstance) 
+    (LoadSuccess _ f) -> f instID fromInstance 
     (LoadFailure errs) -> (mapM_ (liftEitherT.putStrLn) errs) >> (left $ cim "\n" id errs)
 
 
@@ -87,6 +87,6 @@ executeSectionString q instID = do
   modname <- compileQuery q
   ls <- liftEitherT $ load (modname ++ ".o") ["."] []  (stringResultName q)
   case ls of
-    (LoadSuccess m f) -> liftEitherT $ f instID
+    (LoadSuccess m f) -> f instID
     (LoadFailure errs) -> (mapM_ (liftEitherT.putStrLn) errs) >> (left $ cim "\n" id errs)
 

@@ -112,12 +112,12 @@ checkTest fp = do
       putStrLn "  Different number of queries in result and expected"
       failTest
       else do
-      comps <- forM (zip3 [1..] res exp) $ \(i,(QR _ qr _ rr),(QR _ qe _ rq)) -> do
+      comps <- forM (zip3 [1..] res exp) $ \(i,(QR _ qr _ (rsuc:rr)),(QR _ qe _ (qsuc:rq))) -> do
         if qr /= qe
           then do
           putStrLn $ "  Query number " ++ (show i) ++ " mismatch"
           return False
-          else if (sort $ tail rr) /= (sort $ tail rq)
+          else if rsuc /= qsuc || (sort rr) /= (sort rq)
                then do
                  putStrLn $ "  Query number " ++ (show i) ++ " wrong results"
                  return False
@@ -136,7 +136,7 @@ executeTest fp = do
     han <- connectTo "localhost" $ PortNumber 4242 
     hPutStr han input
     results <- hGetContents han
-    let resTups = zip3 [1..] (splitContents ';' input) (splitContents '\EOT' results)
+    let resTups = zip3 [1..] (splitContents ';' input) (sepBy (=='\EOT') results)
         res = unlines $ concatMap (\(i,inp,outp) -> [queryHead i,dropWhile isSpace inp,resultHead i,dropWhile isSpace outp]) resTups
     writeFile (fp ++ ".result") res
 
@@ -157,3 +157,8 @@ splitContents ch f = init $ sc f
         sc (c:cs) 
           | ch == c   = []:(sc cs)
           | otherwise = let (a:as) = sc cs in (c:a):as
+
+sepBy _ [] = [[]]
+sepBy fn (a:as)
+  | fn a      = []:(sepBy fn as)
+  | otherwise = let (res1:res) = sepBy fn as in ((a:res1):res)

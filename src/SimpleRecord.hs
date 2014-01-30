@@ -38,7 +38,7 @@ strListToTupleName srmd = "strListToTuple_" ++ (name srmd)
 codeSimpleRecordStrListsToTuple :: DBMetadata -> HaskellFunction
 codeSimpleRecordStrListsToTuple srmd =
   Fun (strListToTupleName srmd)
-  (FunType [tc_List $ tc_List $ tc_Maybe $ t_String] $ tc_Either t_String $ tc_List $ TupType $ map (tc_Maybe . snd) vertTypes) 
+  (FunType [tc_List $ tc_List $ tc_Maybe $ t_String] $ tc_1 "Error" $ tc_List $ TupType $ map (tc_Maybe . snd) vertTypes) 
   $ Lam (Ltp "ins")
   $ Whr (c_mapM (Lit "pTup") (Lit "ins"))
   [(FnpNP "pTup" [Lstp $ map (\(_,i) -> Ltp $ "z_" ++ (show i)) $ zip simplex [1..]],
@@ -68,7 +68,7 @@ codeSimpleRecordInstantiate srmd =
         inTupType = tc_List $ TupType $ map (tc_Maybe . snd) vertTypes
         inTupName = Lit "inData"
         inInstanceName = Lit "instID"
-        funType = FunType [BaseType "InstanceID", inTupType] $ tc_IO $ t_NutleyInstance
+        funType = FunType [BaseType "InstanceID", inTupType] $ tc_ErrorT t_IO $ t_NutleyInstance
         
         numCols = length verts
         columnCodes = map (\(v,i) -> 
@@ -81,7 +81,7 @@ codeSimpleRecordInstantiate srmd =
         fileNameCodes = map (\v -> 
                               (Ltp $ "segmentFile_" ++ (show v) , Right $ segmentFileName srmd v))
                         verts
-        writeFiles = c_mapM_ (Lit "(uncurry writeByteStringFile)")  $ 
+        writeFiles = c_1 "EitherT" $ c_2 "fmap" (Lit "return") $ c_mapM_ (Lit "(uncurry writeByteStringFile)")  $ 
                      (Lit $ "[" ++ (cim "," (\v -> "(segmentFile_" ++ (show v) ++ ",compColumn_" ++ (show v) ++ ")") $ verts) ++ "]")
 
 
@@ -97,9 +97,8 @@ codeSimpleRecordMaterialize metadata ss@(SubSchema simps sch) =
                                          Nothing -> do_return $ Lit "()"
                                          (Just decomp) -> 
                                            (Ltp $ "column_" ++ (show cid),
-                                            ((c_2 "fmap" decomp
-                                              (c_1 "readByteStringFile" (segmentFileName metadata cid))))
-                                            +>>=+ (Lit "fromEither")))
+                                            c_1 "EitherT" $ c_2 "fmap" decomp
+                                            $ c_1 "readByteStringFile" $ segmentFileName metadata cid))
                                  $ verts
           tupsCode = (USp,c_return $ Tpl $ map 
                           (\s -> if s`subset`(simpleRecordSimplex metadata)

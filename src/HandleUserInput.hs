@@ -105,8 +105,8 @@ withNutleyInstances instances f
         (NutleyActionObject ioAction) -> ioAction
       hoistEither $ withNutleyInstances objs f
 
-handleLetName :: GlobalState -> ClientQuery -> IO String
-handleLetName state (LetQuery name create) = eitherT return return $ do
+handleLetName :: GlobalState -> ClientQuery -> IO (Error String)
+handleLetName state (LetQuery name create) = runEitherT $ do
   join $ mapEitherT atomically $ do
     obj <- createToObject state create 
     case obj of
@@ -121,8 +121,11 @@ handleLetName state (LetQuery name create) = eitherT return return $ do
         return $ return ()
   return $ "Added object " ++ name
   
-handleShow state (ShowQuery name) = eitherT return (return.showNutleyObject)
-                                    $ mapEitherT atomically $ lookupByName state name
+handleShow state (ShowQuery name) = do
+  res <- runEitherT $ mapEitherT atomically $ lookupByName state name
+  case res of
+    (Right sh) -> return $ return $ showNutleyObject sh
+    (Left err) -> return $ Left err
 
 schemaQuerySchema :: GlobalState -> SchemaQuery -> ErrorT STM Schema
 schemaQuerySchema state (NamedSchema name) = do 
@@ -139,8 +142,8 @@ instanceQueryInstance state (NamedInstance name) = lookupByName state name
 instanceQueryInstance state (CreateInstance createQuery) = createToObject state createQuery
   
 
-handleSelect :: GlobalState -> ClientQuery -> IO String
-handleSelect state (SelectQuery simpNamed instanceQuery) = eitherT return return $ do
+handleSelect :: GlobalState -> ClientQuery -> IO (Error String)
+handleSelect state (SelectQuery simpNamed instanceQuery) = runEitherT $ do
   instanceObj <- mapEitherT atomically $ instanceQueryInstance state instanceQuery 
   (inst,md) <- execNutleyInstance instanceObj -- THIS CAN LEAK MEMORY IF instanceObj IS AN INSTANTIATE QUERY
   ss <- case simplicesFromNames md simpNamed of
@@ -149,15 +152,14 @@ handleSelect state (SelectQuery simpNamed instanceQuery) = eitherT return return
       right (SubSchema simps $ dbSchema md)
   executeSectionString (SectionQuery md ss) inst
 
-handleUserInput :: GlobalState -> String -> IO String
+handleUserInput :: GlobalState -> String -> IO (Error String)
 handleUserInput state str = do
   case parse str of
-    Nothing -> return "Parse Error"
+    Nothing -> return $ Left "Parse Error"
     (Just letq@(LetQuery _ _)) -> handleLetName state letq
     (Just show@(ShowQuery _)) -> handleShow state show
     (Just sele@(SelectQuery _ _)) -> handleSelect state sele
-    (Just ClearCache) -> clearPlancache >> (return "")
-    (Just ClearData) -> clearData >> (clearGlobalState state) >> (return "")
-    (Just Quit) -> return "_q"
-    (Just KILLServer) -> return "_k"
+    (Just ClearCache) -> clearPlancache >> (return $ Right "")
+    (Just ClearData) -> clearData >> (clearGlobalState state) >> (return $ Right "")
+    (Just Quit) -> return $ Right "_q"
     

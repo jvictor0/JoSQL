@@ -127,6 +127,7 @@ tc_List x = ConsType "[]" [x]
 tc_Maybe x = ConsType "Maybe" [x]
 tc_Either x y = ConsType "Either" [x,y]
 tc_IO x = ConsType "IO" [x]
+tc_ErrorT m x = ConsType "ErrorT" [m,x]
 
 t_ = BaseType
 t_Int = t_ "Int"
@@ -134,7 +135,7 @@ t_Double = t_ "Double"
 t_String = t_ "String"
 t_ByteString = t_ "ByteString"
 t_LazyByteString = t_ "LazyByteString"
-
+t_IO = t_ "IO"
 t_NutleyInstance = t_ "NutleyInstance"
 
 

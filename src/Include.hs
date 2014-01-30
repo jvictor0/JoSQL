@@ -6,7 +6,8 @@ module Include
         module Types,
         module Prelude,
         readByteStringFile, writeByteStringFile, cim, extract,
-        ByteString, LazyByteString)
+        ByteString, LazyByteString,
+        module Control.Monad.Trans.Either)
        where
 
 import NutleyInstance
@@ -16,7 +17,7 @@ import RuntimeUtils
 import Types
 import Paramable
 import Utils (cim)
-
+import Control.Monad.Trans.Either
 
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.ByteString as BS

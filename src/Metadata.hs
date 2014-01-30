@@ -67,6 +67,7 @@ data MetadataToken = SimpleRecordToken | SimpleSubInstanceToken
                    | InverseImageToken | DirectImageToken
                    | ShriekToken
                    | CoLimitToken
+                   | RemoteInstanceToken
                    deriving (Eq,Show,Ord)
 
 dbToken (SimpleRecordMetadata _ _ _ _ _) = SimpleRecordToken

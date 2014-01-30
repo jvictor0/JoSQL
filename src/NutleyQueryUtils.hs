@@ -29,11 +29,11 @@ instantiateSelectFName to from ss = "instantiate_select_" ++ (name to) ++ "_from
 
 materializeType metadata ss@(SubSchema simps _) = funType
   where inTupType = TupType $ map (tc_List.TupType.(univ (dbSchema metadata))) simps
-        funType = FunType [t_NutleyInstance] $ tc_IO $ inTupType
+        funType = FunType [t_NutleyInstance] $ tc_ErrorT t_IO $ inTupType
         verts = nub $ concat simps
 
 sectionType :: DBMetadata -> SubSchema -> HaskellType
-sectionType metadata (SubSchema simps _) = FunType [t_NutleyInstance] $ tc_IO $ outTupType         
+sectionType metadata (SubSchema simps _) = FunType [t_NutleyInstance] $ tc_ErrorT t_IO $ outTupType         
   where outTupType = tc_List $ TupType $ map (typeLookup $ dbSchema metadata) allVerts
         allVerts = foldr union [] $ simps :: [VertID]
 
@@ -74,7 +74,7 @@ codeInstantiateSelectDefault :: DBMetadata -> DBMetadata -> SubSchema -> ([(Name
 codeInstantiateSelectDefault to from ss = 
   ([("I",InstantiateQuery to),("J",SectionQuery from ss)],
    Fun (instantiateSelectFName to from ss)
-   (FunType [BaseType "InstanceID", t_NutleyInstance] $ tc_IO $ t_NutleyInstance)
+   (FunType [BaseType "InstanceID", t_NutleyInstance] $ tc_ErrorT t_IO $ t_NutleyInstance)
    $ Lam (Mlp [Ltp "instID", Ltp "fromInstance"])
    $ Do [(Ltp "tups", c_1 ("J." ++ sectionFName from ss) $ Lit "fromInstance"),
          (USp,c_2 ("I." ++ instantiateFName to) (Lit "instID") $ c_map (Lam (nTupPat n) (tupMap n (Lit "Just"))) (Lit "tups"))]
