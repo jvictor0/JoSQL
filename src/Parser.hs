@@ -21,6 +21,7 @@ data LexTree = Ident String
              | LoadToken
              | ClearToken
              | DataToken
+             | ConnectToken
              | CacheToken
              | ServerToken
              | CreateToken
@@ -39,6 +40,7 @@ data LexTree = Ident String
              | AtToken
              | ByToken
              | FromToken
+             | ToToken
              | VerticesToken
              | SimplicesToken
              | ShowToken
@@ -68,6 +70,8 @@ instance Show LexTree where
   show ShriekToken = "shriek"
   show ImageToken = "image"
   show InverseToken = "inverse"
+  show ConnectToken = "connect"
+  show ToToken = "to"
   show DirectToken = "direct"
   show WithToken = "with"
   show AtToken = "at"
@@ -129,6 +133,8 @@ token "at" = AtToken
 token "from" = FromToken
 token "shriek" = ShriekToken
 token "image" = ImageToken
+token "connect" = ConnectToken
+token "to" = ToToken
 token "direct" = DirectToken
 token "inverse" = InverseToken
 token "show" = ShowToken
@@ -259,7 +265,7 @@ findSuccessIn a fns = join $ find isJust $ map ($a) fns
 
 parseLetName :: LexTree -> Maybe ClientQuery
 parseLetName (Node TopLevel (LetToken:(Ident name):EqToken:create)) = do
-  createQuery <- findSuccessIn create $ createInstanceFunctions ++ [parseCreateSchema,parseCreateMap]
+  createQuery <- parseCreateQuery create
   return $ LetQuery name createQuery
 parseLetName _ = Nothing
 
@@ -274,6 +280,7 @@ parseCreateSchema _ = Nothing
 
 parseSchemaQuery :: LexTree -> Maybe SchemaQuery
 parseSchemaQuery (Ident a) =  Just $ NamedSchema a
+parseSchemaQuery (Node Paren [SchemaToken,instanceQuery]) = fmap SchemaOf $ parseInstanceQuery instanceQuery
 parseSchemaQuery _ = Nothing
 
 parseInstanceQuery :: LexTree -> Maybe InstanceQuery
@@ -396,6 +403,12 @@ parseCreateMap [CreateToken,MapToken,srcQuery,ArrowToken,trgQuery,WithToken,Node
   return $ CreateMap src trg mp
 parseCreateMap _ = Nothing
 
+parseConnect [ConnectToken,ToToken,Quote addrAndPort] = case break (==':')  addrAndPort of
+  ('\"':addr,':':port) 
+    | all isDigit $ init port -> Just $ ConnectQuery addr $ read $ init port
+  _ -> Nothing
+parseConnect _ = Nothing
+
 parseSelect :: [LexTree] -> Maybe ClientQuery
 parseSelect [SelectToken,simplices,FromToken,instanceQuery] = do
   simps <- parseSimplices simplices
@@ -403,7 +416,18 @@ parseSelect [SelectToken,simplices,FromToken,instanceQuery] = do
   return $ SelectQuery simps inst
 parseSelect _ = Nothing
 
-parseShow (Node TopLevel [ShowToken,Ident name]) = Just $ ShowQuery name
+parseName [Ident a] = Just $ NamedObject a
+parseName _ = Nothing
+
+
+parseCreateQuery create = findSuccessIn create $ createInstanceFunctions ++ 
+                          [parseName,parseCreateSchema,parseCreateMap,parseConnect,
+                           liftToSingletonList $ (fmap SchemaQuery).parseSchemaQuery]
+
+parseShow (Node TopLevel (ShowToken:create)) = do
+  createQuery <- parseCreateQuery create
+  return $ ShowQuery createQuery
+
 parseShow _ = Nothing
 
 parseSpecial (Node TopLevel [ClearToken,CacheToken]) = Just ClearCache

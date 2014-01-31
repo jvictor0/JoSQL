@@ -9,7 +9,7 @@ import Schema
 import HaskellCode
 
 data ClientQuery = LetQuery Name CreateQuery
-                 | ShowQuery Name
+                 | ShowQuery CreateQuery
                  | SelectQuery [[Name]] InstanceQuery
                  | KILLServer
                  | ClearCache
@@ -25,6 +25,9 @@ data CreateQuery = CreateSchema [TypeDec] [[Name]]
                  | FilterQuery InstanceQuery HaskellCode
                  | FunctorQuery FunctorType MapQuery InstanceQuery
                  | UnionQuery [InstanceQuery]
+                 | NamedObject Name
+                 | SchemaQuery SchemaQuery
+                 | ConnectQuery String Int
                    deriving (Eq,Show)
 
 data InstanceQuery = NamedInstance Name
@@ -32,6 +35,7 @@ data InstanceQuery = NamedInstance Name
                    deriving (Eq,Show)
 
 data SchemaQuery = NamedSchema Name
+                 | SchemaOf InstanceQuery
                    deriving (Eq,Show)
 
 data MapQuery = NamedMap Name

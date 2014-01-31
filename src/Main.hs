@@ -42,7 +42,8 @@ mainLoop state sock = do
   mainLoop state sock
                
 runConn :: GlobalState -> (Socket, SockAddr) -> IO ()
-runConn state (sock, _) = do
+runConn state (sock, sockaddr) = do
+  putStrLn $ "connection opened " ++ (show sockaddr)
   hdl <- socketToHandle sock ReadWriteMode
   hSetBuffering hdl $ BlockBuffering Nothing
   contents <- hGetContents hdl
@@ -60,6 +61,6 @@ runConn state (sock, _) = do
         hPutStrLn hdl $ "\001"
         hPutStrLn hdl $ err ++ "\EOT"
     hFlush hdl
-  putStrLn "user disconnected"
+  putStrLn $"connection closed " ++ (show sockaddr)
   hClose hdl
 

@@ -5,12 +5,21 @@ import qualified Data.ByteString as BS
 import Numeric (showHex)
 import Control.Monad.Trans.Either
 import Control.Monad
+import Control.Exception
+import Types
 
 fromJustE str Nothing = error str
 fromJustE _ (Just a) = a
 
 fromJustOr alt Nothing = alt
 fromJustOr _ (Just a) = a
+
+tryErrorT :: IO a -> ErrorT IO a
+tryErrorT act = do
+  eexct <- EitherT $ fmap return $ try act 
+  case eexct of
+    (Left err) -> left $ show (err :: IOError)
+    (Right a) -> return a
 
 hexPrint :: BS.ByteString -> String
 hexPrint = concatMap (flip showHex "") . BS.unpack

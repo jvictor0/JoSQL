@@ -5,6 +5,7 @@ import qualified Data.Map as Map
 import Control.Monad
 import Data.Maybe
 import Control.Monad.Trans.Either
+import System.IO
 
 import Utils
 import Types
@@ -20,6 +21,7 @@ data NutleyObject = NutleySchema Schema
                   | NutleyMap SchemaMap 
                   | NutleyObjInstance NutleyInstance DBMetadata
                   | NutleyActionObject (ErrorT IO NutleyObject)
+                  | NutleyConnection Handle String
                   | EmptyNutleyObject
                     
 data GlobalState = GlobalState 
@@ -60,7 +62,9 @@ showNutleyObject (NutleyMap (SchemaMap srcS trgS f))
   where srcMap = schemaVertexNames srcS
         trgMap = schemaVertexNames trgS
 showNutleyObject EmptyNutleyObject = "There's no object here"
-        
+showNutleyObject (NutleyConnection _ addr) = "connect to " ++ (show addr)
+showNutleyObject (NutleyActionObject _) = error "show NutleyActionObject not allowed"
+
 newGlobalState = atomically $ do
   no <- newTVar Map.empty
   id <- newTVar 0

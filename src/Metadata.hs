@@ -61,8 +61,15 @@ data DBMetadata = SimpleRecordMetadata
                     coLimitName :: Name,
                     coLimitInnerMetadatas :: [DBMetadata],
                     coLimitHashCode :: BS.ByteString
-                  }                  
-                                            
+                  } |
+                  RemoteInstanceMetadata
+                  {
+                    remoteInstanceName :: Name,
+                    remoteInstanceSchema :: Schema,
+                    remoteInstanceQuery :: String,
+                    remoteInstanceHashCode :: BS.ByteString
+                  }
+                  
 data MetadataToken = SimpleRecordToken | SimpleSubInstanceToken 
                    | InverseImageToken | DirectImageToken
                    | ShriekToken
@@ -76,6 +83,7 @@ dbToken (InverseImageMetadata _ _ _ _ _) = InverseImageToken
 dbToken (DirectImageMetadata _ _ _ _) = DirectImageToken
 dbToken (ShriekMetadata _ _ _ _) = ShriekToken
 dbToken (CoLimitMetadata _ _ _) = CoLimitToken
+dbToken (RemoteInstanceMetadata _ _ _ _) = RemoteInstanceToken
                                                          
 instance Named DBMetadata where
   name md = case dbToken md of
@@ -85,6 +93,7 @@ instance Named DBMetadata where
     DirectImageToken -> directImageName md
     ShriekToken -> shriekName md
     CoLimitToken -> coLimitName md
+    RemoteInstanceToken -> remoteInstanceName md
 
 dbSchema :: DBMetadata -> Schema
 dbSchema md = case dbToken md of
@@ -93,6 +102,7 @@ dbSchema md = case dbToken md of
   InverseImageToken -> schemaMapDomain $ inverseImageMap md
   DirectImageToken -> schemaMapCoDomain $ directImageMap md
   ShriekToken -> schemaMapCoDomain $ shriekMap md
+  RemoteInstanceToken -> remoteInstanceSchema md
   CoLimitToken -> case coLimitInnerMetadatas md of 
     [] -> emptySchema
     (a:_) -> dbSchema a
@@ -105,7 +115,8 @@ dbHashCode md = case dbToken md of
   DirectImageToken -> directImageHashCode md
   ShriekToken -> shriekHashCode md
   CoLimitToken -> coLimitHashCode md
-
+  RemoteInstanceToken -> remoteInstanceHashCode md
+  
 instance Eq DBMetadata where
   a == b = (dbHashCode a) == (dbHashCode b)
 instance Ord DBMetadata where
@@ -124,6 +135,7 @@ simplicesFromNames db simps = do
   simps <- mapM (mapM (flip lookup names)) simps
   guard $ all (containsSimplex (fullSubSchema $ dbSchema db)) simps
   return simps
+  
 -- should go in a different file
 instance Verify DBMetadata where
   verifyConditions md = case dbToken md of

@@ -26,8 +26,13 @@ import Data.Either
 import Control.Concurrent.STM
 import Parser
 import Control.Monad.Trans.Either
+import Network.Socket
+import Network
+
 
 createToObject :: GlobalState -> CreateQuery -> ErrorT STM NutleyObject
+createToObject state (NamedObject name) = lookupByName state name
+createToObject state (SchemaQuery sch) = fmap NutleySchema $ schemaQuerySchema state sch
 createToObject state (CreateSchema verts simps) = do 
   let idMap = Map.fromList $ zip (map (\(TypeDec a _) -> a) verts) [1..]
       tpList = zip [1..] (map (\(TypeDec _ a) -> a) verts)
@@ -89,7 +94,10 @@ createToObject state (FunctorQuery t mapQuery instanceQuery) = do
       InverseImageFunctor -> do
         (invmd,params) <- inverseImage f md
         return $ NutleyObjInstance (InverseImage params inst) invmd
-
+createToObject state (ConnectQuery addr port) = return $ NutleyActionObject $ do
+  hdl <- tryErrorT $ connectTo addr $ PortNumber $ fromIntegral port
+  return $ NutleyConnection hdl (addr ++ ":" ++ (show port))
+  
 withNutleyInstance :: NutleyObject -> ((NutleyInstance,DBMetadata) -> Error NutleyObject) -> Error NutleyObject
 withNutleyInstance (NutleyObjInstance inst md) f = f (inst,md)
 withNutleyInstance (NutleyActionObject ioAction) f = return $ NutleyActionObject $ do
@@ -105,6 +113,8 @@ withNutleyInstances instances f
         (NutleyActionObject ioAction) -> ioAction
       hoistEither $ withNutleyInstances objs f
 
+
+
 handleLetName :: GlobalState -> ClientQuery -> IO (Error String)
 handleLetName state (LetQuery name create) = runEitherT $ do
   join $ mapEitherT atomically $ do
@@ -114,23 +124,28 @@ handleLetName state (LetQuery name create) = runEitherT $ do
         result <- liftEitherT $ runEitherT ioObj
         case result of
           (Left err) -> (liftEitherT $ atomically $ removeNamedObject state name) >> left err
-          (Right nobj@(NutleyObjInstance _ _)) -> liftEitherT $  atomically $ addNamedObject state name nobj
-          _ -> error "something has gone wrong"
+          (Right nobj) -> do
+            hoistEither $ guardEither "something has gone wrong" $ not $ isActionObject nobj
+            liftEitherT $ atomically $ addNamedObject state name nobj
       _ -> do
         addNamedObjectIfNotExists state name obj 
         return $ return ()
   return $ "Added object " ++ name
   
-handleShow state (ShowQuery name) = do
-  res <- runEitherT $ mapEitherT atomically $ lookupByName state name
-  case res of
-    (Right sh) -> return $ return $ showNutleyObject sh
-    (Left err) -> return $ Left err
+handleShow state (ShowQuery create) = do
+  res <- runEitherT $ do
+    obj <- mapEitherT atomically $ createToObject state create
+    case obj of
+      (NutleyActionObject a) -> a
+      _ -> return obj
+  return $ fmap showNutleyObject res
 
 schemaQuerySchema :: GlobalState -> SchemaQuery -> ErrorT STM Schema
 schemaQuerySchema state (NamedSchema name) = do 
   (NutleySchema s) <- lookupByName state name 
   return s
+schemaQuerySchema state (SchemaOf instanceQuery) = instanceQuerySchema state instanceQuery
+
 
 mapQueryMap :: GlobalState -> MapQuery -> ErrorT STM SchemaMap
 mapQueryMap state (NamedMap name) = do 
@@ -141,6 +156,24 @@ instanceQueryInstance :: GlobalState -> InstanceQuery -> ErrorT STM NutleyObject
 instanceQueryInstance state (NamedInstance name) = lookupByName state name
 instanceQueryInstance state (CreateInstance createQuery) = createToObject state createQuery
   
+instanceQuerySchema state (NamedInstance name) = do
+  (NutleyObjInstance _ md) <- lookupByName state name
+  return $ dbSchema md
+instanceQuerySchema state (CreateInstance (InstantiateSchema schq _ _)) = schemaQuerySchema state schq
+instanceQuerySchema state (CreateInstance (FilterQuery inst _)) = instanceQuerySchema state inst
+instanceQuerySchema state (CreateInstance (FunctorQuery ShriekFunctor f _)) = mapQueryCoDomainSchema state f
+instanceQuerySchema state (CreateInstance (FunctorQuery DirectImageFunctor f _)) = mapQueryCoDomainSchema state f
+instanceQuerySchema state (CreateInstance (FunctorQuery InverseImageFunctor f _)) = mapQueryDomainSchema state f
+instanceQuerySchema state (CreateInstance (UnionQuery (a:as))) = instanceQuerySchema state a
+instanceQuerySchema state (CreateInstance (UnionQuery [])) = return emptySchema
+mapQueryCoDomainSchema state mapQuery = do
+  (SchemaMap _ cdm _) <- mapQueryMap state mapQuery
+  return cdm
+  
+mapQueryDomainSchema state mapQuery = do
+  (SchemaMap dom _ _) <- mapQueryMap state mapQuery
+  return dom
+
 
 handleSelect :: GlobalState -> ClientQuery -> IO (Error String)
 handleSelect state (SelectQuery simpNamed instanceQuery) = runEitherT $ do
