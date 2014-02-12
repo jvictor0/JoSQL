@@ -66,7 +66,6 @@ data DBMetadata = SimpleRecordMetadata
                   {
                     remoteInstanceName :: Name,
                     remoteInstanceSchema :: Schema,
-                    remoteInstanceQuery :: String,
                     remoteInstanceHashCode :: BS.ByteString
                   }
                   
@@ -83,7 +82,7 @@ dbToken (InverseImageMetadata _ _ _ _ _) = InverseImageToken
 dbToken (DirectImageMetadata _ _ _ _) = DirectImageToken
 dbToken (ShriekMetadata _ _ _ _) = ShriekToken
 dbToken (CoLimitMetadata _ _ _) = CoLimitToken
-dbToken (RemoteInstanceMetadata _ _ _ _) = RemoteInstanceToken
+dbToken (RemoteInstanceMetadata _ _ _) = RemoteInstanceToken
                                                          
 instance Named DBMetadata where
   name md = case dbToken md of

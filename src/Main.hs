@@ -55,12 +55,15 @@ runConn state (sock, sockaddr) = do
     case response of
       (Right "_q") -> hClose hdl
       (Right resp) -> do
-        hPutStrLn hdl $ "\000"
-        hPutStrLn hdl $ resp ++ "\EOT"
+        hPutStrLn hdl "\000"
+        hPutStrLn hdl resp 
+        hPutStrLn hdl "\EOT"
+        hFlush hdl
       (Left err) -> do
-        hPutStrLn hdl $ "\001"
-        hPutStrLn hdl $ err ++ "\EOT"
-    hFlush hdl
+        hPutStrLn hdl "\001"
+        hPutStrLn hdl err
+        hPutStrLn hdl "\EOT"
+        hFlush hdl
   putStrLn $"connection closed " ++ (show sockaddr)
   hClose hdl
 

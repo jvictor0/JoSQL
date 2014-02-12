@@ -27,6 +27,8 @@ schemaSimplices (Schema (SC _ simps) _) = simps
 schemaTypes (Schema _ ts) = ts
 
 subSchemaSimplices (SubSchema simps _) = simps
+showSubSchema (SubSchema simps sch) = "{" ++ (cim "," (\x -> "{" ++ (cim "," id x) ++ "}") nmedsimps) ++ "}"
+  where nmedsimps = map (map (fromJust.(flip schemaLookupVertexName sch))) simps
 subSchemaVertices ss = nub $ concat $ subSchemaSimplices ss
 
 data SubSchema = SubSchema [Simplex] Schema deriving (Generic)

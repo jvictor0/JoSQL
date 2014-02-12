@@ -19,7 +19,7 @@ import InverseImage
 import DirectImage
 import Shriek
 import CoLimit
-
+import RemoteInstance
 
 codeQuery (MaterializeQuery db ss) = codeMaterialize db ss
 codeQuery (SectionQuery db ss) = codeSection db ss
@@ -31,6 +31,7 @@ codeSection :: DBMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
 codeSection db ss = case dbToken db of
   DirectImageToken -> codeDirectImageSection db ss
   ShriekToken -> codeShriekSection db ss
+  RemoteInstanceToken -> codeRemoteInstanceSection db ss
   _           -> codeSectionDefault db ss
 
 codeMaterialize :: DBMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)

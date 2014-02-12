@@ -1,0 +1,1111 @@
+let newYorkTransit = create schema with vertices = 
+{
+  purpose :: Int,
+  sampNum :: Int,
+  perNum :: Int,
+  tripNum :: Int,
+  tripID :: Int,
+  albanyDestPlace :: Int,
+  albanyArriveTime :: String,
+  albanyArriveDate :: String,
+  albanyDestCounty :: String,
+  albanyOriginPlace :: Int,
+  albanyDepartTime :: String,
+  albanyDepartDate :: String,
+  albanyOriginCounty :: String,
+  newYorkDestPlace :: Int,
+  newYorkArriveTime :: String,
+  newYorkArriveDate :: String,
+  newYorkDestCounty :: String,
+  newYorkOriginPlace :: Int,
+  newYorkDepartTime :: String,
+  newYorkDepartDate :: String,
+  newYorkOriginCounty :: String,
+  queensDestPlace :: Int,
+  queensArriveTime :: String,
+  queensArriveDate :: String,
+  queensDestCounty :: String,
+  queensOriginPlace :: Int,
+  queensDepartTime :: String,
+  queensDepartDate :: String,
+  queensOriginCounty :: String,
+  bergenDestPlace :: Int,
+  bergenArriveTime :: String,
+  bergenArriveDate :: String,
+  bergenDestCounty :: String,
+  bergenOriginPlace :: Int,
+  bergenDepartTime :: String,
+  bergenDepartDate :: String,
+  bergenOriginCounty :: String,
+  bronxDestPlace :: Int,
+  bronxArriveTime :: String,
+  bronxArriveDate :: String,
+  bronxDestCounty :: String,
+  bronxOriginPlace :: Int,
+  bronxDepartTime :: String,
+  bronxDepartDate :: String,
+  bronxOriginCounty :: String,
+  kingsDestPlace :: Int,
+  kingsArriveTime :: String,
+  kingsArriveDate :: String,
+  kingsDestCounty :: String,
+  kingsOriginPlace :: Int,
+  kingsDepartTime :: String,
+  kingsDepartDate :: String,
+  kingsOriginCounty :: String,
+  richmondDestPlace :: Int,
+  richmondArriveTime :: String,
+  richmondArriveDate :: String,
+  richmondDestCounty :: String,
+  richmondOriginPlace :: Int,
+  richmondDepartTime :: String,
+  richmondDepartDate :: String,
+  richmondOriginCounty :: String,
+  fairfieldDestPlace :: Int,
+  fairfieldArriveTime :: String,
+  fairfieldArriveDate :: String,
+  fairfieldDestCounty :: String,
+  fairfieldOriginPlace :: Int,
+  fairfieldDepartTime :: String,
+  fairfieldDepartDate :: String,
+  fairfieldOriginCounty :: String,
+  hartfordDestPlace :: Int,
+  hartfordArriveTime :: String,
+  hartfordArriveDate :: String,
+  hartfordDestCounty :: String,
+  hartfordOriginPlace :: Int,
+  hartfordDepartTime :: String,
+  hartfordDepartDate :: String,
+  hartfordOriginCounty :: String,
+  hudsonDestPlace :: Int,
+  hudsonArriveTime :: String,
+  hudsonArriveDate :: String,
+  hudsonDestCounty :: String,
+  hudsonOriginPlace :: Int,
+  hudsonDepartTime :: String,
+  hudsonDepartDate :: String,
+  hudsonOriginCounty :: String,
+  monroeDestPlace :: Int,
+  monroeArriveTime :: String,
+  monroeArriveDate :: String,
+  monroeDestCounty :: String,
+  monroeOriginPlace :: Int,
+  monroeDepartTime :: String,
+  monroeDepartDate :: String,
+  monroeOriginCounty :: String,
+  morrisDestPlace :: Int,
+  morrisArriveTime :: String,
+  morrisArriveDate :: String,
+  morrisDestCounty :: String,
+  morrisOriginPlace :: Int,
+  morrisDepartTime :: String,
+  morrisDepartDate :: String,
+  morrisOriginCounty :: String,
+  nassauDestPlace :: Int,
+  nassauArriveTime :: String,
+  nassauArriveDate :: String,
+  nassauDestCounty :: String,
+  nassauOriginPlace :: Int,
+  nassauDepartTime :: String,
+  nassauDepartDate :: String,
+  nassauOriginCounty :: String,
+  newHavenDestPlace :: Int,
+  newHavenArriveTime :: String,
+  newHavenArriveDate :: String,
+  newHavenDestCounty :: String,
+  newHavenOriginPlace :: Int,
+  newHavenDepartTime :: String,
+  newHavenDepartDate :: String,
+  newHavenOriginCounty :: String,
+  oneidaDestPlace :: Int,
+  oneidaArriveTime :: String,
+  oneidaArriveDate :: String,
+  oneidaDestCounty :: String,
+  oneidaOriginPlace :: Int,
+  oneidaDepartTime :: String,
+  oneidaDepartDate :: String,
+  oneidaOriginCounty :: String,
+  outofAreaDestPlace :: Int,
+  outofAreaArriveTime :: String,
+  outofAreaArriveDate :: String,
+  outofAreaDestCounty :: String,
+  outofAreaOriginPlace :: Int,
+  outofAreaDepartTime :: String,
+  outofAreaDepartDate :: String,
+  outofAreaOriginCounty :: String,
+  rocklandDestPlace :: Int,
+  rocklandArriveTime :: String,
+  rocklandArriveDate :: String,
+  rocklandDestCounty :: String,
+  rocklandOriginPlace :: Int,
+  rocklandDepartTime :: String,
+  rocklandDepartDate :: String,
+  rocklandOriginCounty :: String,
+  westchesterDestPlace :: Int,
+  westchesterArriveTime :: String,
+  westchesterArriveDate :: String,
+  westchesterDestCounty :: String,
+  westchesterOriginPlace :: Int,
+  westchesterDepartTime :: String,
+  westchesterDepartDate :: String,
+  westchesterOriginCounty :: String,
+  burlingtonDestPlace :: Int,
+  burlingtonArriveTime :: String,
+  burlingtonArriveDate :: String,
+  burlingtonDestCounty :: String,
+  burlingtonOriginPlace :: Int,
+  burlingtonDepartTime :: String,
+  burlingtonDepartDate :: String,
+  burlingtonOriginCounty :: String,
+  camdenDestPlace :: Int,
+  camdenArriveTime :: String,
+  camdenArriveDate :: String,
+  camdenDestCounty :: String,
+  camdenOriginPlace :: Int,
+  camdenDepartTime :: String,
+  camdenDepartDate :: String,
+  camdenOriginCounty :: String,
+  clintonDestPlace :: Int,
+  clintonArriveTime :: String,
+  clintonArriveDate :: String,
+  clintonDestCounty :: String,
+  clintonOriginPlace :: Int,
+  clintonDepartTime :: String,
+  clintonDepartDate :: String,
+  clintonOriginCounty :: String,
+  columbiaDestPlace :: Int,
+  columbiaArriveTime :: String,
+  columbiaArriveDate :: String,
+  columbiaDestCounty :: String,
+  columbiaOriginPlace :: Int,
+  columbiaDepartTime :: String,
+  columbiaDepartDate :: String,
+  columbiaOriginCounty :: String,
+  dutchessDestPlace :: Int,
+  dutchessArriveTime :: String,
+  dutchessArriveDate :: String,
+  dutchessDestCounty :: String,
+  dutchessOriginPlace :: Int,
+  dutchessDepartTime :: String,
+  dutchessDepartDate :: String,
+  dutchessOriginCounty :: String,
+  litchfieldDestPlace :: Int,
+  litchfieldArriveTime :: String,
+  litchfieldArriveDate :: String,
+  litchfieldDestCounty :: String,
+  litchfieldOriginPlace :: Int,
+  litchfieldDepartTime :: String,
+  litchfieldDepartDate :: String,
+  litchfieldOriginCounty :: String,
+  essexDestPlace :: Int,
+  essexArriveTime :: String,
+  essexArriveDate :: String,
+  essexDestCounty :: String,
+  essexOriginPlace :: Int,
+  essexDepartTime :: String,
+  essexDepartDate :: String,
+  essexOriginCounty :: String,
+  fultonDestPlace :: Int,
+  fultonArriveTime :: String,
+  fultonArriveDate :: String,
+  fultonDestCounty :: String,
+  fultonOriginPlace :: Int,
+  fultonDepartTime :: String,
+  fultonDepartDate :: String,
+  fultonOriginCounty :: String,
+  unionDestPlace :: Int,
+  unionArriveTime :: String,
+  unionArriveDate :: String,
+  unionDestCounty :: String,
+  unionOriginPlace :: Int,
+  unionDepartTime :: String,
+  unionDepartDate :: String,
+  unionOriginCounty :: String,
+  cattaraugusDestPlace :: Int,
+  cattaraugusArriveTime :: String,
+  cattaraugusArriveDate :: String,
+  cattaraugusDestCounty :: String,
+  cattaraugusOriginPlace :: Int,
+  cattaraugusDepartTime :: String,
+  cattaraugusDepartDate :: String,
+  cattaraugusOriginCounty :: String,
+  mercerDestPlace :: Int,
+  mercerArriveTime :: String,
+  mercerArriveDate :: String,
+  mercerDestCounty :: String,
+  mercerOriginPlace :: Int,
+  mercerDepartTime :: String,
+  mercerDepartDate :: String,
+  mercerOriginCounty :: String,
+  middlesexDestPlace :: Int,
+  middlesexArriveTime :: String,
+  middlesexArriveDate :: String,
+  middlesexDestCounty :: String,
+  middlesexOriginPlace :: Int,
+  middlesexDepartTime :: String,
+  middlesexDepartDate :: String,
+  middlesexOriginCounty :: String,
+  monmouthDestPlace :: Int,
+  monmouthArriveTime :: String,
+  monmouthArriveDate :: String,
+  monmouthDestCounty :: String,
+  monmouthOriginPlace :: Int,
+  monmouthDepartTime :: String,
+  monmouthDepartDate :: String,
+  monmouthOriginCounty :: String,
+  oceanDestPlace :: Int,
+  oceanArriveTime :: String,
+  oceanArriveDate :: String,
+  oceanDestCounty :: String,
+  oceanOriginPlace :: Int,
+  oceanDepartTime :: String,
+  oceanDepartDate :: String,
+  oceanOriginCounty :: String,
+  orangeDestPlace :: Int,
+  orangeArriveTime :: String,
+  orangeArriveDate :: String,
+  orangeDestCounty :: String,
+  orangeOriginPlace :: Int,
+  orangeDepartTime :: String,
+  orangeDepartDate :: String,
+  orangeOriginCounty :: String,
+  passaicDestPlace :: Int,
+  passaicArriveTime :: String,
+  passaicArriveDate :: String,
+  passaicDestCounty :: String,
+  passaicOriginPlace :: Int,
+  passaicDepartTime :: String,
+  passaicDepartDate :: String,
+  passaicOriginCounty :: String,
+  putnamDestPlace :: Int,
+  putnamArriveTime :: String,
+  putnamArriveDate :: String,
+  putnamDestCounty :: String,
+  putnamOriginPlace :: Int,
+  putnamDepartTime :: String,
+  putnamDepartDate :: String,
+  putnamOriginCounty :: String,
+  suffolkDestPlace :: Int,
+  suffolkArriveTime :: String,
+  suffolkArriveDate :: String,
+  suffolkDestCounty :: String,
+  suffolkOriginPlace :: Int,
+  suffolkDepartTime :: String,
+  suffolkDepartDate :: String,
+  suffolkOriginCounty :: String,
+  sullivanDestPlace :: Int,
+  sullivanArriveTime :: String,
+  sullivanArriveDate :: String,
+  sullivanDestCounty :: String,
+  sullivanOriginPlace :: Int,
+  sullivanDepartTime :: String,
+  sullivanDepartDate :: String,
+  sullivanOriginCounty :: String,
+  newLondonDestPlace :: Int,
+  newLondonArriveTime :: String,
+  newLondonArriveDate :: String,
+  newLondonDestCounty :: String,
+  newLondonOriginPlace :: Int,
+  newLondonDepartTime :: String,
+  newLondonDepartDate :: String,
+  newLondonOriginCounty :: String,
+  atlanticDestPlace :: Int,
+  atlanticArriveTime :: String,
+  atlanticArriveDate :: String,
+  atlanticDestCounty :: String,
+  atlanticOriginPlace :: Int,
+  atlanticDepartTime :: String,
+  atlanticDepartDate :: String,
+  atlanticOriginCounty :: String,
+  sussexDestPlace :: Int,
+  sussexArriveTime :: String,
+  sussexArriveDate :: String,
+  sussexDestCounty :: String,
+  sussexOriginPlace :: Int,
+  sussexDepartTime :: String,
+  sussexDepartDate :: String,
+  sussexOriginCounty :: String,
+  wayneDestPlace :: Int,
+  wayneArriveTime :: String,
+  wayneArriveDate :: String,
+  wayneDestCounty :: String,
+  wayneOriginPlace :: Int,
+  wayneDepartTime :: String,
+  wayneDepartDate :: String,
+  wayneOriginCounty :: String,
+  otsegoDestPlace :: Int,
+  otsegoArriveTime :: String,
+  otsegoArriveDate :: String,
+  otsegoDestCounty :: String,
+  otsegoOriginPlace :: Int,
+  otsegoDepartTime :: String,
+  otsegoDepartDate :: String,
+  otsegoOriginCounty :: String,
+  somersetDestPlace :: Int,
+  somersetArriveTime :: String,
+  somersetArriveDate :: String,
+  somersetDestCounty :: String,
+  somersetOriginPlace :: Int,
+  somersetDepartTime :: String,
+  somersetDepartDate :: String,
+  somersetOriginCounty :: String,
+  rensselaerDestPlace :: Int,
+  rensselaerArriveTime :: String,
+  rensselaerArriveDate :: String,
+  rensselaerDestCounty :: String,
+  rensselaerOriginPlace :: Int,
+  rensselaerDepartTime :: String,
+  rensselaerDepartDate :: String,
+  rensselaerOriginCounty :: String,
+  tompkinsDestPlace :: Int,
+  tompkinsArriveTime :: String,
+  tompkinsArriveDate :: String,
+  tompkinsDestCounty :: String,
+  tompkinsOriginPlace :: Int,
+  tompkinsDepartTime :: String,
+  tompkinsDepartDate :: String,
+  tompkinsOriginCounty :: String,
+  ulsterDestPlace :: Int,
+  ulsterArriveTime :: String,
+  ulsterArriveDate :: String,
+  ulsterDestCounty :: String,
+  ulsterOriginPlace :: Int,
+  ulsterDepartTime :: String,
+  ulsterDepartDate :: String,
+  ulsterOriginCounty :: String,
+  washingtonDestPlace :: Int,
+  washingtonArriveTime :: String,
+  washingtonArriveDate :: String,
+  washingtonDestCounty :: String,
+  washingtonOriginPlace :: Int,
+  washingtonDepartTime :: String,
+  washingtonDepartDate :: String,
+  washingtonOriginCounty :: String
+}
+simplices = 
+{
+  {sampNum,perNum,tripNum,tripID,albanyOriginPlace,newYorkDestPlace,purpose,albanyDepartTime,newYorkArriveTime,albanyDepartDate,newYorkArriveDate,albanyOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,albanyOriginPlace,queensDestPlace,purpose,albanyDepartTime,queensArriveTime,albanyDepartDate,queensArriveDate,albanyOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,bergenOriginPlace,bergenDestPlace,purpose,bergenDepartTime,bergenArriveTime,bergenDepartDate,bergenArriveDate,bergenOriginCounty,bergenDestCounty},
+  {sampNum,perNum,tripNum,tripID,bergenOriginPlace,bronxDestPlace,purpose,bergenDepartTime,bronxArriveTime,bergenDepartDate,bronxArriveDate,bergenOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,bergenOriginPlace,kingsDestPlace,purpose,bergenDepartTime,kingsArriveTime,bergenDepartDate,kingsArriveDate,bergenOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,bergenOriginPlace,newYorkDestPlace,purpose,bergenDepartTime,newYorkArriveTime,bergenDepartDate,newYorkArriveDate,bergenOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,bergenOriginPlace,queensDestPlace,purpose,bergenDepartTime,queensArriveTime,bergenDepartDate,queensArriveDate,bergenOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,bergenOriginPlace,richmondDestPlace,purpose,bergenDepartTime,richmondArriveTime,bergenDepartDate,richmondArriveDate,bergenOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,bergenDestPlace,purpose,bronxDepartTime,bergenArriveTime,bronxDepartDate,bergenArriveDate,bronxOriginCounty,bergenDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,bronxDestPlace,purpose,bronxDepartTime,bronxArriveTime,bronxDepartDate,bronxArriveDate,bronxOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,fairfieldDestPlace,purpose,bronxDepartTime,fairfieldArriveTime,bronxDepartDate,fairfieldArriveDate,bronxOriginCounty,fairfieldDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,hartfordDestPlace,purpose,bronxDepartTime,hartfordArriveTime,bronxDepartDate,hartfordArriveDate,bronxOriginCounty,hartfordDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,hudsonDestPlace,purpose,bronxDepartTime,hudsonArriveTime,bronxDepartDate,hudsonArriveDate,bronxOriginCounty,hudsonDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,kingsDestPlace,purpose,bronxDepartTime,kingsArriveTime,bronxDepartDate,kingsArriveDate,bronxOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,monroeDestPlace,purpose,bronxDepartTime,monroeArriveTime,bronxDepartDate,monroeArriveDate,bronxOriginCounty,monroeDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,morrisDestPlace,purpose,bronxDepartTime,morrisArriveTime,bronxDepartDate,morrisArriveDate,bronxOriginCounty,morrisDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,nassauDestPlace,purpose,bronxDepartTime,nassauArriveTime,bronxDepartDate,nassauArriveDate,bronxOriginCounty,nassauDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,newHavenDestPlace,purpose,bronxDepartTime,newHavenArriveTime,bronxDepartDate,newHavenArriveDate,bronxOriginCounty,newHavenDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,newYorkDestPlace,purpose,bronxDepartTime,newYorkArriveTime,bronxDepartDate,newYorkArriveDate,bronxOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,oneidaDestPlace,purpose,bronxDepartTime,oneidaArriveTime,bronxDepartDate,oneidaArriveDate,bronxOriginCounty,oneidaDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,outofAreaDestPlace,purpose,bronxDepartTime,outofAreaArriveTime,bronxDepartDate,outofAreaArriveDate,bronxOriginCounty,outofAreaDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,queensDestPlace,purpose,bronxDepartTime,queensArriveTime,bronxDepartDate,queensArriveDate,bronxOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,richmondDestPlace,purpose,bronxDepartTime,richmondArriveTime,bronxDepartDate,richmondArriveDate,bronxOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,rocklandDestPlace,purpose,bronxDepartTime,rocklandArriveTime,bronxDepartDate,rocklandArriveDate,bronxOriginCounty,rocklandDestCounty},
+  {sampNum,perNum,tripNum,tripID,bronxOriginPlace,westchesterDestPlace,purpose,bronxDepartTime,westchesterArriveTime,bronxDepartDate,westchesterArriveDate,bronxOriginCounty,westchesterDestCounty},
+  {sampNum,perNum,tripNum,tripID,burlingtonOriginPlace,kingsDestPlace,purpose,burlingtonDepartTime,kingsArriveTime,burlingtonDepartDate,kingsArriveDate,burlingtonOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,camdenOriginPlace,kingsDestPlace,purpose,camdenDepartTime,kingsArriveTime,camdenDepartDate,kingsArriveDate,camdenOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,camdenOriginPlace,newYorkDestPlace,purpose,camdenDepartTime,newYorkArriveTime,camdenDepartDate,newYorkArriveDate,camdenOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,clintonOriginPlace,kingsDestPlace,purpose,clintonDepartTime,kingsArriveTime,clintonDepartDate,kingsArriveDate,clintonOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,columbiaOriginPlace,kingsDestPlace,purpose,columbiaDepartTime,kingsArriveTime,columbiaDepartDate,kingsArriveDate,columbiaOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,columbiaOriginPlace,queensDestPlace,purpose,columbiaDepartTime,queensArriveTime,columbiaDepartDate,queensArriveDate,columbiaOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,dutchessOriginPlace,litchfieldDestPlace,purpose,dutchessDepartTime,litchfieldArriveTime,dutchessDepartDate,litchfieldArriveDate,dutchessOriginCounty,litchfieldDestCounty},
+  {sampNum,perNum,tripNum,tripID,dutchessOriginPlace,newYorkDestPlace,purpose,dutchessDepartTime,newYorkArriveTime,dutchessDepartDate,newYorkArriveDate,dutchessOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,essexOriginPlace,kingsDestPlace,purpose,essexDepartTime,kingsArriveTime,essexDepartDate,kingsArriveDate,essexOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,essexOriginPlace,newYorkDestPlace,purpose,essexDepartTime,newYorkArriveTime,essexDepartDate,newYorkArriveDate,essexOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,essexOriginPlace,queensDestPlace,purpose,essexDepartTime,queensArriveTime,essexDepartDate,queensArriveDate,essexOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,essexOriginPlace,richmondDestPlace,purpose,essexDepartTime,richmondArriveTime,essexDepartDate,richmondArriveDate,essexOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,fairfieldOriginPlace,bronxDestPlace,purpose,fairfieldDepartTime,bronxArriveTime,fairfieldDepartDate,bronxArriveDate,fairfieldOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,fairfieldOriginPlace,hudsonDestPlace,purpose,fairfieldDepartTime,hudsonArriveTime,fairfieldDepartDate,hudsonArriveDate,fairfieldOriginCounty,hudsonDestCounty},
+  {sampNum,perNum,tripNum,tripID,fairfieldOriginPlace,kingsDestPlace,purpose,fairfieldDepartTime,kingsArriveTime,fairfieldDepartDate,kingsArriveDate,fairfieldOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,fairfieldOriginPlace,newYorkDestPlace,purpose,fairfieldDepartTime,newYorkArriveTime,fairfieldDepartDate,newYorkArriveDate,fairfieldOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,fairfieldOriginPlace,queensDestPlace,purpose,fairfieldDepartTime,queensArriveTime,fairfieldDepartDate,queensArriveDate,fairfieldOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,fairfieldOriginPlace,westchesterDestPlace,purpose,fairfieldDepartTime,westchesterArriveTime,fairfieldDepartDate,westchesterArriveDate,fairfieldOriginCounty,westchesterDestCounty},
+  {sampNum,perNum,tripNum,tripID,fultonOriginPlace,richmondDestPlace,purpose,fultonDepartTime,richmondArriveTime,fultonDepartDate,richmondArriveDate,fultonOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,hartfordOriginPlace,bronxDestPlace,purpose,hartfordDepartTime,bronxArriveTime,hartfordDepartDate,bronxArriveDate,hartfordOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,hartfordOriginPlace,newYorkDestPlace,purpose,hartfordDepartTime,newYorkArriveTime,hartfordDepartDate,newYorkArriveDate,hartfordOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,bronxDestPlace,purpose,hudsonDepartTime,bronxArriveTime,hudsonDepartDate,bronxArriveDate,hudsonOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,hudsonDestPlace,purpose,hudsonDepartTime,hudsonArriveTime,hudsonDepartDate,hudsonArriveDate,hudsonOriginCounty,hudsonDestCounty},
+  {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,kingsDestPlace,purpose,hudsonDepartTime,kingsArriveTime,hudsonDepartDate,kingsArriveDate,hudsonOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,newYorkDestPlace,purpose,hudsonDepartTime,newYorkArriveTime,hudsonDepartDate,newYorkArriveDate,hudsonOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,queensDestPlace,purpose,hudsonDepartTime,queensArriveTime,hudsonDepartDate,queensArriveDate,hudsonOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,richmondDestPlace,purpose,hudsonDepartTime,richmondArriveTime,hudsonDepartDate,richmondArriveDate,hudsonOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,unionDestPlace,purpose,hudsonDepartTime,unionArriveTime,hudsonDepartDate,unionArriveDate,hudsonOriginCounty,unionDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,bergenDestPlace,purpose,kingsDepartTime,bergenArriveTime,kingsDepartDate,bergenArriveDate,kingsOriginCounty,bergenDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,bronxDestPlace,purpose,kingsDepartTime,bronxArriveTime,kingsDepartDate,bronxArriveDate,kingsOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,camdenDestPlace,purpose,kingsDepartTime,camdenArriveTime,kingsDepartDate,camdenArriveDate,kingsOriginCounty,camdenDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,cattaraugusDestPlace,purpose,kingsDepartTime,cattaraugusArriveTime,kingsDepartDate,cattaraugusArriveDate,kingsOriginCounty,cattaraugusDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,essexDestPlace,purpose,kingsDepartTime,essexArriveTime,kingsDepartDate,essexArriveDate,kingsOriginCounty,essexDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,fairfieldDestPlace,purpose,kingsDepartTime,fairfieldArriveTime,kingsDepartDate,fairfieldArriveDate,kingsOriginCounty,fairfieldDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,hudsonDestPlace,purpose,kingsDepartTime,hudsonArriveTime,kingsDepartDate,hudsonArriveDate,kingsOriginCounty,hudsonDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,kingsDestPlace,purpose,kingsDepartTime,kingsArriveTime,kingsDepartDate,kingsArriveDate,kingsOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,mercerDestPlace,purpose,kingsDepartTime,mercerArriveTime,kingsDepartDate,mercerArriveDate,kingsOriginCounty,mercerDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,middlesexDestPlace,purpose,kingsDepartTime,middlesexArriveTime,kingsDepartDate,middlesexArriveDate,kingsOriginCounty,middlesexDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,monmouthDestPlace,purpose,kingsDepartTime,monmouthArriveTime,kingsDepartDate,monmouthArriveDate,kingsOriginCounty,monmouthDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,nassauDestPlace,purpose,kingsDepartTime,nassauArriveTime,kingsDepartDate,nassauArriveDate,kingsOriginCounty,nassauDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,newYorkDestPlace,purpose,kingsDepartTime,newYorkArriveTime,kingsDepartDate,newYorkArriveDate,kingsOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,oceanDestPlace,purpose,kingsDepartTime,oceanArriveTime,kingsDepartDate,oceanArriveDate,kingsOriginCounty,oceanDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,oneidaDestPlace,purpose,kingsDepartTime,oneidaArriveTime,kingsDepartDate,oneidaArriveDate,kingsOriginCounty,oneidaDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,orangeDestPlace,purpose,kingsDepartTime,orangeArriveTime,kingsDepartDate,orangeArriveDate,kingsOriginCounty,orangeDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,outofAreaDestPlace,purpose,kingsDepartTime,outofAreaArriveTime,kingsDepartDate,outofAreaArriveDate,kingsOriginCounty,outofAreaDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,passaicDestPlace,purpose,kingsDepartTime,passaicArriveTime,kingsDepartDate,passaicArriveDate,kingsOriginCounty,passaicDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,putnamDestPlace,purpose,kingsDepartTime,putnamArriveTime,kingsDepartDate,putnamArriveDate,kingsOriginCounty,putnamDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,queensDestPlace,purpose,kingsDepartTime,queensArriveTime,kingsDepartDate,queensArriveDate,kingsOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,richmondDestPlace,purpose,kingsDepartTime,richmondArriveTime,kingsDepartDate,richmondArriveDate,kingsOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,rocklandDestPlace,purpose,kingsDepartTime,rocklandArriveTime,kingsDepartDate,rocklandArriveDate,kingsOriginCounty,rocklandDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,suffolkDestPlace,purpose,kingsDepartTime,suffolkArriveTime,kingsDepartDate,suffolkArriveDate,kingsOriginCounty,suffolkDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,sullivanDestPlace,purpose,kingsDepartTime,sullivanArriveTime,kingsDepartDate,sullivanArriveDate,kingsOriginCounty,sullivanDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,unionDestPlace,purpose,kingsDepartTime,unionArriveTime,kingsDepartDate,unionArriveDate,kingsOriginCounty,unionDestCounty},
+  {sampNum,perNum,tripNum,tripID,kingsOriginPlace,westchesterDestPlace,purpose,kingsDepartTime,westchesterArriveTime,kingsDepartDate,westchesterArriveDate,kingsOriginCounty,westchesterDestCounty},
+  {sampNum,perNum,tripNum,tripID,litchfieldOriginPlace,dutchessDestPlace,purpose,litchfieldDepartTime,dutchessArriveTime,litchfieldDepartDate,dutchessArriveDate,litchfieldOriginCounty,dutchessDestCounty},
+  {sampNum,perNum,tripNum,tripID,litchfieldOriginPlace,litchfieldDestPlace,purpose,litchfieldDepartTime,litchfieldArriveTime,litchfieldDepartDate,litchfieldArriveDate,litchfieldOriginCounty,litchfieldDestCounty},
+  {sampNum,perNum,tripNum,tripID,litchfieldOriginPlace,newYorkDestPlace,purpose,litchfieldDepartTime,newYorkArriveTime,litchfieldDepartDate,newYorkArriveDate,litchfieldOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,middlesexOriginPlace,kingsDestPlace,purpose,middlesexDepartTime,kingsArriveTime,middlesexDepartDate,kingsArriveDate,middlesexOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,middlesexOriginPlace,middlesexDestPlace,purpose,middlesexDepartTime,middlesexArriveTime,middlesexDepartDate,middlesexArriveDate,middlesexOriginCounty,middlesexDestCounty},
+  {sampNum,perNum,tripNum,tripID,middlesexOriginPlace,nassauDestPlace,purpose,middlesexDepartTime,nassauArriveTime,middlesexDepartDate,nassauArriveDate,middlesexOriginCounty,nassauDestCounty},
+  {sampNum,perNum,tripNum,tripID,middlesexOriginPlace,newYorkDestPlace,purpose,middlesexDepartTime,newYorkArriveTime,middlesexDepartDate,newYorkArriveDate,middlesexOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,middlesexOriginPlace,queensDestPlace,purpose,middlesexDepartTime,queensArriveTime,middlesexDepartDate,queensArriveDate,middlesexOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,middlesexOriginPlace,richmondDestPlace,purpose,middlesexDepartTime,richmondArriveTime,middlesexDepartDate,richmondArriveDate,middlesexOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,monmouthOriginPlace,kingsDestPlace,purpose,monmouthDepartTime,kingsArriveTime,monmouthDepartDate,kingsArriveDate,monmouthOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,monmouthOriginPlace,monmouthDestPlace,purpose,monmouthDepartTime,monmouthArriveTime,monmouthDepartDate,monmouthArriveDate,monmouthOriginCounty,monmouthDestCounty},
+  {sampNum,perNum,tripNum,tripID,monmouthOriginPlace,oceanDestPlace,purpose,monmouthDepartTime,oceanArriveTime,monmouthDepartDate,oceanArriveDate,monmouthOriginCounty,oceanDestCounty},
+  {sampNum,perNum,tripNum,tripID,monmouthOriginPlace,richmondDestPlace,purpose,monmouthDepartTime,richmondArriveTime,monmouthDepartDate,richmondArriveDate,monmouthOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,monroeOriginPlace,bronxDestPlace,purpose,monroeDepartTime,bronxArriveTime,monroeDepartDate,bronxArriveDate,monroeOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,monroeOriginPlace,newYorkDestPlace,purpose,monroeDepartTime,newYorkArriveTime,monroeDepartDate,newYorkArriveDate,monroeOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,morrisOriginPlace,bronxDestPlace,purpose,morrisDepartTime,bronxArriveTime,morrisDepartDate,bronxArriveDate,morrisOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,morrisOriginPlace,kingsDestPlace,purpose,morrisDepartTime,kingsArriveTime,morrisDepartDate,kingsArriveDate,morrisOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,morrisOriginPlace,newYorkDestPlace,purpose,morrisDepartTime,newYorkArriveTime,morrisDepartDate,newYorkArriveDate,morrisOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,morrisOriginPlace,queensDestPlace,purpose,morrisDepartTime,queensArriveTime,morrisDepartDate,queensArriveDate,morrisOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,nassauOriginPlace,bronxDestPlace,purpose,nassauDepartTime,bronxArriveTime,nassauDepartDate,bronxArriveDate,nassauOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,nassauOriginPlace,kingsDestPlace,purpose,nassauDepartTime,kingsArriveTime,nassauDepartDate,kingsArriveDate,nassauOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,nassauOriginPlace,nassauDestPlace,purpose,nassauDepartTime,nassauArriveTime,nassauDepartDate,nassauArriveDate,nassauOriginCounty,nassauDestCounty},
+  {sampNum,perNum,tripNum,tripID,nassauOriginPlace,newYorkDestPlace,purpose,nassauDepartTime,newYorkArriveTime,nassauDepartDate,newYorkArriveDate,nassauOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,nassauOriginPlace,queensDestPlace,purpose,nassauDepartTime,queensArriveTime,nassauDepartDate,queensArriveDate,nassauOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,nassauOriginPlace,richmondDestPlace,purpose,nassauDepartTime,richmondArriveTime,nassauDepartDate,richmondArriveDate,nassauOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,nassauOriginPlace,suffolkDestPlace,purpose,nassauDepartTime,suffolkArriveTime,nassauDepartDate,suffolkArriveDate,nassauOriginCounty,suffolkDestCounty},
+  {sampNum,perNum,tripNum,tripID,newHavenOriginPlace,bronxDestPlace,purpose,newHavenDepartTime,bronxArriveTime,newHavenDepartDate,bronxArriveDate,newHavenOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,newHavenOriginPlace,newHavenDestPlace,purpose,newHavenDepartTime,newHavenArriveTime,newHavenDepartDate,newHavenArriveDate,newHavenOriginCounty,newHavenDestCounty},
+  {sampNum,perNum,tripNum,tripID,newLondonOriginPlace,fairfieldDestPlace,purpose,newLondonDepartTime,fairfieldArriveTime,newLondonDepartDate,fairfieldArriveDate,newLondonOriginCounty,fairfieldDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,albanyDestPlace,purpose,newYorkDepartTime,albanyArriveTime,newYorkDepartDate,albanyArriveDate,newYorkOriginCounty,albanyDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,atlanticDestPlace,purpose,newYorkDepartTime,atlanticArriveTime,newYorkDepartDate,atlanticArriveDate,newYorkOriginCounty,atlanticDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,bergenDestPlace,purpose,newYorkDepartTime,bergenArriveTime,newYorkDepartDate,bergenArriveDate,newYorkOriginCounty,bergenDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,bronxDestPlace,purpose,newYorkDepartTime,bronxArriveTime,newYorkDepartDate,bronxArriveDate,newYorkOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,columbiaDestPlace,purpose,newYorkDepartTime,columbiaArriveTime,newYorkDepartDate,columbiaArriveDate,newYorkOriginCounty,columbiaDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,essexDestPlace,purpose,newYorkDepartTime,essexArriveTime,newYorkDepartDate,essexArriveDate,newYorkOriginCounty,essexDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,fairfieldDestPlace,purpose,newYorkDepartTime,fairfieldArriveTime,newYorkDepartDate,fairfieldArriveDate,newYorkOriginCounty,fairfieldDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,hudsonDestPlace,purpose,newYorkDepartTime,hudsonArriveTime,newYorkDepartDate,hudsonArriveDate,newYorkOriginCounty,hudsonDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,kingsDestPlace,purpose,newYorkDepartTime,kingsArriveTime,newYorkDepartDate,kingsArriveDate,newYorkOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,mercerDestPlace,purpose,newYorkDepartTime,mercerArriveTime,newYorkDepartDate,mercerArriveDate,newYorkOriginCounty,mercerDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,middlesexDestPlace,purpose,newYorkDepartTime,middlesexArriveTime,newYorkDepartDate,middlesexArriveDate,newYorkOriginCounty,middlesexDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,monroeDestPlace,purpose,newYorkDepartTime,monroeArriveTime,newYorkDepartDate,monroeArriveDate,newYorkOriginCounty,monroeDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,morrisDestPlace,purpose,newYorkDepartTime,morrisArriveTime,newYorkDepartDate,morrisArriveDate,newYorkOriginCounty,morrisDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,nassauDestPlace,purpose,newYorkDepartTime,nassauArriveTime,newYorkDepartDate,nassauArriveDate,newYorkOriginCounty,nassauDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,newYorkDestPlace,purpose,newYorkDepartTime,newYorkArriveTime,newYorkDepartDate,newYorkArriveDate,newYorkOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,oneidaDestPlace,purpose,newYorkDepartTime,oneidaArriveTime,newYorkDepartDate,oneidaArriveDate,newYorkOriginCounty,oneidaDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,orangeDestPlace,purpose,newYorkDepartTime,orangeArriveTime,newYorkDepartDate,orangeArriveDate,newYorkOriginCounty,orangeDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,outofAreaDestPlace,purpose,newYorkDepartTime,outofAreaArriveTime,newYorkDepartDate,outofAreaArriveDate,newYorkOriginCounty,outofAreaDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,queensDestPlace,purpose,newYorkDepartTime,queensArriveTime,newYorkDepartDate,queensArriveDate,newYorkOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,richmondDestPlace,purpose,newYorkDepartTime,richmondArriveTime,newYorkDepartDate,richmondArriveDate,newYorkOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,rocklandDestPlace,purpose,newYorkDepartTime,rocklandArriveTime,newYorkDepartDate,rocklandArriveDate,newYorkOriginCounty,rocklandDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,suffolkDestPlace,purpose,newYorkDepartTime,suffolkArriveTime,newYorkDepartDate,suffolkArriveDate,newYorkOriginCounty,suffolkDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,sussexDestPlace,purpose,newYorkDepartTime,sussexArriveTime,newYorkDepartDate,sussexArriveDate,newYorkOriginCounty,sussexDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,unionDestPlace,purpose,newYorkDepartTime,unionArriveTime,newYorkDepartDate,unionArriveDate,newYorkOriginCounty,unionDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,wayneDestPlace,purpose,newYorkDepartTime,wayneArriveTime,newYorkDepartDate,wayneArriveDate,newYorkOriginCounty,wayneDestCounty},
+  {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,westchesterDestPlace,purpose,newYorkDepartTime,westchesterArriveTime,newYorkDepartDate,westchesterArriveDate,newYorkOriginCounty,westchesterDestCounty},
+  {sampNum,perNum,tripNum,tripID,oceanOriginPlace,kingsDestPlace,purpose,oceanDepartTime,kingsArriveTime,oceanDepartDate,kingsArriveDate,oceanOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,oceanOriginPlace,monmouthDestPlace,purpose,oceanDepartTime,monmouthArriveTime,oceanDepartDate,monmouthArriveDate,oceanOriginCounty,monmouthDestCounty},
+  {sampNum,perNum,tripNum,tripID,oceanOriginPlace,queensDestPlace,purpose,oceanDepartTime,queensArriveTime,oceanDepartDate,queensArriveDate,oceanOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,oneidaOriginPlace,bronxDestPlace,purpose,oneidaDepartTime,bronxArriveTime,oneidaDepartDate,bronxArriveDate,oneidaOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,oneidaOriginPlace,kingsDestPlace,purpose,oneidaDepartTime,kingsArriveTime,oneidaDepartDate,kingsArriveDate,oneidaOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,oneidaOriginPlace,newYorkDestPlace,purpose,oneidaDepartTime,newYorkArriveTime,oneidaDepartDate,newYorkArriveDate,oneidaOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,oneidaOriginPlace,oneidaDestPlace,purpose,oneidaDepartTime,oneidaArriveTime,oneidaDepartDate,oneidaArriveDate,oneidaOriginCounty,oneidaDestCounty},
+  {sampNum,perNum,tripNum,tripID,orangeOriginPlace,newYorkDestPlace,purpose,orangeDepartTime,newYorkArriveTime,orangeDepartDate,newYorkArriveDate,orangeOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,orangeOriginPlace,orangeDestPlace,purpose,orangeDepartTime,orangeArriveTime,orangeDepartDate,orangeArriveDate,orangeOriginCounty,orangeDestCounty},
+  {sampNum,perNum,tripNum,tripID,orangeOriginPlace,queensDestPlace,purpose,orangeDepartTime,queensArriveTime,orangeDepartDate,queensArriveDate,orangeOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,orangeOriginPlace,richmondDestPlace,purpose,orangeDepartTime,richmondArriveTime,orangeDepartDate,richmondArriveDate,orangeOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,orangeOriginPlace,sullivanDestPlace,purpose,orangeDepartTime,sullivanArriveTime,orangeDepartDate,sullivanArriveDate,orangeOriginCounty,sullivanDestCounty},
+  {sampNum,perNum,tripNum,tripID,orangeOriginPlace,wayneDestPlace,purpose,orangeDepartTime,wayneArriveTime,orangeDepartDate,wayneArriveDate,orangeOriginCounty,wayneDestCounty},
+  {sampNum,perNum,tripNum,tripID,otsegoOriginPlace,newYorkDestPlace,purpose,otsegoDepartTime,newYorkArriveTime,otsegoDepartDate,newYorkArriveDate,otsegoOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,bronxDestPlace,purpose,outofAreaDepartTime,bronxArriveTime,outofAreaDepartDate,bronxArriveDate,outofAreaOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,kingsDestPlace,purpose,outofAreaDepartTime,kingsArriveTime,outofAreaDepartDate,kingsArriveDate,outofAreaOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,morrisDestPlace,purpose,outofAreaDepartTime,morrisArriveTime,outofAreaDepartDate,morrisArriveDate,outofAreaOriginCounty,morrisDestCounty},
+  {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,newYorkDestPlace,purpose,outofAreaDepartTime,newYorkArriveTime,outofAreaDepartDate,newYorkArriveDate,outofAreaOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,outofAreaDestPlace,purpose,outofAreaDepartTime,outofAreaArriveTime,outofAreaDepartDate,outofAreaArriveDate,outofAreaOriginCounty,outofAreaDestCounty},
+  {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,queensDestPlace,purpose,outofAreaDepartTime,queensArriveTime,outofAreaDepartDate,queensArriveDate,outofAreaOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,richmondDestPlace,purpose,outofAreaDepartTime,richmondArriveTime,outofAreaDepartDate,richmondArriveDate,outofAreaOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,westchesterDestPlace,purpose,outofAreaDepartTime,westchesterArriveTime,outofAreaDepartDate,westchesterArriveDate,outofAreaOriginCounty,westchesterDestCounty},
+  {sampNum,perNum,tripNum,tripID,passaicOriginPlace,kingsDestPlace,purpose,passaicDepartTime,kingsArriveTime,passaicDepartDate,kingsArriveDate,passaicOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,passaicOriginPlace,queensDestPlace,purpose,passaicDepartTime,queensArriveTime,passaicDepartDate,queensArriveDate,passaicOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,putnamOriginPlace,kingsDestPlace,purpose,putnamDepartTime,kingsArriveTime,putnamDepartDate,kingsArriveDate,putnamOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,putnamOriginPlace,newYorkDestPlace,purpose,putnamDepartTime,newYorkArriveTime,putnamDepartDate,newYorkArriveDate,putnamOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,albanyDestPlace,purpose,queensDepartTime,albanyArriveTime,queensDepartDate,albanyArriveDate,queensOriginCounty,albanyDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,bergenDestPlace,purpose,queensDepartTime,bergenArriveTime,queensDepartDate,bergenArriveDate,queensOriginCounty,bergenDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,bronxDestPlace,purpose,queensDepartTime,bronxArriveTime,queensDepartDate,bronxArriveDate,queensOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,columbiaDestPlace,purpose,queensDepartTime,columbiaArriveTime,queensDepartDate,columbiaArriveDate,queensOriginCounty,columbiaDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,essexDestPlace,purpose,queensDepartTime,essexArriveTime,queensDepartDate,essexArriveDate,queensOriginCounty,essexDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,fairfieldDestPlace,purpose,queensDepartTime,fairfieldArriveTime,queensDepartDate,fairfieldArriveDate,queensOriginCounty,fairfieldDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,hudsonDestPlace,purpose,queensDepartTime,hudsonArriveTime,queensDepartDate,hudsonArriveDate,queensOriginCounty,hudsonDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,kingsDestPlace,purpose,queensDepartTime,kingsArriveTime,queensDepartDate,kingsArriveDate,queensOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,middlesexDestPlace,purpose,queensDepartTime,middlesexArriveTime,queensDepartDate,middlesexArriveDate,queensOriginCounty,middlesexDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,morrisDestPlace,purpose,queensDepartTime,morrisArriveTime,queensDepartDate,morrisArriveDate,queensOriginCounty,morrisDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,nassauDestPlace,purpose,queensDepartTime,nassauArriveTime,queensDepartDate,nassauArriveDate,queensOriginCounty,nassauDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,newLondonDestPlace,purpose,queensDepartTime,newLondonArriveTime,queensDepartDate,newLondonArriveDate,queensOriginCounty,newLondonDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,newYorkDestPlace,purpose,queensDepartTime,newYorkArriveTime,queensDepartDate,newYorkArriveDate,queensOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,oceanDestPlace,purpose,queensDepartTime,oceanArriveTime,queensDepartDate,oceanArriveDate,queensOriginCounty,oceanDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,orangeDestPlace,purpose,queensDepartTime,orangeArriveTime,queensDepartDate,orangeArriveDate,queensOriginCounty,orangeDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,outofAreaDestPlace,purpose,queensDepartTime,outofAreaArriveTime,queensDepartDate,outofAreaArriveDate,queensOriginCounty,outofAreaDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,passaicDestPlace,purpose,queensDepartTime,passaicArriveTime,queensDepartDate,passaicArriveDate,queensOriginCounty,passaicDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,queensDestPlace,purpose,queensDepartTime,queensArriveTime,queensDepartDate,queensArriveDate,queensOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,richmondDestPlace,purpose,queensDepartTime,richmondArriveTime,queensDepartDate,richmondArriveDate,queensOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,rocklandDestPlace,purpose,queensDepartTime,rocklandArriveTime,queensDepartDate,rocklandArriveDate,queensOriginCounty,rocklandDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,somersetDestPlace,purpose,queensDepartTime,somersetArriveTime,queensDepartDate,somersetArriveDate,queensOriginCounty,somersetDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,suffolkDestPlace,purpose,queensDepartTime,suffolkArriveTime,queensDepartDate,suffolkArriveDate,queensOriginCounty,suffolkDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,sullivanDestPlace,purpose,queensDepartTime,sullivanArriveTime,queensDepartDate,sullivanArriveDate,queensOriginCounty,sullivanDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,unionDestPlace,purpose,queensDepartTime,unionArriveTime,queensDepartDate,unionArriveDate,queensOriginCounty,unionDestCounty},
+  {sampNum,perNum,tripNum,tripID,queensOriginPlace,westchesterDestPlace,purpose,queensDepartTime,westchesterArriveTime,queensDepartDate,westchesterArriveDate,queensOriginCounty,westchesterDestCounty},
+  {sampNum,perNum,tripNum,tripID,rensselaerOriginPlace,newYorkDestPlace,purpose,rensselaerDepartTime,newYorkArriveTime,rensselaerDepartDate,newYorkArriveDate,rensselaerOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,bergenDestPlace,purpose,richmondDepartTime,bergenArriveTime,richmondDepartDate,bergenArriveDate,richmondOriginCounty,bergenDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,bronxDestPlace,purpose,richmondDepartTime,bronxArriveTime,richmondDepartDate,bronxArriveDate,richmondOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,essexDestPlace,purpose,richmondDepartTime,essexArriveTime,richmondDepartDate,essexArriveDate,richmondOriginCounty,essexDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,fultonDestPlace,purpose,richmondDepartTime,fultonArriveTime,richmondDepartDate,fultonArriveDate,richmondOriginCounty,fultonDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,hudsonDestPlace,purpose,richmondDepartTime,hudsonArriveTime,richmondDepartDate,hudsonArriveDate,richmondOriginCounty,hudsonDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,kingsDestPlace,purpose,richmondDepartTime,kingsArriveTime,richmondDepartDate,kingsArriveDate,richmondOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,middlesexDestPlace,purpose,richmondDepartTime,middlesexArriveTime,richmondDepartDate,middlesexArriveDate,richmondOriginCounty,middlesexDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,monmouthDestPlace,purpose,richmondDepartTime,monmouthArriveTime,richmondDepartDate,monmouthArriveDate,richmondOriginCounty,monmouthDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,nassauDestPlace,purpose,richmondDepartTime,nassauArriveTime,richmondDepartDate,nassauArriveDate,richmondOriginCounty,nassauDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,newYorkDestPlace,purpose,richmondDepartTime,newYorkArriveTime,richmondDepartDate,newYorkArriveDate,richmondOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,orangeDestPlace,purpose,richmondDepartTime,orangeArriveTime,richmondDepartDate,orangeArriveDate,richmondOriginCounty,orangeDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,outofAreaDestPlace,purpose,richmondDepartTime,outofAreaArriveTime,richmondDepartDate,outofAreaArriveDate,richmondOriginCounty,outofAreaDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,queensDestPlace,purpose,richmondDepartTime,queensArriveTime,richmondDepartDate,queensArriveDate,richmondOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,richmondDestPlace,purpose,richmondDepartTime,richmondArriveTime,richmondDepartDate,richmondArriveDate,richmondOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,suffolkDestPlace,purpose,richmondDepartTime,suffolkArriveTime,richmondDepartDate,suffolkArriveDate,richmondOriginCounty,suffolkDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,unionDestPlace,purpose,richmondDepartTime,unionArriveTime,richmondDepartDate,unionArriveDate,richmondOriginCounty,unionDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,wayneDestPlace,purpose,richmondDepartTime,wayneArriveTime,richmondDepartDate,wayneArriveDate,richmondOriginCounty,wayneDestCounty},
+  {sampNum,perNum,tripNum,tripID,richmondOriginPlace,westchesterDestPlace,purpose,richmondDepartTime,westchesterArriveTime,richmondDepartDate,westchesterArriveDate,richmondOriginCounty,westchesterDestCounty},
+  {sampNum,perNum,tripNum,tripID,rocklandOriginPlace,bronxDestPlace,purpose,rocklandDepartTime,bronxArriveTime,rocklandDepartDate,bronxArriveDate,rocklandOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,rocklandOriginPlace,kingsDestPlace,purpose,rocklandDepartTime,kingsArriveTime,rocklandDepartDate,kingsArriveDate,rocklandOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,rocklandOriginPlace,newYorkDestPlace,purpose,rocklandDepartTime,newYorkArriveTime,rocklandDepartDate,newYorkArriveDate,rocklandOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,rocklandOriginPlace,queensDestPlace,purpose,rocklandDepartTime,queensArriveTime,rocklandDepartDate,queensArriveDate,rocklandOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,rocklandOriginPlace,rocklandDestPlace,purpose,rocklandDepartTime,rocklandArriveTime,rocklandDepartDate,rocklandArriveDate,rocklandOriginCounty,rocklandDestCounty},
+  {sampNum,perNum,tripNum,tripID,rocklandOriginPlace,westchesterDestPlace,purpose,rocklandDepartTime,westchesterArriveTime,rocklandDepartDate,westchesterArriveDate,rocklandOriginCounty,westchesterDestCounty},
+  {sampNum,perNum,tripNum,tripID,somersetOriginPlace,queensDestPlace,purpose,somersetDepartTime,queensArriveTime,somersetDepartDate,queensArriveDate,somersetOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,suffolkOriginPlace,kingsDestPlace,purpose,suffolkDepartTime,kingsArriveTime,suffolkDepartDate,kingsArriveDate,suffolkOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,suffolkOriginPlace,nassauDestPlace,purpose,suffolkDepartTime,nassauArriveTime,suffolkDepartDate,nassauArriveDate,suffolkOriginCounty,nassauDestCounty},
+  {sampNum,perNum,tripNum,tripID,suffolkOriginPlace,newYorkDestPlace,purpose,suffolkDepartTime,newYorkArriveTime,suffolkDepartDate,newYorkArriveDate,suffolkOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,suffolkOriginPlace,queensDestPlace,purpose,suffolkDepartTime,queensArriveTime,suffolkDepartDate,queensArriveDate,suffolkOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,suffolkOriginPlace,richmondDestPlace,purpose,suffolkDepartTime,richmondArriveTime,suffolkDepartDate,richmondArriveDate,suffolkOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,suffolkOriginPlace,suffolkDestPlace,purpose,suffolkDepartTime,suffolkArriveTime,suffolkDepartDate,suffolkArriveDate,suffolkOriginCounty,suffolkDestCounty},
+  {sampNum,perNum,tripNum,tripID,sullivanOriginPlace,kingsDestPlace,purpose,sullivanDepartTime,kingsArriveTime,sullivanDepartDate,kingsArriveDate,sullivanOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,sullivanOriginPlace,newYorkDestPlace,purpose,sullivanDepartTime,newYorkArriveTime,sullivanDepartDate,newYorkArriveDate,sullivanOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,sullivanOriginPlace,queensDestPlace,purpose,sullivanDepartTime,queensArriveTime,sullivanDepartDate,queensArriveDate,sullivanOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,sullivanOriginPlace,sullivanDestPlace,purpose,sullivanDepartTime,sullivanArriveTime,sullivanDepartDate,sullivanArriveDate,sullivanOriginCounty,sullivanDestCounty},
+  {sampNum,perNum,tripNum,tripID,sussexOriginPlace,newYorkDestPlace,purpose,sussexDepartTime,newYorkArriveTime,sussexDepartDate,newYorkArriveDate,sussexOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,sussexOriginPlace,sussexDestPlace,purpose,sussexDepartTime,sussexArriveTime,sussexDepartDate,sussexArriveDate,sussexOriginCounty,sussexDestCounty},
+  {sampNum,perNum,tripNum,tripID,tompkinsOriginPlace,bronxDestPlace,purpose,tompkinsDepartTime,bronxArriveTime,tompkinsDepartDate,bronxArriveDate,tompkinsOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,ulsterOriginPlace,kingsDestPlace,purpose,ulsterDepartTime,kingsArriveTime,ulsterDepartDate,kingsArriveDate,ulsterOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,unionOriginPlace,kingsDestPlace,purpose,unionDepartTime,kingsArriveTime,unionDepartDate,kingsArriveDate,unionOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,unionOriginPlace,newYorkDestPlace,purpose,unionDepartTime,newYorkArriveTime,unionDepartDate,newYorkArriveDate,unionOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,unionOriginPlace,queensDestPlace,purpose,unionDepartTime,queensArriveTime,unionDepartDate,queensArriveDate,unionOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,unionOriginPlace,richmondDestPlace,purpose,unionDepartTime,richmondArriveTime,unionDepartDate,richmondArriveDate,unionOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,washingtonOriginPlace,newYorkDestPlace,purpose,washingtonDepartTime,newYorkArriveTime,washingtonDepartDate,newYorkArriveDate,washingtonOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,wayneOriginPlace,newYorkDestPlace,purpose,wayneDepartTime,newYorkArriveTime,wayneDepartDate,newYorkArriveDate,wayneOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,wayneOriginPlace,orangeDestPlace,purpose,wayneDepartTime,orangeArriveTime,wayneDepartDate,orangeArriveDate,wayneOriginCounty,orangeDestCounty},
+  {sampNum,perNum,tripNum,tripID,wayneOriginPlace,richmondDestPlace,purpose,wayneDepartTime,richmondArriveTime,wayneDepartDate,richmondArriveDate,wayneOriginCounty,richmondDestCounty},
+  {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,bronxDestPlace,purpose,westchesterDepartTime,bronxArriveTime,westchesterDepartDate,bronxArriveDate,westchesterOriginCounty,bronxDestCounty},
+  {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,kingsDestPlace,purpose,westchesterDepartTime,kingsArriveTime,westchesterDepartDate,kingsArriveDate,westchesterOriginCounty,kingsDestCounty},
+  {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,newYorkDestPlace,purpose,westchesterDepartTime,newYorkArriveTime,westchesterDepartDate,newYorkArriveDate,westchesterOriginCounty,newYorkDestCounty},
+  {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,outofAreaDestPlace,purpose,westchesterDepartTime,outofAreaArriveTime,westchesterDepartDate,outofAreaArriveDate,westchesterOriginCounty,outofAreaDestCounty},
+  {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,queensDestPlace,purpose,westchesterDepartTime,queensArriveTime,westchesterDepartDate,queensArriveDate,westchesterOriginCounty,queensDestCounty},
+  {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,rocklandDestPlace,purpose,westchesterDepartTime,rocklandArriveTime,westchesterDepartDate,rocklandArriveDate,westchesterOriginCounty,rocklandDestCounty},
+  {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,westchesterDestPlace,purpose,westchesterDepartTime,westchesterArriveTime,westchesterDepartDate,westchesterArriveDate,westchesterOriginCounty,westchesterDestCounty}
+}
+;
+
+let ealbanynewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,albanyOriginPlace,newYorkDestPlace,purpose,albanyDepartTime,newYorkArriveTime,albanyDepartDate,newYorkArriveDate,albanyOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/albanynewYorkEdge.csv";
+
+let ealbanyqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,albanyOriginPlace,queensDestPlace,purpose,albanyDepartTime,queensArriveTime,albanyDepartDate,queensArriveDate,albanyOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/albanyqueensEdge.csv";
+
+let ebergenbergen = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bergenOriginPlace,bergenDestPlace,purpose,bergenDepartTime,bergenArriveTime,bergenDepartDate,bergenArriveDate,bergenOriginCounty,bergenDestCounty} with load "../data/Transit/EdgeTables/bergenbergenEdge.csv";
+
+let ebergenbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bergenOriginPlace,bronxDestPlace,purpose,bergenDepartTime,bronxArriveTime,bergenDepartDate,bronxArriveDate,bergenOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/bergenbronxEdge.csv";
+
+let ebergenkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bergenOriginPlace,kingsDestPlace,purpose,bergenDepartTime,kingsArriveTime,bergenDepartDate,kingsArriveDate,bergenOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/bergenkingsEdge.csv";
+
+let ebergennewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bergenOriginPlace,newYorkDestPlace,purpose,bergenDepartTime,newYorkArriveTime,bergenDepartDate,newYorkArriveDate,bergenOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/bergennewYorkEdge.csv";
+
+let ebergenqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bergenOriginPlace,queensDestPlace,purpose,bergenDepartTime,queensArriveTime,bergenDepartDate,queensArriveDate,bergenOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/bergenqueensEdge.csv";
+
+let ebergenrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bergenOriginPlace,richmondDestPlace,purpose,bergenDepartTime,richmondArriveTime,bergenDepartDate,richmondArriveDate,bergenOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/bergenrichmondEdge.csv";
+
+let ebronxbergen = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,bergenDestPlace,purpose,bronxDepartTime,bergenArriveTime,bronxDepartDate,bergenArriveDate,bronxOriginCounty,bergenDestCounty} with load "../data/Transit/EdgeTables/bronxbergenEdge.csv";
+
+let ebronxbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,bronxDestPlace,purpose,bronxDepartTime,bronxArriveTime,bronxDepartDate,bronxArriveDate,bronxOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/bronxbronxEdge.csv";
+
+let ebronxfairfield = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,fairfieldDestPlace,purpose,bronxDepartTime,fairfieldArriveTime,bronxDepartDate,fairfieldArriveDate,bronxOriginCounty,fairfieldDestCounty} with load "../data/Transit/EdgeTables/bronxfairfieldEdge.csv";
+
+let ebronxhartford = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,hartfordDestPlace,purpose,bronxDepartTime,hartfordArriveTime,bronxDepartDate,hartfordArriveDate,bronxOriginCounty,hartfordDestCounty} with load "../data/Transit/EdgeTables/bronxhartfordEdge.csv";
+
+let ebronxhudson = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,hudsonDestPlace,purpose,bronxDepartTime,hudsonArriveTime,bronxDepartDate,hudsonArriveDate,bronxOriginCounty,hudsonDestCounty} with load "../data/Transit/EdgeTables/bronxhudsonEdge.csv";
+
+let ebronxkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,kingsDestPlace,purpose,bronxDepartTime,kingsArriveTime,bronxDepartDate,kingsArriveDate,bronxOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/bronxkingsEdge.csv";
+
+let ebronxmonroe = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,monroeDestPlace,purpose,bronxDepartTime,monroeArriveTime,bronxDepartDate,monroeArriveDate,bronxOriginCounty,monroeDestCounty} with load "../data/Transit/EdgeTables/bronxmonroeEdge.csv";
+
+let ebronxmorris = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,morrisDestPlace,purpose,bronxDepartTime,morrisArriveTime,bronxDepartDate,morrisArriveDate,bronxOriginCounty,morrisDestCounty} with load "../data/Transit/EdgeTables/bronxmorrisEdge.csv";
+
+let ebronxnassau = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,nassauDestPlace,purpose,bronxDepartTime,nassauArriveTime,bronxDepartDate,nassauArriveDate,bronxOriginCounty,nassauDestCounty} with load "../data/Transit/EdgeTables/bronxnassauEdge.csv";
+
+let ebronxnewHaven = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,newHavenDestPlace,purpose,bronxDepartTime,newHavenArriveTime,bronxDepartDate,newHavenArriveDate,bronxOriginCounty,newHavenDestCounty} with load "../data/Transit/EdgeTables/bronxnewHavenEdge.csv";
+
+let ebronxnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,newYorkDestPlace,purpose,bronxDepartTime,newYorkArriveTime,bronxDepartDate,newYorkArriveDate,bronxOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/bronxnewYorkEdge.csv";
+
+let ebronxoneida = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,oneidaDestPlace,purpose,bronxDepartTime,oneidaArriveTime,bronxDepartDate,oneidaArriveDate,bronxOriginCounty,oneidaDestCounty} with load "../data/Transit/EdgeTables/bronxoneidaEdge.csv";
+
+let ebronxoutofArea = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,outofAreaDestPlace,purpose,bronxDepartTime,outofAreaArriveTime,bronxDepartDate,outofAreaArriveDate,bronxOriginCounty,outofAreaDestCounty} with load "../data/Transit/EdgeTables/bronxoutofAreaEdge.csv";
+
+let ebronxqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,queensDestPlace,purpose,bronxDepartTime,queensArriveTime,bronxDepartDate,queensArriveDate,bronxOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/bronxqueensEdge.csv";
+
+let ebronxrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,richmondDestPlace,purpose,bronxDepartTime,richmondArriveTime,bronxDepartDate,richmondArriveDate,bronxOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/bronxrichmondEdge.csv";
+
+let ebronxrockland = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,rocklandDestPlace,purpose,bronxDepartTime,rocklandArriveTime,bronxDepartDate,rocklandArriveDate,bronxOriginCounty,rocklandDestCounty} with load "../data/Transit/EdgeTables/bronxrocklandEdge.csv";
+
+let ebronxwestchester = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,bronxOriginPlace,westchesterDestPlace,purpose,bronxDepartTime,westchesterArriveTime,bronxDepartDate,westchesterArriveDate,bronxOriginCounty,westchesterDestCounty} with load "../data/Transit/EdgeTables/bronxwestchesterEdge.csv";
+
+let eburlingtonkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,burlingtonOriginPlace,kingsDestPlace,purpose,burlingtonDepartTime,kingsArriveTime,burlingtonDepartDate,kingsArriveDate,burlingtonOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/burlingtonkingsEdge.csv";
+
+let ecamdenkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,camdenOriginPlace,kingsDestPlace,purpose,camdenDepartTime,kingsArriveTime,camdenDepartDate,kingsArriveDate,camdenOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/camdenkingsEdge.csv";
+
+let ecamdennewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,camdenOriginPlace,newYorkDestPlace,purpose,camdenDepartTime,newYorkArriveTime,camdenDepartDate,newYorkArriveDate,camdenOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/camdennewYorkEdge.csv";
+
+let eclintonkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,clintonOriginPlace,kingsDestPlace,purpose,clintonDepartTime,kingsArriveTime,clintonDepartDate,kingsArriveDate,clintonOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/clintonkingsEdge.csv";
+
+let ecolumbiakings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,columbiaOriginPlace,kingsDestPlace,purpose,columbiaDepartTime,kingsArriveTime,columbiaDepartDate,kingsArriveDate,columbiaOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/columbiakingsEdge.csv";
+
+let ecolumbiaqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,columbiaOriginPlace,queensDestPlace,purpose,columbiaDepartTime,queensArriveTime,columbiaDepartDate,queensArriveDate,columbiaOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/columbiaqueensEdge.csv";
+
+let edutchesslitchfield = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,dutchessOriginPlace,litchfieldDestPlace,purpose,dutchessDepartTime,litchfieldArriveTime,dutchessDepartDate,litchfieldArriveDate,dutchessOriginCounty,litchfieldDestCounty} with load "../data/Transit/EdgeTables/dutchesslitchfieldEdge.csv";
+
+let edutchessnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,dutchessOriginPlace,newYorkDestPlace,purpose,dutchessDepartTime,newYorkArriveTime,dutchessDepartDate,newYorkArriveDate,dutchessOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/dutchessnewYorkEdge.csv";
+
+let eessexkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,essexOriginPlace,kingsDestPlace,purpose,essexDepartTime,kingsArriveTime,essexDepartDate,kingsArriveDate,essexOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/essexkingsEdge.csv";
+
+let eessexnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,essexOriginPlace,newYorkDestPlace,purpose,essexDepartTime,newYorkArriveTime,essexDepartDate,newYorkArriveDate,essexOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/essexnewYorkEdge.csv";
+
+let eessexqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,essexOriginPlace,queensDestPlace,purpose,essexDepartTime,queensArriveTime,essexDepartDate,queensArriveDate,essexOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/essexqueensEdge.csv";
+
+let eessexrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,essexOriginPlace,richmondDestPlace,purpose,essexDepartTime,richmondArriveTime,essexDepartDate,richmondArriveDate,essexOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/essexrichmondEdge.csv";
+
+let efairfieldbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,fairfieldOriginPlace,bronxDestPlace,purpose,fairfieldDepartTime,bronxArriveTime,fairfieldDepartDate,bronxArriveDate,fairfieldOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/fairfieldbronxEdge.csv";
+
+let efairfieldhudson = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,fairfieldOriginPlace,hudsonDestPlace,purpose,fairfieldDepartTime,hudsonArriveTime,fairfieldDepartDate,hudsonArriveDate,fairfieldOriginCounty,hudsonDestCounty} with load "../data/Transit/EdgeTables/fairfieldhudsonEdge.csv";
+
+let efairfieldkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,fairfieldOriginPlace,kingsDestPlace,purpose,fairfieldDepartTime,kingsArriveTime,fairfieldDepartDate,kingsArriveDate,fairfieldOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/fairfieldkingsEdge.csv";
+
+let efairfieldnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,fairfieldOriginPlace,newYorkDestPlace,purpose,fairfieldDepartTime,newYorkArriveTime,fairfieldDepartDate,newYorkArriveDate,fairfieldOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/fairfieldnewYorkEdge.csv";
+
+let efairfieldqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,fairfieldOriginPlace,queensDestPlace,purpose,fairfieldDepartTime,queensArriveTime,fairfieldDepartDate,queensArriveDate,fairfieldOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/fairfieldqueensEdge.csv";
+
+let efairfieldwestchester = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,fairfieldOriginPlace,westchesterDestPlace,purpose,fairfieldDepartTime,westchesterArriveTime,fairfieldDepartDate,westchesterArriveDate,fairfieldOriginCounty,westchesterDestCounty} with load "../data/Transit/EdgeTables/fairfieldwestchesterEdge.csv";
+
+let efultonrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,fultonOriginPlace,richmondDestPlace,purpose,fultonDepartTime,richmondArriveTime,fultonDepartDate,richmondArriveDate,fultonOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/fultonrichmondEdge.csv";
+
+let ehartfordbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,hartfordOriginPlace,bronxDestPlace,purpose,hartfordDepartTime,bronxArriveTime,hartfordDepartDate,bronxArriveDate,hartfordOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/hartfordbronxEdge.csv";
+
+let ehartfordnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,hartfordOriginPlace,newYorkDestPlace,purpose,hartfordDepartTime,newYorkArriveTime,hartfordDepartDate,newYorkArriveDate,hartfordOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/hartfordnewYorkEdge.csv";
+
+let ehudsonbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,bronxDestPlace,purpose,hudsonDepartTime,bronxArriveTime,hudsonDepartDate,bronxArriveDate,hudsonOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/hudsonbronxEdge.csv";
+
+let ehudsonhudson = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,hudsonDestPlace,purpose,hudsonDepartTime,hudsonArriveTime,hudsonDepartDate,hudsonArriveDate,hudsonOriginCounty,hudsonDestCounty} with load "../data/Transit/EdgeTables/hudsonhudsonEdge.csv";
+
+let ehudsonkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,kingsDestPlace,purpose,hudsonDepartTime,kingsArriveTime,hudsonDepartDate,kingsArriveDate,hudsonOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/hudsonkingsEdge.csv";
+
+let ehudsonnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,newYorkDestPlace,purpose,hudsonDepartTime,newYorkArriveTime,hudsonDepartDate,newYorkArriveDate,hudsonOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/hudsonnewYorkEdge.csv";
+
+let ehudsonqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,queensDestPlace,purpose,hudsonDepartTime,queensArriveTime,hudsonDepartDate,queensArriveDate,hudsonOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/hudsonqueensEdge.csv";
+
+let ehudsonrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,richmondDestPlace,purpose,hudsonDepartTime,richmondArriveTime,hudsonDepartDate,richmondArriveDate,hudsonOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/hudsonrichmondEdge.csv";
+
+let ehudsonunion = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,hudsonOriginPlace,unionDestPlace,purpose,hudsonDepartTime,unionArriveTime,hudsonDepartDate,unionArriveDate,hudsonOriginCounty,unionDestCounty} with load "../data/Transit/EdgeTables/hudsonunionEdge.csv";
+
+let ekingsbergen = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,bergenDestPlace,purpose,kingsDepartTime,bergenArriveTime,kingsDepartDate,bergenArriveDate,kingsOriginCounty,bergenDestCounty} with load "../data/Transit/EdgeTables/kingsbergenEdge.csv";
+
+let ekingsbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,bronxDestPlace,purpose,kingsDepartTime,bronxArriveTime,kingsDepartDate,bronxArriveDate,kingsOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/kingsbronxEdge.csv";
+
+let ekingscamden = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,camdenDestPlace,purpose,kingsDepartTime,camdenArriveTime,kingsDepartDate,camdenArriveDate,kingsOriginCounty,camdenDestCounty} with load "../data/Transit/EdgeTables/kingscamdenEdge.csv";
+
+let ekingscattaraugus = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,cattaraugusDestPlace,purpose,kingsDepartTime,cattaraugusArriveTime,kingsDepartDate,cattaraugusArriveDate,kingsOriginCounty,cattaraugusDestCounty} with load "../data/Transit/EdgeTables/kingscattaraugusEdge.csv";
+
+let ekingsessex = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,essexDestPlace,purpose,kingsDepartTime,essexArriveTime,kingsDepartDate,essexArriveDate,kingsOriginCounty,essexDestCounty} with load "../data/Transit/EdgeTables/kingsessexEdge.csv";
+
+let ekingsfairfield = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,fairfieldDestPlace,purpose,kingsDepartTime,fairfieldArriveTime,kingsDepartDate,fairfieldArriveDate,kingsOriginCounty,fairfieldDestCounty} with load "../data/Transit/EdgeTables/kingsfairfieldEdge.csv";
+
+let ekingshudson = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,hudsonDestPlace,purpose,kingsDepartTime,hudsonArriveTime,kingsDepartDate,hudsonArriveDate,kingsOriginCounty,hudsonDestCounty} with load "../data/Transit/EdgeTables/kingshudsonEdge.csv";
+
+let ekingskings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,kingsDestPlace,purpose,kingsDepartTime,kingsArriveTime,kingsDepartDate,kingsArriveDate,kingsOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/kingskingsEdge.csv";
+
+let ekingsmercer = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,mercerDestPlace,purpose,kingsDepartTime,mercerArriveTime,kingsDepartDate,mercerArriveDate,kingsOriginCounty,mercerDestCounty} with load "../data/Transit/EdgeTables/kingsmercerEdge.csv";
+
+let ekingsmiddlesex = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,middlesexDestPlace,purpose,kingsDepartTime,middlesexArriveTime,kingsDepartDate,middlesexArriveDate,kingsOriginCounty,middlesexDestCounty} with load "../data/Transit/EdgeTables/kingsmiddlesexEdge.csv";
+
+let ekingsmonmouth = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,monmouthDestPlace,purpose,kingsDepartTime,monmouthArriveTime,kingsDepartDate,monmouthArriveDate,kingsOriginCounty,monmouthDestCounty} with load "../data/Transit/EdgeTables/kingsmonmouthEdge.csv";
+
+let ekingsnassau = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,nassauDestPlace,purpose,kingsDepartTime,nassauArriveTime,kingsDepartDate,nassauArriveDate,kingsOriginCounty,nassauDestCounty} with load "../data/Transit/EdgeTables/kingsnassauEdge.csv";
+
+let ekingsnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,newYorkDestPlace,purpose,kingsDepartTime,newYorkArriveTime,kingsDepartDate,newYorkArriveDate,kingsOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/kingsnewYorkEdge.csv";
+
+let ekingsocean = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,oceanDestPlace,purpose,kingsDepartTime,oceanArriveTime,kingsDepartDate,oceanArriveDate,kingsOriginCounty,oceanDestCounty} with load "../data/Transit/EdgeTables/kingsoceanEdge.csv";
+
+let ekingsoneida = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,oneidaDestPlace,purpose,kingsDepartTime,oneidaArriveTime,kingsDepartDate,oneidaArriveDate,kingsOriginCounty,oneidaDestCounty} with load "../data/Transit/EdgeTables/kingsoneidaEdge.csv";
+
+let ekingsorange = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,orangeDestPlace,purpose,kingsDepartTime,orangeArriveTime,kingsDepartDate,orangeArriveDate,kingsOriginCounty,orangeDestCounty} with load "../data/Transit/EdgeTables/kingsorangeEdge.csv";
+
+let ekingsoutofArea = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,outofAreaDestPlace,purpose,kingsDepartTime,outofAreaArriveTime,kingsDepartDate,outofAreaArriveDate,kingsOriginCounty,outofAreaDestCounty} with load "../data/Transit/EdgeTables/kingsoutofAreaEdge.csv";
+
+let ekingspassaic = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,passaicDestPlace,purpose,kingsDepartTime,passaicArriveTime,kingsDepartDate,passaicArriveDate,kingsOriginCounty,passaicDestCounty} with load "../data/Transit/EdgeTables/kingspassaicEdge.csv";
+
+let ekingsputnam = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,putnamDestPlace,purpose,kingsDepartTime,putnamArriveTime,kingsDepartDate,putnamArriveDate,kingsOriginCounty,putnamDestCounty} with load "../data/Transit/EdgeTables/kingsputnamEdge.csv";
+
+let ekingsqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,queensDestPlace,purpose,kingsDepartTime,queensArriveTime,kingsDepartDate,queensArriveDate,kingsOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/kingsqueensEdge.csv";
+
+let ekingsrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,richmondDestPlace,purpose,kingsDepartTime,richmondArriveTime,kingsDepartDate,richmondArriveDate,kingsOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/kingsrichmondEdge.csv";
+
+let ekingsrockland = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,rocklandDestPlace,purpose,kingsDepartTime,rocklandArriveTime,kingsDepartDate,rocklandArriveDate,kingsOriginCounty,rocklandDestCounty} with load "../data/Transit/EdgeTables/kingsrocklandEdge.csv";
+
+let ekingssuffolk = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,suffolkDestPlace,purpose,kingsDepartTime,suffolkArriveTime,kingsDepartDate,suffolkArriveDate,kingsOriginCounty,suffolkDestCounty} with load "../data/Transit/EdgeTables/kingssuffolkEdge.csv";
+
+let ekingssullivan = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,sullivanDestPlace,purpose,kingsDepartTime,sullivanArriveTime,kingsDepartDate,sullivanArriveDate,kingsOriginCounty,sullivanDestCounty} with load "../data/Transit/EdgeTables/kingssullivanEdge.csv";
+
+let ekingsunion = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,unionDestPlace,purpose,kingsDepartTime,unionArriveTime,kingsDepartDate,unionArriveDate,kingsOriginCounty,unionDestCounty} with load "../data/Transit/EdgeTables/kingsunionEdge.csv";
+
+let ekingswestchester = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,kingsOriginPlace,westchesterDestPlace,purpose,kingsDepartTime,westchesterArriveTime,kingsDepartDate,westchesterArriveDate,kingsOriginCounty,westchesterDestCounty} with load "../data/Transit/EdgeTables/kingswestchesterEdge.csv";
+
+let elitchfielddutchess = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,litchfieldOriginPlace,dutchessDestPlace,purpose,litchfieldDepartTime,dutchessArriveTime,litchfieldDepartDate,dutchessArriveDate,litchfieldOriginCounty,dutchessDestCounty} with load "../data/Transit/EdgeTables/litchfielddutchessEdge.csv";
+
+let elitchfieldlitchfield = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,litchfieldOriginPlace,litchfieldDestPlace,purpose,litchfieldDepartTime,litchfieldArriveTime,litchfieldDepartDate,litchfieldArriveDate,litchfieldOriginCounty,litchfieldDestCounty} with load "../data/Transit/EdgeTables/litchfieldlitchfieldEdge.csv";
+
+let elitchfieldnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,litchfieldOriginPlace,newYorkDestPlace,purpose,litchfieldDepartTime,newYorkArriveTime,litchfieldDepartDate,newYorkArriveDate,litchfieldOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/litchfieldnewYorkEdge.csv";
+
+let emiddlesexkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,middlesexOriginPlace,kingsDestPlace,purpose,middlesexDepartTime,kingsArriveTime,middlesexDepartDate,kingsArriveDate,middlesexOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/middlesexkingsEdge.csv";
+
+let emiddlesexmiddlesex = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,middlesexOriginPlace,middlesexDestPlace,purpose,middlesexDepartTime,middlesexArriveTime,middlesexDepartDate,middlesexArriveDate,middlesexOriginCounty,middlesexDestCounty} with load "../data/Transit/EdgeTables/middlesexmiddlesexEdge.csv";
+
+let emiddlesexnassau = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,middlesexOriginPlace,nassauDestPlace,purpose,middlesexDepartTime,nassauArriveTime,middlesexDepartDate,nassauArriveDate,middlesexOriginCounty,nassauDestCounty} with load "../data/Transit/EdgeTables/middlesexnassauEdge.csv";
+
+let emiddlesexnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,middlesexOriginPlace,newYorkDestPlace,purpose,middlesexDepartTime,newYorkArriveTime,middlesexDepartDate,newYorkArriveDate,middlesexOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/middlesexnewYorkEdge.csv";
+
+let emiddlesexqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,middlesexOriginPlace,queensDestPlace,purpose,middlesexDepartTime,queensArriveTime,middlesexDepartDate,queensArriveDate,middlesexOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/middlesexqueensEdge.csv";
+
+let emiddlesexrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,middlesexOriginPlace,richmondDestPlace,purpose,middlesexDepartTime,richmondArriveTime,middlesexDepartDate,richmondArriveDate,middlesexOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/middlesexrichmondEdge.csv";
+
+let emonmouthkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,monmouthOriginPlace,kingsDestPlace,purpose,monmouthDepartTime,kingsArriveTime,monmouthDepartDate,kingsArriveDate,monmouthOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/monmouthkingsEdge.csv";
+
+let emonmouthmonmouth = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,monmouthOriginPlace,monmouthDestPlace,purpose,monmouthDepartTime,monmouthArriveTime,monmouthDepartDate,monmouthArriveDate,monmouthOriginCounty,monmouthDestCounty} with load "../data/Transit/EdgeTables/monmouthmonmouthEdge.csv";
+
+let emonmouthocean = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,monmouthOriginPlace,oceanDestPlace,purpose,monmouthDepartTime,oceanArriveTime,monmouthDepartDate,oceanArriveDate,monmouthOriginCounty,oceanDestCounty} with load "../data/Transit/EdgeTables/monmouthoceanEdge.csv";
+
+let emonmouthrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,monmouthOriginPlace,richmondDestPlace,purpose,monmouthDepartTime,richmondArriveTime,monmouthDepartDate,richmondArriveDate,monmouthOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/monmouthrichmondEdge.csv";
+
+let emonroebronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,monroeOriginPlace,bronxDestPlace,purpose,monroeDepartTime,bronxArriveTime,monroeDepartDate,bronxArriveDate,monroeOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/monroebronxEdge.csv";
+
+let emonroenewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,monroeOriginPlace,newYorkDestPlace,purpose,monroeDepartTime,newYorkArriveTime,monroeDepartDate,newYorkArriveDate,monroeOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/monroenewYorkEdge.csv";
+
+let emorrisbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,morrisOriginPlace,bronxDestPlace,purpose,morrisDepartTime,bronxArriveTime,morrisDepartDate,bronxArriveDate,morrisOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/morrisbronxEdge.csv";
+
+let emorriskings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,morrisOriginPlace,kingsDestPlace,purpose,morrisDepartTime,kingsArriveTime,morrisDepartDate,kingsArriveDate,morrisOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/morriskingsEdge.csv";
+
+let emorrisnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,morrisOriginPlace,newYorkDestPlace,purpose,morrisDepartTime,newYorkArriveTime,morrisDepartDate,newYorkArriveDate,morrisOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/morrisnewYorkEdge.csv";
+
+let emorrisqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,morrisOriginPlace,queensDestPlace,purpose,morrisDepartTime,queensArriveTime,morrisDepartDate,queensArriveDate,morrisOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/morrisqueensEdge.csv";
+
+let enassaubronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,nassauOriginPlace,bronxDestPlace,purpose,nassauDepartTime,bronxArriveTime,nassauDepartDate,bronxArriveDate,nassauOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/nassaubronxEdge.csv";
+
+let enassaukings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,nassauOriginPlace,kingsDestPlace,purpose,nassauDepartTime,kingsArriveTime,nassauDepartDate,kingsArriveDate,nassauOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/nassaukingsEdge.csv";
+
+let enassaunassau = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,nassauOriginPlace,nassauDestPlace,purpose,nassauDepartTime,nassauArriveTime,nassauDepartDate,nassauArriveDate,nassauOriginCounty,nassauDestCounty} with load "../data/Transit/EdgeTables/nassaunassauEdge.csv";
+
+let enassaunewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,nassauOriginPlace,newYorkDestPlace,purpose,nassauDepartTime,newYorkArriveTime,nassauDepartDate,newYorkArriveDate,nassauOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/nassaunewYorkEdge.csv";
+
+let enassauqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,nassauOriginPlace,queensDestPlace,purpose,nassauDepartTime,queensArriveTime,nassauDepartDate,queensArriveDate,nassauOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/nassauqueensEdge.csv";
+
+let enassaurichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,nassauOriginPlace,richmondDestPlace,purpose,nassauDepartTime,richmondArriveTime,nassauDepartDate,richmondArriveDate,nassauOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/nassaurichmondEdge.csv";
+
+let enassausuffolk = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,nassauOriginPlace,suffolkDestPlace,purpose,nassauDepartTime,suffolkArriveTime,nassauDepartDate,suffolkArriveDate,nassauOriginCounty,suffolkDestCounty} with load "../data/Transit/EdgeTables/nassausuffolkEdge.csv";
+
+let enewHavenbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newHavenOriginPlace,bronxDestPlace,purpose,newHavenDepartTime,bronxArriveTime,newHavenDepartDate,bronxArriveDate,newHavenOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/newHavenbronxEdge.csv";
+
+let enewHavennewHaven = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newHavenOriginPlace,newHavenDestPlace,purpose,newHavenDepartTime,newHavenArriveTime,newHavenDepartDate,newHavenArriveDate,newHavenOriginCounty,newHavenDestCounty} with load "../data/Transit/EdgeTables/newHavennewHavenEdge.csv";
+
+let enewLondonfairfield = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newLondonOriginPlace,fairfieldDestPlace,purpose,newLondonDepartTime,fairfieldArriveTime,newLondonDepartDate,fairfieldArriveDate,newLondonOriginCounty,fairfieldDestCounty} with load "../data/Transit/EdgeTables/newLondonfairfieldEdge.csv";
+
+let enewYorkalbany = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,albanyDestPlace,purpose,newYorkDepartTime,albanyArriveTime,newYorkDepartDate,albanyArriveDate,newYorkOriginCounty,albanyDestCounty} with load "../data/Transit/EdgeTables/newYorkalbanyEdge.csv";
+
+let enewYorkatlantic = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,atlanticDestPlace,purpose,newYorkDepartTime,atlanticArriveTime,newYorkDepartDate,atlanticArriveDate,newYorkOriginCounty,atlanticDestCounty} with load "../data/Transit/EdgeTables/newYorkatlanticEdge.csv";
+
+let enewYorkbergen = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,bergenDestPlace,purpose,newYorkDepartTime,bergenArriveTime,newYorkDepartDate,bergenArriveDate,newYorkOriginCounty,bergenDestCounty} with load "../data/Transit/EdgeTables/newYorkbergenEdge.csv";
+
+let enewYorkbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,bronxDestPlace,purpose,newYorkDepartTime,bronxArriveTime,newYorkDepartDate,bronxArriveDate,newYorkOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/newYorkbronxEdge.csv";
+
+let enewYorkcolumbia = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,columbiaDestPlace,purpose,newYorkDepartTime,columbiaArriveTime,newYorkDepartDate,columbiaArriveDate,newYorkOriginCounty,columbiaDestCounty} with load "../data/Transit/EdgeTables/newYorkcolumbiaEdge.csv";
+
+let enewYorkessex = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,essexDestPlace,purpose,newYorkDepartTime,essexArriveTime,newYorkDepartDate,essexArriveDate,newYorkOriginCounty,essexDestCounty} with load "../data/Transit/EdgeTables/newYorkessexEdge.csv";
+
+let enewYorkfairfield = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,fairfieldDestPlace,purpose,newYorkDepartTime,fairfieldArriveTime,newYorkDepartDate,fairfieldArriveDate,newYorkOriginCounty,fairfieldDestCounty} with load "../data/Transit/EdgeTables/newYorkfairfieldEdge.csv";
+
+let enewYorkhudson = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,hudsonDestPlace,purpose,newYorkDepartTime,hudsonArriveTime,newYorkDepartDate,hudsonArriveDate,newYorkOriginCounty,hudsonDestCounty} with load "../data/Transit/EdgeTables/newYorkhudsonEdge.csv";
+
+let enewYorkkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,kingsDestPlace,purpose,newYorkDepartTime,kingsArriveTime,newYorkDepartDate,kingsArriveDate,newYorkOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/newYorkkingsEdge.csv";
+
+let enewYorkmercer = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,mercerDestPlace,purpose,newYorkDepartTime,mercerArriveTime,newYorkDepartDate,mercerArriveDate,newYorkOriginCounty,mercerDestCounty} with load "../data/Transit/EdgeTables/newYorkmercerEdge.csv";
+
+let enewYorkmiddlesex = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,middlesexDestPlace,purpose,newYorkDepartTime,middlesexArriveTime,newYorkDepartDate,middlesexArriveDate,newYorkOriginCounty,middlesexDestCounty} with load "../data/Transit/EdgeTables/newYorkmiddlesexEdge.csv";
+
+let enewYorkmonroe = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,monroeDestPlace,purpose,newYorkDepartTime,monroeArriveTime,newYorkDepartDate,monroeArriveDate,newYorkOriginCounty,monroeDestCounty} with load "../data/Transit/EdgeTables/newYorkmonroeEdge.csv";
+
+let enewYorkmorris = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,morrisDestPlace,purpose,newYorkDepartTime,morrisArriveTime,newYorkDepartDate,morrisArriveDate,newYorkOriginCounty,morrisDestCounty} with load "../data/Transit/EdgeTables/newYorkmorrisEdge.csv";
+
+let enewYorknassau = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,nassauDestPlace,purpose,newYorkDepartTime,nassauArriveTime,newYorkDepartDate,nassauArriveDate,newYorkOriginCounty,nassauDestCounty} with load "../data/Transit/EdgeTables/newYorknassauEdge.csv";
+
+let enewYorknewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,newYorkDestPlace,purpose,newYorkDepartTime,newYorkArriveTime,newYorkDepartDate,newYorkArriveDate,newYorkOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/newYorknewYorkEdge.csv";
+
+let enewYorkoneida = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,oneidaDestPlace,purpose,newYorkDepartTime,oneidaArriveTime,newYorkDepartDate,oneidaArriveDate,newYorkOriginCounty,oneidaDestCounty} with load "../data/Transit/EdgeTables/newYorkoneidaEdge.csv";
+
+let enewYorkorange = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,orangeDestPlace,purpose,newYorkDepartTime,orangeArriveTime,newYorkDepartDate,orangeArriveDate,newYorkOriginCounty,orangeDestCounty} with load "../data/Transit/EdgeTables/newYorkorangeEdge.csv";
+
+let enewYorkoutofArea = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,outofAreaDestPlace,purpose,newYorkDepartTime,outofAreaArriveTime,newYorkDepartDate,outofAreaArriveDate,newYorkOriginCounty,outofAreaDestCounty} with load "../data/Transit/EdgeTables/newYorkoutofAreaEdge.csv";
+
+let enewYorkqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,queensDestPlace,purpose,newYorkDepartTime,queensArriveTime,newYorkDepartDate,queensArriveDate,newYorkOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/newYorkqueensEdge.csv";
+
+let enewYorkrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,richmondDestPlace,purpose,newYorkDepartTime,richmondArriveTime,newYorkDepartDate,richmondArriveDate,newYorkOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/newYorkrichmondEdge.csv";
+
+let enewYorkrockland = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,rocklandDestPlace,purpose,newYorkDepartTime,rocklandArriveTime,newYorkDepartDate,rocklandArriveDate,newYorkOriginCounty,rocklandDestCounty} with load "../data/Transit/EdgeTables/newYorkrocklandEdge.csv";
+
+let enewYorksuffolk = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,suffolkDestPlace,purpose,newYorkDepartTime,suffolkArriveTime,newYorkDepartDate,suffolkArriveDate,newYorkOriginCounty,suffolkDestCounty} with load "../data/Transit/EdgeTables/newYorksuffolkEdge.csv";
+
+let enewYorksussex = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,sussexDestPlace,purpose,newYorkDepartTime,sussexArriveTime,newYorkDepartDate,sussexArriveDate,newYorkOriginCounty,sussexDestCounty} with load "../data/Transit/EdgeTables/newYorksussexEdge.csv";
+
+let enewYorkunion = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,unionDestPlace,purpose,newYorkDepartTime,unionArriveTime,newYorkDepartDate,unionArriveDate,newYorkOriginCounty,unionDestCounty} with load "../data/Transit/EdgeTables/newYorkunionEdge.csv";
+
+let enewYorkwayne = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,wayneDestPlace,purpose,newYorkDepartTime,wayneArriveTime,newYorkDepartDate,wayneArriveDate,newYorkOriginCounty,wayneDestCounty} with load "../data/Transit/EdgeTables/newYorkwayneEdge.csv";
+
+let enewYorkwestchester = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,newYorkOriginPlace,westchesterDestPlace,purpose,newYorkDepartTime,westchesterArriveTime,newYorkDepartDate,westchesterArriveDate,newYorkOriginCounty,westchesterDestCounty} with load "../data/Transit/EdgeTables/newYorkwestchesterEdge.csv";
+
+let eoceankings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,oceanOriginPlace,kingsDestPlace,purpose,oceanDepartTime,kingsArriveTime,oceanDepartDate,kingsArriveDate,oceanOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/oceankingsEdge.csv";
+
+let eoceanmonmouth = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,oceanOriginPlace,monmouthDestPlace,purpose,oceanDepartTime,monmouthArriveTime,oceanDepartDate,monmouthArriveDate,oceanOriginCounty,monmouthDestCounty} with load "../data/Transit/EdgeTables/oceanmonmouthEdge.csv";
+
+let eoceanqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,oceanOriginPlace,queensDestPlace,purpose,oceanDepartTime,queensArriveTime,oceanDepartDate,queensArriveDate,oceanOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/oceanqueensEdge.csv";
+
+let eoneidabronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,oneidaOriginPlace,bronxDestPlace,purpose,oneidaDepartTime,bronxArriveTime,oneidaDepartDate,bronxArriveDate,oneidaOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/oneidabronxEdge.csv";
+
+let eoneidakings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,oneidaOriginPlace,kingsDestPlace,purpose,oneidaDepartTime,kingsArriveTime,oneidaDepartDate,kingsArriveDate,oneidaOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/oneidakingsEdge.csv";
+
+let eoneidanewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,oneidaOriginPlace,newYorkDestPlace,purpose,oneidaDepartTime,newYorkArriveTime,oneidaDepartDate,newYorkArriveDate,oneidaOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/oneidanewYorkEdge.csv";
+
+let eoneidaoneida = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,oneidaOriginPlace,oneidaDestPlace,purpose,oneidaDepartTime,oneidaArriveTime,oneidaDepartDate,oneidaArriveDate,oneidaOriginCounty,oneidaDestCounty} with load "../data/Transit/EdgeTables/oneidaoneidaEdge.csv";
+
+let eorangenewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,orangeOriginPlace,newYorkDestPlace,purpose,orangeDepartTime,newYorkArriveTime,orangeDepartDate,newYorkArriveDate,orangeOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/orangenewYorkEdge.csv";
+
+let eorangeorange = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,orangeOriginPlace,orangeDestPlace,purpose,orangeDepartTime,orangeArriveTime,orangeDepartDate,orangeArriveDate,orangeOriginCounty,orangeDestCounty} with load "../data/Transit/EdgeTables/orangeorangeEdge.csv";
+
+let eorangequeens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,orangeOriginPlace,queensDestPlace,purpose,orangeDepartTime,queensArriveTime,orangeDepartDate,queensArriveDate,orangeOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/orangequeensEdge.csv";
+
+let eorangerichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,orangeOriginPlace,richmondDestPlace,purpose,orangeDepartTime,richmondArriveTime,orangeDepartDate,richmondArriveDate,orangeOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/orangerichmondEdge.csv";
+
+let eorangesullivan = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,orangeOriginPlace,sullivanDestPlace,purpose,orangeDepartTime,sullivanArriveTime,orangeDepartDate,sullivanArriveDate,orangeOriginCounty,sullivanDestCounty} with load "../data/Transit/EdgeTables/orangesullivanEdge.csv";
+
+let eorangewayne = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,orangeOriginPlace,wayneDestPlace,purpose,orangeDepartTime,wayneArriveTime,orangeDepartDate,wayneArriveDate,orangeOriginCounty,wayneDestCounty} with load "../data/Transit/EdgeTables/orangewayneEdge.csv";
+
+let eotsegonewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,otsegoOriginPlace,newYorkDestPlace,purpose,otsegoDepartTime,newYorkArriveTime,otsegoDepartDate,newYorkArriveDate,otsegoOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/otsegonewYorkEdge.csv";
+
+let eoutofAreabronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,bronxDestPlace,purpose,outofAreaDepartTime,bronxArriveTime,outofAreaDepartDate,bronxArriveDate,outofAreaOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/outofAreabronxEdge.csv";
+
+let eoutofAreakings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,kingsDestPlace,purpose,outofAreaDepartTime,kingsArriveTime,outofAreaDepartDate,kingsArriveDate,outofAreaOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/outofAreakingsEdge.csv";
+
+let eoutofAreamorris = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,morrisDestPlace,purpose,outofAreaDepartTime,morrisArriveTime,outofAreaDepartDate,morrisArriveDate,outofAreaOriginCounty,morrisDestCounty} with load "../data/Transit/EdgeTables/outofAreamorrisEdge.csv";
+
+let eoutofAreanewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,newYorkDestPlace,purpose,outofAreaDepartTime,newYorkArriveTime,outofAreaDepartDate,newYorkArriveDate,outofAreaOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/outofAreanewYorkEdge.csv";
+
+let eoutofAreaoutofArea = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,outofAreaDestPlace,purpose,outofAreaDepartTime,outofAreaArriveTime,outofAreaDepartDate,outofAreaArriveDate,outofAreaOriginCounty,outofAreaDestCounty} with load "../data/Transit/EdgeTables/outofAreaoutofAreaEdge.csv";
+
+let eoutofAreaqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,queensDestPlace,purpose,outofAreaDepartTime,queensArriveTime,outofAreaDepartDate,queensArriveDate,outofAreaOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/outofAreaqueensEdge.csv";
+
+let eoutofArearichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,richmondDestPlace,purpose,outofAreaDepartTime,richmondArriveTime,outofAreaDepartDate,richmondArriveDate,outofAreaOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/outofArearichmondEdge.csv";
+
+let eoutofAreawestchester = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,outofAreaOriginPlace,westchesterDestPlace,purpose,outofAreaDepartTime,westchesterArriveTime,outofAreaDepartDate,westchesterArriveDate,outofAreaOriginCounty,westchesterDestCounty} with load "../data/Transit/EdgeTables/outofAreawestchesterEdge.csv";
+
+let epassaickings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,passaicOriginPlace,kingsDestPlace,purpose,passaicDepartTime,kingsArriveTime,passaicDepartDate,kingsArriveDate,passaicOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/passaickingsEdge.csv";
+
+let epassaicqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,passaicOriginPlace,queensDestPlace,purpose,passaicDepartTime,queensArriveTime,passaicDepartDate,queensArriveDate,passaicOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/passaicqueensEdge.csv";
+
+let eputnamkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,putnamOriginPlace,kingsDestPlace,purpose,putnamDepartTime,kingsArriveTime,putnamDepartDate,kingsArriveDate,putnamOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/putnamkingsEdge.csv";
+
+let eputnamnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,putnamOriginPlace,newYorkDestPlace,purpose,putnamDepartTime,newYorkArriveTime,putnamDepartDate,newYorkArriveDate,putnamOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/putnamnewYorkEdge.csv";
+
+let equeensalbany = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,albanyDestPlace,purpose,queensDepartTime,albanyArriveTime,queensDepartDate,albanyArriveDate,queensOriginCounty,albanyDestCounty} with load "../data/Transit/EdgeTables/queensalbanyEdge.csv";
+
+let equeensbergen = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,bergenDestPlace,purpose,queensDepartTime,bergenArriveTime,queensDepartDate,bergenArriveDate,queensOriginCounty,bergenDestCounty} with load "../data/Transit/EdgeTables/queensbergenEdge.csv";
+
+let equeensbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,bronxDestPlace,purpose,queensDepartTime,bronxArriveTime,queensDepartDate,bronxArriveDate,queensOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/queensbronxEdge.csv";
+
+let equeenscolumbia = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,columbiaDestPlace,purpose,queensDepartTime,columbiaArriveTime,queensDepartDate,columbiaArriveDate,queensOriginCounty,columbiaDestCounty} with load "../data/Transit/EdgeTables/queenscolumbiaEdge.csv";
+
+let equeensessex = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,essexDestPlace,purpose,queensDepartTime,essexArriveTime,queensDepartDate,essexArriveDate,queensOriginCounty,essexDestCounty} with load "../data/Transit/EdgeTables/queensessexEdge.csv";
+
+let equeensfairfield = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,fairfieldDestPlace,purpose,queensDepartTime,fairfieldArriveTime,queensDepartDate,fairfieldArriveDate,queensOriginCounty,fairfieldDestCounty} with load "../data/Transit/EdgeTables/queensfairfieldEdge.csv";
+
+let equeenshudson = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,hudsonDestPlace,purpose,queensDepartTime,hudsonArriveTime,queensDepartDate,hudsonArriveDate,queensOriginCounty,hudsonDestCounty} with load "../data/Transit/EdgeTables/queenshudsonEdge.csv";
+
+let equeenskings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,kingsDestPlace,purpose,queensDepartTime,kingsArriveTime,queensDepartDate,kingsArriveDate,queensOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/queenskingsEdge.csv";
+
+let equeensmiddlesex = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,middlesexDestPlace,purpose,queensDepartTime,middlesexArriveTime,queensDepartDate,middlesexArriveDate,queensOriginCounty,middlesexDestCounty} with load "../data/Transit/EdgeTables/queensmiddlesexEdge.csv";
+
+let equeensmorris = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,morrisDestPlace,purpose,queensDepartTime,morrisArriveTime,queensDepartDate,morrisArriveDate,queensOriginCounty,morrisDestCounty} with load "../data/Transit/EdgeTables/queensmorrisEdge.csv";
+
+let equeensnassau = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,nassauDestPlace,purpose,queensDepartTime,nassauArriveTime,queensDepartDate,nassauArriveDate,queensOriginCounty,nassauDestCounty} with load "../data/Transit/EdgeTables/queensnassauEdge.csv";
+
+let equeensnewLondon = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,newLondonDestPlace,purpose,queensDepartTime,newLondonArriveTime,queensDepartDate,newLondonArriveDate,queensOriginCounty,newLondonDestCounty} with load "../data/Transit/EdgeTables/queensnewLondonEdge.csv";
+
+let equeensnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,newYorkDestPlace,purpose,queensDepartTime,newYorkArriveTime,queensDepartDate,newYorkArriveDate,queensOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/queensnewYorkEdge.csv";
+
+let equeensocean = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,oceanDestPlace,purpose,queensDepartTime,oceanArriveTime,queensDepartDate,oceanArriveDate,queensOriginCounty,oceanDestCounty} with load "../data/Transit/EdgeTables/queensoceanEdge.csv";
+
+let equeensorange = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,orangeDestPlace,purpose,queensDepartTime,orangeArriveTime,queensDepartDate,orangeArriveDate,queensOriginCounty,orangeDestCounty} with load "../data/Transit/EdgeTables/queensorangeEdge.csv";
+
+let equeensoutofArea = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,outofAreaDestPlace,purpose,queensDepartTime,outofAreaArriveTime,queensDepartDate,outofAreaArriveDate,queensOriginCounty,outofAreaDestCounty} with load "../data/Transit/EdgeTables/queensoutofAreaEdge.csv";
+
+let equeenspassaic = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,passaicDestPlace,purpose,queensDepartTime,passaicArriveTime,queensDepartDate,passaicArriveDate,queensOriginCounty,passaicDestCounty} with load "../data/Transit/EdgeTables/queenspassaicEdge.csv";
+
+let equeensqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,queensDestPlace,purpose,queensDepartTime,queensArriveTime,queensDepartDate,queensArriveDate,queensOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/queensqueensEdge.csv";
+
+let equeensrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,richmondDestPlace,purpose,queensDepartTime,richmondArriveTime,queensDepartDate,richmondArriveDate,queensOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/queensrichmondEdge.csv";
+
+let equeensrockland = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,rocklandDestPlace,purpose,queensDepartTime,rocklandArriveTime,queensDepartDate,rocklandArriveDate,queensOriginCounty,rocklandDestCounty} with load "../data/Transit/EdgeTables/queensrocklandEdge.csv";
+
+let equeenssomerset = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,somersetDestPlace,purpose,queensDepartTime,somersetArriveTime,queensDepartDate,somersetArriveDate,queensOriginCounty,somersetDestCounty} with load "../data/Transit/EdgeTables/queenssomersetEdge.csv";
+
+let equeenssuffolk = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,suffolkDestPlace,purpose,queensDepartTime,suffolkArriveTime,queensDepartDate,suffolkArriveDate,queensOriginCounty,suffolkDestCounty} with load "../data/Transit/EdgeTables/queenssuffolkEdge.csv";
+
+let equeenssullivan = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,sullivanDestPlace,purpose,queensDepartTime,sullivanArriveTime,queensDepartDate,sullivanArriveDate,queensOriginCounty,sullivanDestCounty} with load "../data/Transit/EdgeTables/queenssullivanEdge.csv";
+
+let equeensunion = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,unionDestPlace,purpose,queensDepartTime,unionArriveTime,queensDepartDate,unionArriveDate,queensOriginCounty,unionDestCounty} with load "../data/Transit/EdgeTables/queensunionEdge.csv";
+
+let equeenswestchester = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,queensOriginPlace,westchesterDestPlace,purpose,queensDepartTime,westchesterArriveTime,queensDepartDate,westchesterArriveDate,queensOriginCounty,westchesterDestCounty} with load "../data/Transit/EdgeTables/queenswestchesterEdge.csv";
+
+let erensselaernewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,rensselaerOriginPlace,newYorkDestPlace,purpose,rensselaerDepartTime,newYorkArriveTime,rensselaerDepartDate,newYorkArriveDate,rensselaerOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/rensselaernewYorkEdge.csv";
+
+let erichmondbergen = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,bergenDestPlace,purpose,richmondDepartTime,bergenArriveTime,richmondDepartDate,bergenArriveDate,richmondOriginCounty,bergenDestCounty} with load "../data/Transit/EdgeTables/richmondbergenEdge.csv";
+
+let erichmondbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,bronxDestPlace,purpose,richmondDepartTime,bronxArriveTime,richmondDepartDate,bronxArriveDate,richmondOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/richmondbronxEdge.csv";
+
+let erichmondessex = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,essexDestPlace,purpose,richmondDepartTime,essexArriveTime,richmondDepartDate,essexArriveDate,richmondOriginCounty,essexDestCounty} with load "../data/Transit/EdgeTables/richmondessexEdge.csv";
+
+let erichmondfulton = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,fultonDestPlace,purpose,richmondDepartTime,fultonArriveTime,richmondDepartDate,fultonArriveDate,richmondOriginCounty,fultonDestCounty} with load "../data/Transit/EdgeTables/richmondfultonEdge.csv";
+
+let erichmondhudson = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,hudsonDestPlace,purpose,richmondDepartTime,hudsonArriveTime,richmondDepartDate,hudsonArriveDate,richmondOriginCounty,hudsonDestCounty} with load "../data/Transit/EdgeTables/richmondhudsonEdge.csv";
+
+let erichmondkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,kingsDestPlace,purpose,richmondDepartTime,kingsArriveTime,richmondDepartDate,kingsArriveDate,richmondOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/richmondkingsEdge.csv";
+
+let erichmondmiddlesex = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,middlesexDestPlace,purpose,richmondDepartTime,middlesexArriveTime,richmondDepartDate,middlesexArriveDate,richmondOriginCounty,middlesexDestCounty} with load "../data/Transit/EdgeTables/richmondmiddlesexEdge.csv";
+
+let erichmondmonmouth = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,monmouthDestPlace,purpose,richmondDepartTime,monmouthArriveTime,richmondDepartDate,monmouthArriveDate,richmondOriginCounty,monmouthDestCounty} with load "../data/Transit/EdgeTables/richmondmonmouthEdge.csv";
+
+let erichmondnassau = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,nassauDestPlace,purpose,richmondDepartTime,nassauArriveTime,richmondDepartDate,nassauArriveDate,richmondOriginCounty,nassauDestCounty} with load "../data/Transit/EdgeTables/richmondnassauEdge.csv";
+
+let erichmondnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,newYorkDestPlace,purpose,richmondDepartTime,newYorkArriveTime,richmondDepartDate,newYorkArriveDate,richmondOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/richmondnewYorkEdge.csv";
+
+let erichmondorange = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,orangeDestPlace,purpose,richmondDepartTime,orangeArriveTime,richmondDepartDate,orangeArriveDate,richmondOriginCounty,orangeDestCounty} with load "../data/Transit/EdgeTables/richmondorangeEdge.csv";
+
+let erichmondoutofArea = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,outofAreaDestPlace,purpose,richmondDepartTime,outofAreaArriveTime,richmondDepartDate,outofAreaArriveDate,richmondOriginCounty,outofAreaDestCounty} with load "../data/Transit/EdgeTables/richmondoutofAreaEdge.csv";
+
+let erichmondqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,queensDestPlace,purpose,richmondDepartTime,queensArriveTime,richmondDepartDate,queensArriveDate,richmondOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/richmondqueensEdge.csv";
+
+let erichmondrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,richmondDestPlace,purpose,richmondDepartTime,richmondArriveTime,richmondDepartDate,richmondArriveDate,richmondOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/richmondrichmondEdge.csv";
+
+let erichmondsuffolk = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,suffolkDestPlace,purpose,richmondDepartTime,suffolkArriveTime,richmondDepartDate,suffolkArriveDate,richmondOriginCounty,suffolkDestCounty} with load "../data/Transit/EdgeTables/richmondsuffolkEdge.csv";
+
+let erichmondunion = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,unionDestPlace,purpose,richmondDepartTime,unionArriveTime,richmondDepartDate,unionArriveDate,richmondOriginCounty,unionDestCounty} with load "../data/Transit/EdgeTables/richmondunionEdge.csv";
+
+let erichmondwayne = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,wayneDestPlace,purpose,richmondDepartTime,wayneArriveTime,richmondDepartDate,wayneArriveDate,richmondOriginCounty,wayneDestCounty} with load "../data/Transit/EdgeTables/richmondwayneEdge.csv";
+
+let erichmondwestchester = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,richmondOriginPlace,westchesterDestPlace,purpose,richmondDepartTime,westchesterArriveTime,richmondDepartDate,westchesterArriveDate,richmondOriginCounty,westchesterDestCounty} with load "../data/Transit/EdgeTables/richmondwestchesterEdge.csv";
+
+let erocklandbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,rocklandOriginPlace,bronxDestPlace,purpose,rocklandDepartTime,bronxArriveTime,rocklandDepartDate,bronxArriveDate,rocklandOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/rocklandbronxEdge.csv";
+
+let erocklandkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,rocklandOriginPlace,kingsDestPlace,purpose,rocklandDepartTime,kingsArriveTime,rocklandDepartDate,kingsArriveDate,rocklandOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/rocklandkingsEdge.csv";
+
+let erocklandnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,rocklandOriginPlace,newYorkDestPlace,purpose,rocklandDepartTime,newYorkArriveTime,rocklandDepartDate,newYorkArriveDate,rocklandOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/rocklandnewYorkEdge.csv";
+
+let erocklandqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,rocklandOriginPlace,queensDestPlace,purpose,rocklandDepartTime,queensArriveTime,rocklandDepartDate,queensArriveDate,rocklandOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/rocklandqueensEdge.csv";
+
+let erocklandrockland = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,rocklandOriginPlace,rocklandDestPlace,purpose,rocklandDepartTime,rocklandArriveTime,rocklandDepartDate,rocklandArriveDate,rocklandOriginCounty,rocklandDestCounty} with load "../data/Transit/EdgeTables/rocklandrocklandEdge.csv";
+
+let erocklandwestchester = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,rocklandOriginPlace,westchesterDestPlace,purpose,rocklandDepartTime,westchesterArriveTime,rocklandDepartDate,westchesterArriveDate,rocklandOriginCounty,westchesterDestCounty} with load "../data/Transit/EdgeTables/rocklandwestchesterEdge.csv";
+
+let esomersetqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,somersetOriginPlace,queensDestPlace,purpose,somersetDepartTime,queensArriveTime,somersetDepartDate,queensArriveDate,somersetOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/somersetqueensEdge.csv";
+
+let esuffolkkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,suffolkOriginPlace,kingsDestPlace,purpose,suffolkDepartTime,kingsArriveTime,suffolkDepartDate,kingsArriveDate,suffolkOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/suffolkkingsEdge.csv";
+
+let esuffolknassau = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,suffolkOriginPlace,nassauDestPlace,purpose,suffolkDepartTime,nassauArriveTime,suffolkDepartDate,nassauArriveDate,suffolkOriginCounty,nassauDestCounty} with load "../data/Transit/EdgeTables/suffolknassauEdge.csv";
+
+let esuffolknewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,suffolkOriginPlace,newYorkDestPlace,purpose,suffolkDepartTime,newYorkArriveTime,suffolkDepartDate,newYorkArriveDate,suffolkOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/suffolknewYorkEdge.csv";
+
+let esuffolkqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,suffolkOriginPlace,queensDestPlace,purpose,suffolkDepartTime,queensArriveTime,suffolkDepartDate,queensArriveDate,suffolkOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/suffolkqueensEdge.csv";
+
+let esuffolkrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,suffolkOriginPlace,richmondDestPlace,purpose,suffolkDepartTime,richmondArriveTime,suffolkDepartDate,richmondArriveDate,suffolkOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/suffolkrichmondEdge.csv";
+
+let esuffolksuffolk = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,suffolkOriginPlace,suffolkDestPlace,purpose,suffolkDepartTime,suffolkArriveTime,suffolkDepartDate,suffolkArriveDate,suffolkOriginCounty,suffolkDestCounty} with load "../data/Transit/EdgeTables/suffolksuffolkEdge.csv";
+
+let esullivankings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,sullivanOriginPlace,kingsDestPlace,purpose,sullivanDepartTime,kingsArriveTime,sullivanDepartDate,kingsArriveDate,sullivanOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/sullivankingsEdge.csv";
+
+let esullivannewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,sullivanOriginPlace,newYorkDestPlace,purpose,sullivanDepartTime,newYorkArriveTime,sullivanDepartDate,newYorkArriveDate,sullivanOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/sullivannewYorkEdge.csv";
+
+let esullivanqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,sullivanOriginPlace,queensDestPlace,purpose,sullivanDepartTime,queensArriveTime,sullivanDepartDate,queensArriveDate,sullivanOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/sullivanqueensEdge.csv";
+
+let esullivansullivan = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,sullivanOriginPlace,sullivanDestPlace,purpose,sullivanDepartTime,sullivanArriveTime,sullivanDepartDate,sullivanArriveDate,sullivanOriginCounty,sullivanDestCounty} with load "../data/Transit/EdgeTables/sullivansullivanEdge.csv";
+
+let esussexnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,sussexOriginPlace,newYorkDestPlace,purpose,sussexDepartTime,newYorkArriveTime,sussexDepartDate,newYorkArriveDate,sussexOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/sussexnewYorkEdge.csv";
+
+let esussexsussex = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,sussexOriginPlace,sussexDestPlace,purpose,sussexDepartTime,sussexArriveTime,sussexDepartDate,sussexArriveDate,sussexOriginCounty,sussexDestCounty} with load "../data/Transit/EdgeTables/sussexsussexEdge.csv";
+
+let etompkinsbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,tompkinsOriginPlace,bronxDestPlace,purpose,tompkinsDepartTime,bronxArriveTime,tompkinsDepartDate,bronxArriveDate,tompkinsOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/tompkinsbronxEdge.csv";
+
+let eulsterkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,ulsterOriginPlace,kingsDestPlace,purpose,ulsterDepartTime,kingsArriveTime,ulsterDepartDate,kingsArriveDate,ulsterOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/ulsterkingsEdge.csv";
+
+let eunionkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,unionOriginPlace,kingsDestPlace,purpose,unionDepartTime,kingsArriveTime,unionDepartDate,kingsArriveDate,unionOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/unionkingsEdge.csv";
+
+let eunionnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,unionOriginPlace,newYorkDestPlace,purpose,unionDepartTime,newYorkArriveTime,unionDepartDate,newYorkArriveDate,unionOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/unionnewYorkEdge.csv";
+
+let eunionqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,unionOriginPlace,queensDestPlace,purpose,unionDepartTime,queensArriveTime,unionDepartDate,queensArriveDate,unionOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/unionqueensEdge.csv";
+
+let eunionrichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,unionOriginPlace,richmondDestPlace,purpose,unionDepartTime,richmondArriveTime,unionDepartDate,richmondArriveDate,unionOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/unionrichmondEdge.csv";
+
+let ewashingtonnewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,washingtonOriginPlace,newYorkDestPlace,purpose,washingtonDepartTime,newYorkArriveTime,washingtonDepartDate,newYorkArriveDate,washingtonOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/washingtonnewYorkEdge.csv";
+
+let ewaynenewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,wayneOriginPlace,newYorkDestPlace,purpose,wayneDepartTime,newYorkArriveTime,wayneDepartDate,newYorkArriveDate,wayneOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/waynenewYorkEdge.csv";
+
+let ewayneorange = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,wayneOriginPlace,orangeDestPlace,purpose,wayneDepartTime,orangeArriveTime,wayneDepartDate,orangeArriveDate,wayneOriginCounty,orangeDestCounty} with load "../data/Transit/EdgeTables/wayneorangeEdge.csv";
+
+let ewaynerichmond = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,wayneOriginPlace,richmondDestPlace,purpose,wayneDepartTime,richmondArriveTime,wayneDepartDate,richmondArriveDate,wayneOriginCounty,richmondDestCounty} with load "../data/Transit/EdgeTables/waynerichmondEdge.csv";
+
+let ewestchesterbronx = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,bronxDestPlace,purpose,westchesterDepartTime,bronxArriveTime,westchesterDepartDate,bronxArriveDate,westchesterOriginCounty,bronxDestCounty} with load "../data/Transit/EdgeTables/westchesterbronxEdge.csv";
+
+let ewestchesterkings = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,kingsDestPlace,purpose,westchesterDepartTime,kingsArriveTime,westchesterDepartDate,kingsArriveDate,westchesterOriginCounty,kingsDestCounty} with load "../data/Transit/EdgeTables/westchesterkingsEdge.csv";
+
+let ewestchesternewYork = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,newYorkDestPlace,purpose,westchesterDepartTime,newYorkArriveTime,westchesterDepartDate,newYorkArriveDate,westchesterOriginCounty,newYorkDestCounty} with load "../data/Transit/EdgeTables/westchesternewYorkEdge.csv";
+
+let ewestchesteroutofArea = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,outofAreaDestPlace,purpose,westchesterDepartTime,outofAreaArriveTime,westchesterDepartDate,outofAreaArriveDate,westchesterOriginCounty,outofAreaDestCounty} with load "../data/Transit/EdgeTables/westchesteroutofAreaEdge.csv";
+
+let ewestchesterqueens = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,queensDestPlace,purpose,westchesterDepartTime,queensArriveTime,westchesterDepartDate,queensArriveDate,westchesterOriginCounty,queensDestCounty} with load "../data/Transit/EdgeTables/westchesterqueensEdge.csv";
+
+let ewestchesterrockland = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,rocklandDestPlace,purpose,westchesterDepartTime,rocklandArriveTime,westchesterDepartDate,rocklandArriveDate,westchesterOriginCounty,rocklandDestCounty} with load "../data/Transit/EdgeTables/westchesterrocklandEdge.csv";
+
+let ewestchesterwestchester = instantiate newYorkTransit at {sampNum,perNum,tripNum,tripID,westchesterOriginPlace,westchesterDestPlace,purpose,westchesterDepartTime,westchesterArriveTime,westchesterDepartDate,westchesterArriveDate,westchesterOriginCounty,westchesterDestCounty} with load "../data/Transit/EdgeTables/westchesterwestchesterEdge.csv";
+
+let nycTransitSurvey = union ealbanynewYork,ealbanyqueens,ebergenbergen,ebergenbronx,ebergenkings,ebergennewYork,ebergenqueens,ebergenrichmond,ebronxbergen,ebronxbronx,ebronxfairfield,ebronxhartford,ebronxhudson,ebronxkings,ebronxmonroe,ebronxmorris,ebronxnassau,ebronxnewHaven,ebronxnewYork,ebronxoneida,ebronxoutofArea,ebronxqueens,ebronxrichmond,ebronxrockland,ebronxwestchester,eburlingtonkings,ecamdenkings,ecamdennewYork,eclintonkings,ecolumbiakings,ecolumbiaqueens,edutchesslitchfield,edutchessnewYork,eessexkings,eessexnewYork,eessexqueens,eessexrichmond,efairfieldbronx,efairfieldhudson,efairfieldkings,efairfieldnewYork,efairfieldqueens,efairfieldwestchester,efultonrichmond,ehartfordbronx,ehartfordnewYork,ehudsonbronx,ehudsonhudson,ehudsonkings,ehudsonnewYork,ehudsonqueens,ehudsonrichmond,ehudsonunion,ekingsbergen,ekingsbronx,ekingscamden,ekingscattaraugus,ekingsessex,ekingsfairfield,ekingshudson,ekingskings,ekingsmercer,ekingsmiddlesex,ekingsmonmouth,ekingsnassau,ekingsnewYork,ekingsocean,ekingsoneida,ekingsorange,ekingsoutofArea,ekingspassaic,ekingsputnam,ekingsqueens,ekingsrichmond,ekingsrockland,ekingssuffolk,ekingssullivan,ekingsunion,ekingswestchester,elitchfielddutchess,elitchfieldlitchfield,elitchfieldnewYork,emiddlesexkings,emiddlesexmiddlesex,emiddlesexnassau,emiddlesexnewYork,emiddlesexqueens,emiddlesexrichmond,emonmouthkings,emonmouthmonmouth,emonmouthocean,emonmouthrichmond,emonroebronx,emonroenewYork,emorrisbronx,emorriskings,emorrisnewYork,emorrisqueens,enassaubronx,enassaukings,enassaunassau,enassaunewYork,enassauqueens,enassaurichmond,enassausuffolk,enewHavenbronx,enewHavennewHaven,enewLondonfairfield,enewYorkalbany,enewYorkatlantic,enewYorkbergen,enewYorkbronx,enewYorkcolumbia,enewYorkessex,enewYorkfairfield,enewYorkhudson,enewYorkkings,enewYorkmercer,enewYorkmiddlesex,enewYorkmonroe,enewYorkmorris,enewYorknassau,enewYorknewYork,enewYorkoneida,enewYorkorange,enewYorkoutofArea,enewYorkqueens,enewYorkrichmond,enewYorkrockland,enewYorksuffolk,enewYorksussex,enewYorkunion,enewYorkwayne,enewYorkwestchester,eoceankings,eoceanmonmouth,eoceanqueens,eoneidabronx,eoneidakings,eoneidanewYork,eoneidaoneida,eorangenewYork,eorangeorange,eorangequeens,eorangerichmond,eorangesullivan,eorangewayne,eotsegonewYork,eoutofAreabronx,eoutofAreakings,eoutofAreamorris,eoutofAreanewYork,eoutofAreaoutofArea,eoutofAreaqueens,eoutofArearichmond,eoutofAreawestchester,epassaickings,epassaicqueens,eputnamkings,eputnamnewYork,equeensalbany,equeensbergen,equeensbronx,equeenscolumbia,equeensessex,equeensfairfield,equeenshudson,equeenskings,equeensmiddlesex,equeensmorris,equeensnassau,equeensnewLondon,equeensnewYork,equeensocean,equeensorange,equeensoutofArea,equeenspassaic,equeensqueens,equeensrichmond,equeensrockland,equeenssomerset,equeenssuffolk,equeenssullivan,equeensunion,equeenswestchester,erensselaernewYork,erichmondbergen,erichmondbronx,erichmondessex,erichmondfulton,erichmondhudson,erichmondkings,erichmondmiddlesex,erichmondmonmouth,erichmondnassau,erichmondnewYork,erichmondorange,erichmondoutofArea,erichmondqueens,erichmondrichmond,erichmondsuffolk,erichmondunion,erichmondwayne,erichmondwestchester,erocklandbronx,erocklandkings,erocklandnewYork,erocklandqueens,erocklandrockland,erocklandwestchester,esomersetqueens,esuffolkkings,esuffolknassau,esuffolknewYork,esuffolkqueens,esuffolkrichmond,esuffolksuffolk,esullivankings,esullivannewYork,esullivanqueens,esullivansullivan,esussexnewYork,esussexsussex,etompkinsbronx,eulsterkings,eunionkings,eunionnewYork,eunionqueens,eunionrichmond,ewashingtonnewYork,ewaynenewYork,ewayneorange,ewaynerichmond,ewestchesterbronx,ewestchesterkings,ewestchesternewYork,ewestchesteroutofArea,ewestchesterqueens,ewestchesterrockland,ewestchesterwestchester;
+

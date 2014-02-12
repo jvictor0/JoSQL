@@ -1,4 +1,6 @@
-module Utils where
+module Utils (module Utils, module RuntimeUtils) where
+
+import RuntimeUtils
 
 import Data.List
 import qualified Data.ByteString as BS
@@ -13,13 +15,6 @@ fromJustE _ (Just a) = a
 
 fromJustOr alt Nothing = alt
 fromJustOr _ (Just a) = a
-
-tryErrorT :: IO a -> ErrorT IO a
-tryErrorT act = do
-  eexct <- EitherT $ fmap return $ try act 
-  case eexct of
-    (Left err) -> left $ show (err :: IOError)
-    (Right a) -> return a
 
 hexPrint :: BS.ByteString -> String
 hexPrint = concatMap (flip showHex "") . BS.unpack

@@ -38,6 +38,14 @@ sectionType metadata (SubSchema simps _) = FunType [t_NutleyInstance] $ tc_Error
         allVerts = foldr union [] $ simps :: [VertID]
 
 
+-- TODO: make this work for functors
+nontrivialMaterialization :: SubSchema -> DBMetadata -> Bool
+nontrivialMaterialization ss md = case dbToken md of
+  SimpleRecordToken -> any (`subset`(map fst $ simpleRecordCompressionSchemes md)) $ subSchemaSimplices ss
+  SimpleSubInstanceToken -> nontrivialMaterialization ss $ simpleSubInstanceInnerMetadata md
+  CoLimitToken -> any (nontrivialMaterialization ss) $ coLimitInnerMetadatas md
+  _ -> True
+
 codeMaterializeDefault :: DBMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
 codeMaterializeDefault metadata ss@(SubSchema simps sch) = 
   (map (\(i,s) -> ("IMP" ++ (show i),SectionQuery metadata (SubSchema [s] sch))) $ zip [1..] simps,

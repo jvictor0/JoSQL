@@ -6,6 +6,7 @@ import Control.Monad
 import Data.Maybe
 import Control.Monad.Trans.Either
 import System.IO
+import Network
 
 import Utils
 import Types
@@ -21,7 +22,7 @@ data NutleyObject = NutleySchema Schema
                   | NutleyMap SchemaMap 
                   | NutleyObjInstance NutleyInstance DBMetadata
                   | NutleyActionObject (ErrorT IO NutleyObject)
-                  | NutleyConnection Handle String
+                  | NutleyConnection HostName PortID
                   | EmptyNutleyObject
                     
 data GlobalState = GlobalState 
@@ -42,6 +43,13 @@ nextInstanceID state = do
   writeTVar (instanceIDCounter state) $ id + 1
   return id
                    
+freshName state "" = do
+  id <- nextInstanceID state
+  b <- nameExists state $ "fresh_" ++ (show id)
+  if b then freshName state "" else return $ "fresh_" ++ (show id)
+freshName _ a = return a
+
+
 showNutleyObject (NutleySchema (Schema (SC verts' simps) tps)) = result
   where invmp = Map.fromList $ verts'
         verts = map fst verts'
@@ -62,7 +70,7 @@ showNutleyObject (NutleyMap (SchemaMap srcS trgS f))
   where srcMap = schemaVertexNames srcS
         trgMap = schemaVertexNames trgS
 showNutleyObject EmptyNutleyObject = "There's no object here"
-showNutleyObject (NutleyConnection _ addr) = "connect to " ++ (show addr)
+showNutleyObject (NutleyConnection addr port) = "connect to \"" ++ addr ++ ":" ++ (show port) ++ "\""
 showNutleyObject (NutleyActionObject _) = error "show NutleyActionObject not allowed"
 
 newGlobalState = atomically $ do

@@ -40,7 +40,9 @@ data LexTree = Ident String
              | AtToken
              | ByToken
              | FromToken
+             | OnToken
              | ToToken
+             | FreshToken
              | VerticesToken
              | SimplicesToken
              | ShowToken
@@ -72,6 +74,7 @@ instance Show LexTree where
   show InverseToken = "inverse"
   show ConnectToken = "connect"
   show ToToken = "to"
+  show FreshToken = "fresh"
   show DirectToken = "direct"
   show WithToken = "with"
   show AtToken = "at"
@@ -92,6 +95,7 @@ instance Show LexTree where
   show ClearToken = "clear"
   show CacheToken = "cache"
   show QuitToken = "quit"
+  show OnToken = "on"
   show ServerToken = "server"
   show UnknownToken = "UNKOWN"
   show (Node t lvs) = (leftBraceStr t) ++ (cim " " show lvs) ++ (rightBraceStr t)
@@ -135,6 +139,7 @@ token "shriek" = ShriekToken
 token "image" = ImageToken
 token "connect" = ConnectToken
 token "to" = ToToken
+token "on" = OnToken
 token "direct" = DirectToken
 token "inverse" = InverseToken
 token "show" = ShowToken
@@ -146,6 +151,7 @@ token "null" = NullToken
 token "KILL" = KILLToken
 token "server" = ServerToken
 token "clear" = ClearToken
+token "fresh" = FreshToken
 token "cache" = CacheToken
 token "data" = DataToken
 token "quit" = QuitToken
@@ -267,6 +273,9 @@ parseLetName :: LexTree -> Maybe ClientQuery
 parseLetName (Node TopLevel (LetToken:(Ident name):EqToken:create)) = do
   createQuery <- parseCreateQuery create
   return $ LetQuery name createQuery
+parseLetName (Node TopLevel (LetToken:FreshToken:EqToken:create)) = do
+  createQuery <- parseCreateQuery create
+  return $ LetQuery "" createQuery
 parseLetName _ = Nothing
 
 parseCreateSchema :: [LexTree] -> Maybe CreateQuery
@@ -385,11 +394,23 @@ parseFunctor [DirectToken,ImageToken,mapQuery,WithToken,instanceQuery] = createF
 parseFunctor [InverseToken,ImageToken,mapQuery,WithToken,instanceQuery] = createFunctorQuery InverseImageFunctor mapQuery instanceQuery
 parseFunctor _ = Nothing
   
+parseOnConnect :: [LexTree] -> Maybe CreateQuery
+parseOnConnect (OnToken:connectQuery:createQuery) = do
+  conn <- parseConnectQuery connectQuery
+  return $ OnConnection conn $ show $ Node TopLevel createQuery
+parseOnConnect _ = Nothing
+
+parseConnectQuery :: LexTree -> Maybe ConnectQuery
+parseConnectQuery (Ident a) = Just $ NamedConnect a
+parseConnectQuery (Node Paren c) = do
+  (ConnectQuery a b) <- parseConnect c
+  return $ AddressedConnect a b
+
 createFunctorQuery fType mapQuery instanceQuery = do
   inst  <- parseInstanceQuery instanceQuery
   mp    <- parseMapQuery mapQuery
   return $ FunctorQuery fType mp inst
-                 
+    
 parseMapDef :: [LexTree] -> Maybe (Name,Name,HaskellCode)
 parseMapDef [Ident a,ArrowToken,Ident b] = parseMapDef [Ident a,ArrowToken,Ident b,ByToken,Ident b]
 parseMapDef ((Ident a):ArrowToken:(Ident b):ByToken:expr) = fmap (\f -> (a,b,Lam (Ltp b) f)) $ parseExpression expr
@@ -422,6 +443,7 @@ parseName _ = Nothing
 
 parseCreateQuery create = findSuccessIn create $ createInstanceFunctions ++ 
                           [parseName,parseCreateSchema,parseCreateMap,parseConnect,
+                           parseOnConnect,
                            liftToSingletonList $ (fmap SchemaQuery).parseSchemaQuery]
 
 parseShow (Node TopLevel (ShowToken:create)) = do

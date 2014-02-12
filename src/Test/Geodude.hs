@@ -14,7 +14,7 @@ data QueryResult = QR String String String [String]
 
 data Mode = Mode MType String
 
-data MType = Test | Update | Diff | Error deriving (Eq)
+data MType = Test | Update | Diff | Run | Error deriving (Eq)
 numASCIIs = 3
 
 main = do
@@ -25,9 +25,10 @@ main = do
   joSQLInputs <- generateInputs 0 "." dotFile
   forM_ joSQLInputs $ \x -> do
     putStrLn x
-    when (md`elem`[Test,Update]) $ executeTest x
+    when (md`elem`[Test,Update,Run]) $ executeTest x
     when (md`elem`[Test,Diff]) $ checkTest x 
     when (md == Update) $ (updateTest x) >> passTest
+    when (md == Run) passTest
   
   
 getMode [dotFile] = Mode Test dotFile
@@ -35,10 +36,11 @@ getMode ["-u",dotFile] = Mode Update dotFile
 getMode ["-update",dotFile] = Mode Update dotFile
 getMode ["-d",dotFile] = Mode Diff dotFile
 getMode ["-diff",dotFile] = Mode Diff dotFile
+getMode ["-r",dotFile] = Mode Run dotFile
 getMode _ = Mode Error ""                        
  
 isDotFile "." = False
-isDotFile ".." = False
+isDotFile ('.':'.':_) = False
 isDotFile ('.':file) = True
 isDotFile _ = False
 

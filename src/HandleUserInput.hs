@@ -19,6 +19,7 @@ import Shriek
 import DirectImage
 import System.Directory
 import InverseImage
+import RemoteInstance
 
 import qualified Data.Map as Map
 import Control.Monad
@@ -28,17 +29,12 @@ import Parser
 import Control.Monad.Trans.Either
 import Network.Socket
 import Network
-
+import System.IO
 
 createToObject :: GlobalState -> CreateQuery -> ErrorT STM NutleyObject
 createToObject state (NamedObject name) = lookupByName state name
 createToObject state (SchemaQuery sch) = fmap NutleySchema $ schemaQuerySchema state sch
-createToObject state (CreateSchema verts simps) = do 
-  let idMap = Map.fromList $ zip (map (\(TypeDec a _) -> a) verts) [1..]
-      tpList = zip [1..] (map (\(TypeDec _ a) -> a) verts)
-  hoistEither $ guardEither "Duplicate vertex name in create schema" $ (Map.size idMap) == (length verts)
-  simpIds <- hoistEither $ forM simps $ mapM ((maybeToEither "simplex not in schema").(flip Map.lookup idMap))
-  return $ NutleySchema (Schema (SC (zip [1.. Map.size idMap] $ map (\(TypeDec a _) -> a) verts) simpIds) tpList)
+createToObject state cs@(CreateSchema verts simps) = fmap NutleySchema $ hoistEither $ createSchemaToSchema cs
 createToObject state (InstantiateSchema schq simplex dat) = do 
   sch <- schemaQuerySchema state schq
   id <- liftEitherT $ nextInstanceID state
@@ -94,9 +90,16 @@ createToObject state (FunctorQuery t mapQuery instanceQuery) = do
       InverseImageFunctor -> do
         (invmd,params) <- inverseImage f md
         return $ NutleyObjInstance (InverseImage params inst) invmd
-createToObject state (ConnectQuery addr port) = return $ NutleyActionObject $ do
-  hdl <- tryErrorT $ connectTo addr $ PortNumber $ fromIntegral port
-  return $ NutleyConnection hdl (addr ++ ":" ++ (show port))
+createToObject state (ConnectQuery addr port) =
+  return $ NutleyConnection addr $ PortNumber $ fromIntegral port
+  
+createSchemaToSchema :: CreateQuery -> Error Schema
+createSchemaToSchema (CreateSchema verts simps) = do 
+  let idMap = Map.fromList $ zip (map (\(TypeDec a _) -> a) verts) [1..]
+      tpList = zip [1..] (map (\(TypeDec _ a) -> a) verts)
+  guardEither "Duplicate vertex name in create schema" $ (Map.size idMap) == (length verts)
+  simpIds <- forM simps $ mapM ((maybeToEither "simplex not in schema").(flip Map.lookup idMap))
+  return $ Schema (SC (zip [1.. Map.size idMap] $ map (\(TypeDec a _) -> a) verts) simpIds) tpList
   
 withNutleyInstance :: NutleyObject -> ((NutleyInstance,DBMetadata) -> Error NutleyObject) -> Error NutleyObject
 withNutleyInstance (NutleyObjInstance inst md) f = f (inst,md)
@@ -116,8 +119,38 @@ withNutleyInstances instances f
 
 
 handleLetName :: GlobalState -> ClientQuery -> IO (Error String)
-handleLetName state (LetQuery name create) = runEitherT $ do
+handleLetName state (LetQuery name' (OnConnection c query)) = runEitherT $ do
+  (name,NutleyConnection addr port) <- mapEitherT atomically $ do
+    name <- liftEitherT $ freshName state name'
+    conn <- connectQueryConnect state c
+    reserveName state name
+    return (name,conn)
+  hdl <- tryErrorT $ connectTo addr port
+  tryErrorT $ hPutStrLn hdl $ "let " ++ name ++ " = " ++ query ++ ";"
+  (e:trans) <- hGetTransmission hdl
+  hoistEither $ guardEither ("node error: " ++ concat trans) $ e == "\000"
+  tryErrorT $ hPutStrLn hdl $ "show (schema " ++ name ++ ")"
+  (e2:createSchemaQuery:rst) <- hGetTransmission hdl
+  if e == "\000"
+  then do
+    hoistEither $ guardEither "something has gone wrong" $ null rst  
+    let (Just schQ) = (\(Node TopLevel lt) -> parseCreateSchema lt) =<< (lexTree createSchemaQuery)
+    sch <- hoistEither $ createSchemaToSchema schQ
+    let nobj = NutleyObjInstance (RemoteInstance addr port) (remoteInstance name sch)
+    liftEitherT $ atomically $ addNamedObject state name nobj
+    return $ "Added object " ++ name
+  else do
+    tryErrorT $ hPutStrLn hdl $ "show " ++ name ++ ";"
+    (e2:createQuery:rst) <- hGetTransmission hdl  
+    hoistEither $ guardEither ("node error: " ++ concat trans) $ e2 == "\000"
+    hoistEither $ guardEither "something went wrong" $ null rst
+    res <- liftEitherT $ handleUserInput state $ "let " ++ name ++ " = " ++ createQuery
+    case res of
+     (Left err) -> (liftEitherT $ atomically $ removeNamedObject state name) >> left err
+     (Right note) -> return $ "Added object " ++ name  
+handleLetName state (LetQuery name' create) = runEitherT $ do
   join $ mapEitherT atomically $ do
+    name <- liftEitherT $ freshName state name'
     obj <- createToObject state create 
     case obj of
       (NutleyActionObject ioObj) -> (>>) (reserveName state name) $ return $ do
@@ -127,10 +160,11 @@ handleLetName state (LetQuery name create) = runEitherT $ do
           (Right nobj) -> do
             hoistEither $ guardEither "something has gone wrong" $ not $ isActionObject nobj
             liftEitherT $ atomically $ addNamedObject state name nobj
+            return $ "Added object " ++ name
       _ -> do
         addNamedObjectIfNotExists state name obj 
-        return $ return ()
-  return $ "Added object " ++ name
+        return $ return $ "Added object " ++ name
+
   
 handleShow state (ShowQuery create) = do
   res <- runEitherT $ do
@@ -152,13 +186,19 @@ mapQueryMap state (NamedMap name) = do
   (NutleyMap f) <- lookupByName state name 
   return f
 
+connectQueryConnect :: GlobalState -> ConnectQuery -> ErrorT STM NutleyObject
+connectQueryConnect state (AddressedConnect addr port) = return $ NutleyConnection addr $ PortNumber $ fromIntegral port
+connectQueryConnect state (NamedConnect name) = lookupByName state name
+
 instanceQueryInstance :: GlobalState -> InstanceQuery -> ErrorT STM NutleyObject
 instanceQueryInstance state (NamedInstance name) = lookupByName state name
 instanceQueryInstance state (CreateInstance createQuery) = createToObject state createQuery
   
 instanceQuerySchema state (NamedInstance name) = do
-  (NutleyObjInstance _ md) <- lookupByName state name
-  return $ dbSchema md
+  res <- lookupByName state name
+  case res of
+    (NutleyObjInstance _ md) -> return $ dbSchema md
+    _ -> left $ "object " ++ name ++ " has no schema"
 instanceQuerySchema state (CreateInstance (InstantiateSchema schq _ _)) = schemaQuerySchema state schq
 instanceQuerySchema state (CreateInstance (FilterQuery inst _)) = instanceQuerySchema state inst
 instanceQuerySchema state (CreateInstance (FunctorQuery ShriekFunctor f _)) = mapQueryCoDomainSchema state f
@@ -166,6 +206,8 @@ instanceQuerySchema state (CreateInstance (FunctorQuery DirectImageFunctor f _))
 instanceQuerySchema state (CreateInstance (FunctorQuery InverseImageFunctor f _)) = mapQueryDomainSchema state f
 instanceQuerySchema state (CreateInstance (UnionQuery (a:as))) = instanceQuerySchema state a
 instanceQuerySchema state (CreateInstance (UnionQuery [])) = return emptySchema
+instanceQuerySchema state _ = left "cannot take schema of that object"
+  
 mapQueryCoDomainSchema state mapQuery = do
   (SchemaMap _ cdm _) <- mapQueryMap state mapQuery
   return cdm

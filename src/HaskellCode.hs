@@ -142,6 +142,7 @@ t_NutleyInstance = t_ "NutleyInstance"
 --- Functional Convinience Type
 x +$+ y = App (Lit "($)") [x,y]
 x +==+ y = App (Lit "(==)") [x,y]
+x +/=+ y = App (Lit "(/=)") [x,y]
 x +.+ y = App (Lit "(.)") [x,y]
 x +++ y = App (Lit "(+)") [x,y]
 x +-+ y = App (Lit "(-)") [x,y]
