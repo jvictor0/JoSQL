@@ -1,0 +1,10 @@
+clear data;
+clear cache;
+
+let s = create schema with vertices = {a :: Int, b :: String, c :: Int} simplices = {{a,b,c}};
+let i = instantiate s at {a,b,c} with load "Geodude/SimpleRecord/load/loadTest3.csv";
+let j = instantiate s at {a,c} with load "Geodude/SimpleRecord/load/loadTest2.csv";
+
+select {{a,b,c}} from i;
+select {{a,c}} from i;
+select {{a,c}} from j;

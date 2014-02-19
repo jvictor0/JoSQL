@@ -13,9 +13,9 @@ cabal-dev
 CQ*
 \#*
 *.seg
-*.expected
 *.result
-*.csv
-Main
-Geodude
-.mdb
+JoSQL
+Geodude/Geodude
+*.mdb
+*.bak
+data
