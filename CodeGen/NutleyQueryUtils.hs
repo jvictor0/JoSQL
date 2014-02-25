@@ -48,12 +48,12 @@ nontrivialMaterialization ss md = case dbToken md of
 
 codeMaterializeDefault :: DBMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
 codeMaterializeDefault metadata ss@(SubSchema simps sch) = 
-  (map (\(i,s) -> ("IMP" ++ (show i),SectionQuery metadata (SubSchema [s] sch))) $ zip [1..] simps,
+  (map (\(i,s) -> ("imp" ++ (show i),SectionQuery metadata (SubSchema [s] sch))) $ zip [1..] simps,
    Fun (materializeFName metadata ss) (materializeType metadata ss)
    $ Lam (Ltp "instID") $ Do $ sects ++ [do_return result]
   )
   where sects = map (\(i,s) -> (Ltp $ "sec_" ++ (show i), 
-                                c_1 ("IMP" ++ (show i) ++ "." ++ (sectionFName metadata (SubSchema [s] sch))) (Lit "instID")))
+                                c_1 ("imp" ++ (show i) ++ "_" ++ (sectionFName metadata (SubSchema [s] sch))) (Lit "instID")))
                 $ zip [1..] simps
         result = Tpl $ map (\(i,_) -> Lit $ "sec_" ++ (show i)) $ zip [1..] simps
 
@@ -63,16 +63,16 @@ codeSectionDefault metadata ss@(SubSchema [] _) =
    Fun (sectionFName metadata ss) (sectionType metadata ss)
    $ Lam (Ltp "instID") $ c_return $ Lst [])
 codeSectionDefault metadata ss@(SubSchema [x] _) =
-  ([("I",MaterializeQuery metadata ss)],
+  ([("i",MaterializeQuery metadata ss)],
    Fun (sectionFName metadata ss) (sectionType metadata ss)
    $ Lam (Ltp "instID") $ materializeFun)
-  where materializeFun = (Lit $ "I." ++ (materializeFName metadata ss)) $$ [Lit "instID"]
+  where materializeFun = (Lit $ "i_" ++ (materializeFName metadata ss)) $$ [Lit "instID"]
 codeSectionDefault metadata ss@(SubSchema simps sch) = 
-  ([("I",MaterializeQuery metadata ss)],
+  ([("i",MaterializeQuery metadata ss)],
    Fun (sectionFName metadata ss) (sectionType metadata ss)
    $ Lam (Ltp "instID") $ Do [materializeFun, (USp, c_return joinCode)])
   where materializeFun = (Tup $ map (\(_,i) -> Ltp $ "column_" ++ (show i)) $ zip simps [1..], 
-                          (Lit $ "I." ++ ( materializeFName metadata ss)) $$ [Lit "instID"])
+                          (Lit $ "i_" ++ ( materializeFName metadata ss)) $$ [Lit "instID"])
         material = Lit "materializedCols"
         joinCode = codeEquiJoin $ map (\(s,i) -> (s,Lit $ "column_" ++ (show i))) $ zip simps [1..]
 
@@ -80,12 +80,12 @@ codeSectionDefault metadata ss@(SubSchema simps sch) =
 
 codeInstantiateSelectDefault :: DBMetadata -> DBMetadata -> SubSchema -> ([(Name,NutleyQuery)],HaskellFunction)
 codeInstantiateSelectDefault to from ss = 
-  ([("I",InstantiateQuery to),("J",SectionQuery from ss)],
+  ([("i",InstantiateQuery to),("j",SectionQuery from ss)],
    Fun (instantiateSelectFName to from ss)
    (FunType [BaseType "InstanceID", t_NutleyInstance] $ tc_ErrorT t_IO $ t_NutleyInstance)
    $ Lam (Mlp [Ltp "instID", Ltp "fromInstance"])
-   $ Do [(Ltp "tups", c_1 ("J." ++ sectionFName from ss) $ Lit "fromInstance"),
-         (USp,c_2 ("I." ++ instantiateFName to) (Lit "instID") $ c_map (Lam (nTupPat n) (tupMap n (Lit "Just"))) (Lit "tups"))]
+   $ Do [(Ltp "tups", c_1 ("j_" ++ sectionFName from ss) $ Lit "fromInstance"),
+         (USp,c_2 ("i_" ++ instantiateFName to) (Lit "instID") $ c_map (Lam (nTupPat n) (tupMap n (Lit "Just"))) (Lit "tups"))]
    )
   where n = length $ simpleRecordCompressionSchemes to
   

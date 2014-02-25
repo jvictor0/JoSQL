@@ -81,7 +81,7 @@ instance Show HaskellCode where
   show (Whr c whrlst) = (show c) ++ "\n" ++ tab ++ "where\n" ++ 
                         (concatMap (\(pat,tp) -> (case tp of
                                                      (Left t) -> tab ++ tab ++ (show pat) ++ " :: " ++ (show t) ++ "\n"
-                                                     (Right cde) -> tab ++ tab ++ (show pat) ++ " = \n      " ++ (showI 3 cde) ++ "\n"))
+                                                     (Right cde) -> tab ++ tab ++ (show pat) ++ " = \n      " ++ (showI 3 cde) ++ "\n\n"))
                          whrlst)
   show (If con thn els) = "if    " ++ (showI 3 con) ++ "\nthen  " ++ (showI 3 thn) ++ "\nelse  " ++ (showI 3 els)
   show (Lam pat cde) = if length showbod < maxFunAppLen 

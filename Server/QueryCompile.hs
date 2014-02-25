@@ -2,6 +2,7 @@ module Server.QueryCompile where
 
 import Utils.Utils
 import CodeGen.Metadata.Metadata
+import CodeGen.ResolveDepends
 import Data.Schema
 import Data.Name
 import System.Plugins.Make
@@ -49,22 +50,19 @@ clearCompiled = system "rm Plancache/*.o Plancache/*.hi"
 
 compileQuery :: NutleyQuery -> ErrorT IO String
 compileQuery q = do
-  let (reqs, bod) = codeQuery q
+  let body = codeResolvedQuery q
       mname = queryModuleName q
-      rnams = map queryModuleName $ map snd reqs
       fcnts = "module " ++ mname ++ " where\n\n" ++ 
-              (concatMap (\(qn,r) -> "import qualified " ++ r ++ " as " ++ qn ++ "\n") $ zip (map fst reqs) rnams) ++ "\n" ++
               "import Utils.Include\n\n\n" ++ 
-              (show bod) ++ "\n\n\n" ++ 
+              (show body) ++ "\n\n\n" ++ 
               (cim "\n\n\n" show $ serializeCode q)
   b <- liftEitherT $ doesFileExist ("Plancache/" ++ mname ++ ".o")
   if b
     then return mname
     else do
     liftEitherT $ putStrLn $ "compiling " ++ (name q)
-    mapM_ compileQuery $ map snd reqs
     liftEitherT $ writeFile ("Plancache/" ++ mname ++ ".hs") fcnts
-    status <- liftEitherT $ make ("Plancache/" ++ mname ++ ".hs") []
+    status <- liftEitherT $ make ("Plancache/" ++ mname ++ ".hs") ["-idist/build/JoSQL/JoSQL-tmp"]
     case status of 
       (MakeSuccess _ _) -> do
         liftEitherT $ putStrLn $ "sucess: " ++ (mname ++ ".hs")

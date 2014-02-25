@@ -27,13 +27,13 @@ shriek f md = ShriekMetadata
   } 
                                   
 codeShriekSection metadata ss = 
-  (if fromInner then [("I",SectionQuery (shriekInnerMetadata metadata) ss')] else [],
+  (if fromInner then [("i",SectionQuery (shriekInnerMetadata metadata) ss')] else [],
    Fun (sectionFName metadata ss) (sectionType metadata ss)
    $ if fromInner
      then Lam (Fnp "Shriek" [Ltp "instID"]) 
           $ c_1 innerSecName $ Lit "instID"
      else c_1 "const" $ c_return $ Lst [])
-  where innerSecName = "I." ++ (sectionFName (shriekInnerMetadata metadata) ss')
+  where innerSecName = "i_" ++ (sectionFName (shriekInnerMetadata metadata) ss')
         ss'          = SubSchema (map (fromJust.(simplexIncluded (shriekMap metadata))) $ subSchemaSimplices ss)
                        $ schemaMapDomain $ shriekMap metadata
         fromInner = (schemaFullImage $ shriekMap metadata) `containsSubSchema` ss
@@ -54,7 +54,7 @@ codeShriekMaterialize metadata ss =
                                         else (i,(Nothing,s)))
                             1 $ subSchemaSimplices ss
         usableSimps = map snd $ filter (isJust.fst) observedSimps
-        innerMatName = "I." ++ (sectionFName (shriekInnerMetadata metadata) ss')
+        innerMatName = "i_" ++ (sectionFName (shriekInnerMetadata metadata) ss')
         ss' = SubSchema (map (fromJust.(simplexIncluded (shriekMap metadata))) $ usableSimps)
               $ schemaMapDomain $ shriekMap metadata
   

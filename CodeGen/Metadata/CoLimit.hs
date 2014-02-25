@@ -52,7 +52,7 @@ coProduct inners = CoLimitMetadata
   where (coProdSchema,incs) = schemaCoProduct $ map dbSchema inners
         
 coLimitInnerMaterializeQueries db ss = 
-  map (\(i,imd) -> ("IMP" ++ (show i), MaterializeQuery imd ss,"ins_" ++ (show i))) 
+  map (\(i,imd) -> ("imp" ++ (show i), MaterializeQuery imd ss,"ins_" ++ (show i))) 
   $ filter ((nontrivialMaterialization ss).snd) $ zip [1..] $ coLimitInnerMetadatas db
 
 
@@ -62,7 +62,7 @@ codeCoLimitMaterialize metadata ss =
    $ Lam (Fnp "CoLimit" $ [Lstp $ map Ltp $ map (\(i,_) -> "ins_" ++ (show i)) $ zip [1..] $ coLimitInnerMetadatas metadata])
    $ Do 
    $ (map (\(i,(mod,q,nms)) -> (Ltp $ "kinz_" ++ (show i), 
-                                c_mapM (Lit $ mod ++ "." ++ (name q)) $ Lit nms))
+                                c_mapM (Lit $ mod ++ "_" ++ (name q)) $ Lit nms))
       $ zip [1..] innerMats) ++ 
      [do_return $ tupConcat (length $ subSchemaSimplices ss) $ c_concat $ Lst $ map (\(i,_) -> Lit $ "kinz_" ++ (show i)) 
       $ zip [1..] innerMats]

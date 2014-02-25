@@ -35,11 +35,11 @@ codeDirectImageRearange f img siginv = Lam (nTupPat $ length invSimps)
   where invSimps = zip [1..] $ subSchemaVertices siginv
 
 codeDirectImageSection metadata ss = 
-  ([("I",SectionQuery (directImageInnerMetadata metadata) ss')],
+  ([("i",SectionQuery (directImageInnerMetadata metadata) ss')],
    Fun (sectionFName metadata ss) (sectionType metadata ss)
    $ Lam (Fnp "DirectImage" [Ltp "instID"]) 
    $ Do [(Ltp "preresult",c_1 innerSecName $ Lit "instID"),
          do_return $ c_map (codeDirectImageRearange f ss ss') $ Lit "preresult"])
-  where innerSecName = "I." ++ (sectionFName (directImageInnerMetadata metadata) ss')
+  where innerSecName = "i_" ++ (sectionFName (directImageInnerMetadata metadata) ss')
         ss' = schemaPreimage ss f
         f = directImageMap metadata
